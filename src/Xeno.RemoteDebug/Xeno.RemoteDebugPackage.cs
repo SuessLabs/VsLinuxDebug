@@ -27,7 +27,7 @@ namespace Xeno.RemoteDebug
   [Guid(Xeno.RemoteDebugPackage.PackageGuidString)]
   public sealed class Xeno.RemoteDebugPackage : AsyncPackage
   {
-      /// <summary>
+    /// <summary>
     /// Xeno.RemoteDebugPackage GUID string.
     /// </summary>
     public const string PackageGuidString = "7998b06b-a709-46ee-b460-d0dca3f1e12d";
