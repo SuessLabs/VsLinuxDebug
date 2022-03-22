@@ -1,6 +1,10 @@
 # [Remote Debuger](https://github.com/SuessLabs/RemoteDebug.git)
 
-Remotely deploy and debug your C# apps onto your Raspberry Pi over the network.
+Remotely deploy and debug your .NET C# apps via SSH using Visual Studio.
+
+> WARNING: This is a work in progress!
+
+Visual Studio's "attach to process via SSH" is cute, but it lacks deployment and automatic attaching. This project aims to allow you to do just that when programming for your Linux VM or Raspberry Pi over the network.
 
 ## To Do
 
