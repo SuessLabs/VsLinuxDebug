@@ -4,7 +4,7 @@
         <Identity Id="VsLinuxDebugger.4d7bf4de-5015-4e24-92c0-7f9f3397b2da" Version="1.0" Language="en-US" Publisher="Suess Labs" />
         <DisplayName>VsLinuxDebugger</DisplayName>
         <Description xml:space="preserve">Visual Studio Remote Linux Debugger.</Description>
-        <License>LICENSE</License>
+        <License>LICENSE.txt</License>
         <Icon>Resources\DebuggerPackage.ico</Icon>
         <Tags>remote debug; vsdbg; linux; xamarin; rpi4; remotedebug; linux debug; net6</Tags>
     </Metadata>
