@@ -24,8 +24,9 @@ namespace Xeno.RemoteDebug
   /// </para>
   /// </remarks>
   [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-  [Guid(Xeno.RemoteDebugPackage.PackageGuidString)]
-  public sealed class Xeno.RemoteDebugPackage : AsyncPackage
+  [Guid(PackageGuidString)]
+  [ProvideMenuResource("Menus.ctmenu",1)]
+  public sealed class RemoteDebugPackage : AsyncPackage
   {
     /// <summary>
     /// Xeno.RemoteDebugPackage GUID string.
@@ -46,6 +47,9 @@ namespace Xeno.RemoteDebug
       // When initialized asynchronously, the current thread may be a background thread at this point.
       // Do any initialization that requires the UI thread after switching to the UI thread.
       await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
+      // Source: https://github.com/Microsoft/VSSDK-Extensibility-Samples/blob/master/Options/src/OptionsPackage.cs
+      ////  return base.InitializeAsync(cancellationToken, progress);
     }
     #endregion Package Members
   }

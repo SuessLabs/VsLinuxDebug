@@ -46,12 +46,26 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\Helpers.cs" />
+    <Compile Include="OptionsPages\Misc\BaseOptionsModel.cs" />
+    <Compile Include="OptionsPages\Misc\BaseOptionsPage.cs" />
+    <Compile Include="OptionsPages\BuildOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OptionsPages\Misc\DialogPageProvider.cs" />
+    <Compile Include="OptionsPages\ConnectionOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IConnectionService.cs" />
     <Compile Include="Services\ConnectionService.cs" />
     <Compile Include="Xeno.RemoteDebugPackage.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LICENSE">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\Package.ico" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>

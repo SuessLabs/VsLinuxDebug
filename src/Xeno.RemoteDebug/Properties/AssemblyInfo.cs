@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Xeno.RemoteDebug")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Suess Labs, LLC")]
 [assembly: AssemblyProduct("Xeno.RemoteDebug")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]

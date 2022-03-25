@@ -18,7 +18,6 @@ namespace Xeno.RemoteDebug.Services
 
     public SftpClient Sftp { get; }
 
-
     public bool IsConnected { get; private set; }
 
     public void Connect()
