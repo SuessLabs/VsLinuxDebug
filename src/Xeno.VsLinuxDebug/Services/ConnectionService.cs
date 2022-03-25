@@ -1,6 +1,6 @@
 ﻿using Renci.SshNet;
 
-namespace Xeno.RemoteDebug.Services
+namespace Xeno.VsLinuxDebug.Services
 {
   public class ConnectionService : IConnectionService
   {

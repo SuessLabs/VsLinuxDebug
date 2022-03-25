@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32210.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xeno.RemoteDebug", "Xeno.RemoteDebug\Xeno.RemoteDebug.csproj", "{71070783-D7ED-4F18-9747-E6149284A837}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xeno.VsLinuxDebug", "Xeno.VsLinuxDebug\Xeno.VsLinuxDebug.csproj", "{71070783-D7ED-4F18-9747-E6149284A837}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

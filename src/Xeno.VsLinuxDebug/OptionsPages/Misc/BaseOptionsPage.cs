@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 
-namespace Xeno.RemoteDebug.OptionsPages
+namespace Xeno.VsLinuxDebug.OptionsPages
 {
 ////  /// <summary>
 ////  /// A base class for a DialogPage to show in Tools -> Options.

@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.Shell.Settings;
 using Microsoft.VisualStudio.Threading;
 using Task = System.Threading.Tasks.Task;
 
-namespace Xeno.RemoteDebug.OptionsPages
+namespace Xeno.VsLinuxDebug.OptionsPages
 {
 ////  /// <summary>
 ////  /// A base class for specifying options

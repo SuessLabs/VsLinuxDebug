@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Renci.SshNet;
 
-namespace Xeno.RemoteDebug.Services
+namespace Xeno.VsLinuxDebug.Services
 {
   public interface IConnectionService
   {

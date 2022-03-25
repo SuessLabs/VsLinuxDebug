@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Xeno.RemoteDebug")]
+[assembly: AssemblyTitle("Xeno.VsLinuxDebug")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Suess Labs, LLC")]
-[assembly: AssemblyProduct("Xeno.RemoteDebug")]
+[assembly: AssemblyProduct("Xeno.VsLinuxDebug")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

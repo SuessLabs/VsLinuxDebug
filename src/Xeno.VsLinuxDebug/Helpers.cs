@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Net;
 
-namespace Xeno.RemoteDebug.Common
+namespace Xeno.VsLinuxDebug.Common
 {
   public static class Helpers
   {

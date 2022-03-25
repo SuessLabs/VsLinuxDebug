@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xeno.RemoteDebug.OptionsPages
+namespace Xeno.VsLinuxDebug.OptionsPages
 {
 ////  internal class DialogPageProvider
 ////  {

@@ -21,5 +21,8 @@ In order to get this project moving, the following must be done.
 
 ## References
 
+* [Extension Docs](https://docs.microsoft.com/en-us/visualstudio/extensibility/creating-a-settings-category?view=vs-2022)
+* [Extension Sample](https://github.com/microsoft/VSSDK-Extensibility-Samples/tree/master/Options)
 * [KSWoll's VS-Mono](https://github.com/kswoll/vs-mono) project.
 * [VS Mono Debugger](https://github.com/GordianDotNet/VSMonoDebugger) - VS2017, VS2019
+* [VS Mono Debugger](https://github.com/radutomy/VSRemoteDebugger)

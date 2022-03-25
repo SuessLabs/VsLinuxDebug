@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Microsoft.VisualStudio.Shell;
 
-namespace Xeno.RemoteDebug.OptionsPages
+namespace Xeno.VsLinuxDebug.OptionsPages
 {
   public class BuildOptionsPage : DialogPage
   {

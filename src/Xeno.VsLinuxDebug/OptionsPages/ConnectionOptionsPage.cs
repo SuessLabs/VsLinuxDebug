@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel;
 using Microsoft.VisualStudio.Shell;
 
-namespace Xeno.RemoteDebug.OptionsPages
+namespace Xeno.VsLinuxDebug.OptionsPages
 {
   public class ConnectionOptionsPage : DialogPage
   {
-    public string BaseDeployPath { get; set; } = "~/RemoteDebug/";
+    public string BaseDeployPath { get; set; } = "~/VsLinuxDebug/";
 
     [Category("Remote Settings")]
     [DisplayName("IP Address")]
