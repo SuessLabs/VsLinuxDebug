@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using System;
 using System.ComponentModel.Design;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
 
-namespace Xeno.RemoteDebug.Commands
+namespace VsLinuxDebugger
 {
   /// <summary>
   /// Command handler
   /// </summary>
-  internal sealed class DebugCmd
+  internal sealed class SshDebugCommand
   {
     /// <summary>
     /// Command ID.
@@ -22,22 +22,22 @@ namespace Xeno.RemoteDebug.Commands
     /// <summary>
     /// Command menu group (command set GUID).
     /// </summary>
-    public static readonly Guid CommandSet = new Guid("bd293660-9d6c-4b0e-a36a-b91f951a128b");
+    public static readonly Guid CommandSet = new Guid("da478db6-b5f9-4b11-ab42-4e08c5d1db07");
 
     /// <summary>
     /// VS Package that provides this command, not null.
     /// </summary>
-    private readonly AsyncPackage _package;
+    private readonly AsyncPackage package;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DebugCmd"/> class.
+    /// Initializes a new instance of the <see cref="SshDebugCommand"/> class.
     /// Adds our command handlers for menu (commands must exist in the command table file)
     /// </summary>
     /// <param name="package">Owner package, not null.</param>
     /// <param name="commandService">Command service to add command to, not null.</param>
-    private DebugCmd(AsyncPackage package, OleMenuCommandService commandService)
+    private SshDebugCommand(AsyncPackage package, OleMenuCommandService commandService)
     {
-      this._package = package ?? throw new ArgumentNullException(nameof(package));
+      this.package = package ?? throw new ArgumentNullException(nameof(package));
       commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
       var menuCommandID = new CommandID(CommandSet, CommandId);
@@ -48,7 +48,7 @@ namespace Xeno.RemoteDebug.Commands
     /// <summary>
     /// Gets the instance of the command.
     /// </summary>
-    public static DebugCmd Instance
+    public static SshDebugCommand Instance
     {
       get;
       private set;
@@ -61,7 +61,7 @@ namespace Xeno.RemoteDebug.Commands
     {
       get
       {
-        return this._package;
+        return this.package;
       }
     }
 
@@ -71,12 +71,12 @@ namespace Xeno.RemoteDebug.Commands
     /// <param name="package">Owner package, not null.</param>
     public static async Task InitializeAsync(AsyncPackage package)
     {
-      // Switch to the main thread - the call to AddCommand in DebugCmd's constructor requires
+      // Switch to the main thread - the call to AddCommand in SshDebugCommand's constructor requires
       // the UI thread.
       await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
       OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-      Instance = new DebugCmd(package, commandService);
+      Instance = new SshDebugCommand(package, commandService);
     }
 
     /// <summary>
@@ -90,11 +90,11 @@ namespace Xeno.RemoteDebug.Commands
     {
       ThreadHelper.ThrowIfNotOnUIThread();
       string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-      string title = "DebugCmd";
+      string title = "SshDebugCommand";
 
       // Show a message box to prove we were here
       VsShellUtilities.ShowMessageBox(
-          this._package,
+          this.package,
           message,
           title,
           OLEMSGICON.OLEMSGICON_INFO,

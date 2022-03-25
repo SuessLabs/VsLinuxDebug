@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Shell;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Microsoft.VisualStudio.Shell;
 using Task = System.Threading.Tasks.Task;
 
-namespace Xeno.VsLinuxDebug
+namespace VsLinuxDebugger
 {
   /// <summary>
   /// This is the class that implements the package exposed by this assembly.
@@ -24,15 +24,16 @@ namespace Xeno.VsLinuxDebug
   /// </para>
   /// </remarks>
   [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-  [Guid(PackageGuidString)]
-  [ProvideMenuResource("Menus.ctmenu",1)]
+  [Guid(DebuggerPackage.PackageGuidString)]
   [ProvideMenuResource("Menus.ctmenu", 1)]
   public sealed class DebuggerPackage : AsyncPackage
   {
     /// <summary>
-    /// Xeno.VsLinuxDebugPackage GUID string.
+    /// VsLinuxDebuggerPackage GUID string.
     /// </summary>
-    public const string PackageGuidString = "7998b06b-a709-46ee-b460-d0dca3f1e12d";
+    public const string PackageGuidString = "19f87f23-7a2c-4279-ac7c-c9267776bbf9";
+
+    //// public string IpAddress => RemotePage.IpAddress;
 
     #region Package Members
 
@@ -48,11 +49,9 @@ namespace Xeno.VsLinuxDebug
       // When initialized asynchronously, the current thread may be a background thread at this point.
       // Do any initialization that requires the UI thread after switching to the UI thread.
       await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-      await Xeno.RemoteDebug.Commands.DebugCmd.InitializeAsync(this);
-
-      // Source: https://github.com/Microsoft/VSSDK-Extensibility-Samples/blob/master/Options/src/OptionsPackage.cs
-      ////  return base.InitializeAsync(cancellationToken, progress);
+      await SshDebugCommand.InitializeAsync(this);
     }
-    #endregion Package Members
+
+    #endregion
   }
 }

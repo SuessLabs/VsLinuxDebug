@@ -4,23 +4,17 @@
     <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{71070783-D7ED-4F18-9747-E6149284A837}</ProjectGuid>
+    <ProjectGuid>{C204143E-FDE0-4F29-976B-A0C8AC798BAD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Xeno.RemoteDebug</RootNamespace>
-    <AssemblyName>Xeno.RemoteDebug</AssemblyName>
+    <RootNamespace>VsLinuxDebugger</RootNamespace>
+    <AssemblyName>VsLinuxDebugger</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <UseCodebase>true</UseCodebase>
@@ -51,34 +45,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Commands\DebugCmd.cs" />
-    <Compile Include="Helpers.cs" />
-    <Compile Include="OptionsPages\Misc\BaseOptionsModel.cs" />
-    <Compile Include="OptionsPages\Misc\BaseOptionsPage.cs" />
-    <Compile Include="OptionsPages\BuildOptionsPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="OptionsPages\Misc\DialogPageProvider.cs" />
-    <Compile Include="OptionsPages\ConnectionOptionsPage.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IConnectionService.cs" />
-    <Compile Include="Services\ConnectionService.cs" />
+    <Compile Include="SshDebugCommand.cs" />
     <Compile Include="DebuggerPackage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PkgCmd.vsct" />
-    <Content Include="Resources\DebuggerPackage.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\DebugCmd.png" />
-    <Content Include="LICENSE">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <None Include="Key.snk" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -94,16 +65,15 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.32112.339" ExcludeAssets="runtime" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.2.37-preview1" />
-    <PackageReference Include="SSH.NET">
-      <Version>2020.0.1</Version>
-    </PackageReference>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.2.1087-preview2" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="VSPackage.resx">
-      <MergeWithCTO>true</MergeWithCTO>
-      <ManifestResourceName>VSPackage</ManifestResourceName>
-    </EmbeddedResource>
+    <VSCTCompile Include="DebuggerPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\SshDebugCommand.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
