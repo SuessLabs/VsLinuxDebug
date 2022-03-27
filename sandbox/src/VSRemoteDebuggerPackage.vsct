@@ -22,7 +22,7 @@
 
   <!--The Commands section is where commands, menus, and menu groups are defined.
       This section uses a Guid to identify the package that provides the command defined inside it. -->
-  <Commands package="guidVSRemoteDebuggerPackage">
+  <Commands package="guidVSLinuxDebuggerPackage">
     <!-- Inside this section we have different sub-sections: one for the menus, another
     for the menu groups, one for the buttons (the actual commands), one for the combos
     and the last one for the bitmaps used. Each element is identified by a command id that
@@ -36,7 +36,7 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
     <Groups>
-      <Group guid="guidVSRemoteDebuggerPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+      <Group guid="guidVSLinuxDebuggerPackageCmdSet" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
       </Group>
     </Groups>
@@ -52,13 +52,40 @@
               <CommandFlag>DefaultInvisible</CommandFlag>
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
-      <Button guid="guidVSRemoteDebuggerPackageCmdSet" id="RemoteDebugId" priority="0x0100" type="Button">
-        <Parent guid="guidVSRemoteDebuggerPackageCmdSet" id="MyMenuGroup" />
+      <Button guid="guidVSLinuxDebuggerPackageCmdSet" id="RemoteDebugId" priority="0x0100" type="Button">
+        <Parent guid="guidVSLinuxDebuggerPackageCmdSet" id="MyMenuGroup" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
-          <ButtonText>Start Remote Debugging</ButtonText>
+          <ButtonText>SSH: Deploy and Debug</ButtonText>
         </Strings>
       </Button>
+
+      <!--
+      <Button guid="guidVSLinuxDebuggerPackageCmdSet" id="RemoteDebugId" priority="0x0100" type="Button">
+        <Parent guid="guidVSLinuxDebuggerPackageCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>SSH: Deploy</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidVSLinuxDebuggerPackageCmdSet" id="RemoteDebugId" priority="0x0100" type="Button">
+        <Parent guid="guidVSLinuxDebuggerPackageCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>SSH: Build Startup Project</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidVSLinuxDebuggerPackageCmdSet" id="RemoteDebugId" priority="0x0100" type="Button">
+        <Parent guid="guidVSLinuxDebuggerPackageCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>SSH: Settings</ButtonText>
+        </Strings>
+      </Button>
+      -->
+
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -68,16 +95,16 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
             inside a button definition. An important aspect of this declaration is that the element id
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\RemoteDebugger16x16.png" usedList="bmpPic1" />
+      <Bitmap guid="guidImages" href="Resources\RemoteDebug16x16.png" usedList="bmpPic1" />
     </Bitmaps>
   </Commands>
 
   <Symbols>
     <!-- This is the package guid. -->
-    <GuidSymbol name="guidVSRemoteDebuggerPackage" value="{27375819-9dd0-4292-a612-2300250b06b8}" />
+    <GuidSymbol name="guidVSLinuxDebuggerPackage" value="{27375819-9dd0-4292-a612-2300250b06b8}" />
 
     <!-- This is the guid used to group the menu commands together -->
-    <GuidSymbol name="guidVSRemoteDebuggerPackageCmdSet" value="{5b4eaa99-73ea-49a5-99c3-bd64eecafa37}">
+    <GuidSymbol name="guidVSLinuxDebuggerPackageCmdSet" value="{5b4eaa99-73ea-49a5-99c3-bd64eecafa37}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
       <IDSymbol name="RemoteDebugId" value="0x0100" />
     </GuidSymbol>

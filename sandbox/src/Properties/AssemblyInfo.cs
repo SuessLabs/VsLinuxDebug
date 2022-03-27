@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("VSRemoteDebugger")]
+[assembly: AssemblyTitle("VSLinuxDebugger")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("VSRemoteDebugger")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCompany("Xeno Innovations, Inc.")]
+[assembly: AssemblyProduct("VSLinuxDebugger")]
+[assembly: AssemblyCopyright("Copyright 2021 Xeno Innovations, Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

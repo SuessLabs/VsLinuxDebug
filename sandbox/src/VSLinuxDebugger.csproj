@@ -55,8 +55,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Commands\RemoteDebugCommand.cs" />
-    <Compile Include="Commands\VSRemoteDebuggerPackage.cs" />
+    <Compile Include="RemoteDebugCommand.cs" />
+    <Compile Include="VSRemoteDebuggerPackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -94,13 +94,13 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="Commands\VSRemoteDebuggerPackage.vsct">
+    <VSCTCompile Include="VSRemoteDebuggerPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Commands\Resources\RemoteDebug16x16.png" />
-    <Content Include="Commands\Resources\RemoteDebugger.png">
+    <Content Include="Resources\RemoteDebug16x16.png" />
+    <Content Include="Resources\RemoteDebugger.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
