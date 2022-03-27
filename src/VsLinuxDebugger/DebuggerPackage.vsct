@@ -61,13 +61,13 @@
         </Strings>
       </Button>
 
-      <Button guid="guidAddIconCmdSet" id="cmdIdMyCommand" priority="0x0100" type="Button">
+      <!--<Button guid="guidAddIconCmdSet" id="cmdIdMyCommand" priority="0x0100" type="Button">
         <Parent guid="guidAddIconCmdSet" id="MyMenuGroup" />
         <Icon guid="buildIcon" id="buildIcon1" />
         <Strings>
           <ButtonText>TEST BUILD ICON</ButtonText>
         </Strings>
-      </Button>
+      </Button>-->
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
