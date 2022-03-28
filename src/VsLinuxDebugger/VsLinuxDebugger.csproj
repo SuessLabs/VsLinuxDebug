@@ -46,11 +46,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands.Impl.cs" />
-    <Compile Include="Core\LaunchSettings.cs" />
-    <Compile Include="OptionsPage\BuildOptionsPage.cs">
+    <Compile Include="Core\LaunchJson.cs" />
+    <Compile Include="OptionsPages\OptionsPage.Ssh.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="OptionsPage\ConnectionOptionsPage.cs">
+    <Compile Include="OptionsPages\OptionsPage.Local.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OptionsPages\OptionsPage.DotNet.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

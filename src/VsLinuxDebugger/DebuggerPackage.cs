@@ -1,7 +1,8 @@
-﻿using Microsoft.VisualStudio.Shell;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Microsoft.VisualStudio.Shell;
+using Xeno.VsLinuxDebug.OptionsPages;
 using Task = System.Threading.Tasks.Task;
 
 namespace VsLinuxDebugger
@@ -26,14 +27,33 @@ namespace VsLinuxDebugger
   [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
   [Guid(DebuggerPackage.PackageGuidString)]
   [ProvideMenuResource("Menus.ctmenu", 1)]
+  [ProvideOptionPage(typeof(OptionsPage), "Linux Debugger", "Options", 0, 0, true)]
   public sealed partial class DebuggerPackage : AsyncPackage
   {
-    /// <summary>
-    /// VsLinuxDebuggerPackage GUID string.
-    /// </summary>
+    /// <summary>Package GUID string.</summary>
     public const string PackageGuidString = "19f87f23-7a2c-4279-ac7c-c9267776bbf9";
 
-    //// public string IpAddress => RemotePage.IpAddress;
+    public string HostIp => _optionsPage.HostIp;
+    public uint HostPort => _optionsPage.HostPort;
+
+    public bool LocalPlinkEnabled => _optionsPage.PLinkEnabled;
+    public string LocalPLinkPath => _optionsPage.PLinkPath;
+
+    public string RemoteDeployBasePath => _optionsPage.RemoteDeploymentBasePath;
+    public string RemoteDeployDebugPath => $"{_optionsPage.RemoteDeploymentBasePath}/TMP";
+    public string RemoteDeployReleasePath => $"{_optionsPage.RemoteDeploymentBasePath}/TMP";
+    public string RemoteDotNetPath => _optionsPage.RemoteDotNetPath;
+    public string RemoteVsDbgPath => _optionsPage.RemoteVsDbgPath;
+
+    public bool UseCommandLineArgs => _optionsPage.UseCommandLineArgs;
+    public bool UsePublish => _optionsPage.Publish;
+
+    public bool UserKeyFileEnabled => _optionsPage.SshPrivateKeyEnabled;
+    public string UserKeyFilePath => _optionsPage.SshPrivateKeyPath;
+    public string UserName => _optionsPage.UserName;
+    public string UserPass => _optionsPage.UserPass;
+
+    private OptionsPage _optionsPage => (OptionsPage)GetDialogPage(typeof(OptionsPage));
 
     #region Package Members
 
@@ -52,6 +72,6 @@ namespace VsLinuxDebugger
       await Commands.InitializeAsync(this);
     }
 
-    #endregion
+    #endregion Package Members
   }
 }

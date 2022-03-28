@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
 
 namespace VsLinuxDebugger
@@ -70,6 +71,14 @@ namespace VsLinuxDebugger
       return menuCommand;
     }
 
+    private void MessageBox(string message, string title = "Error") => VsShellUtilities.ShowMessageBox(
+      _package,
+      message,
+      title,
+      OLEMSGICON.OLEMSGICON_INFO,
+      OLEMSGBUTTON.OLEMSGBUTTON_OK,
+      OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+
     /////// <summary>
     ///////   This function is the callback used to execute the command when the menu item is clicked.
     ///////   See the constructor to see how the menu item is associated with this function using
@@ -93,6 +102,7 @@ namespace VsLinuxDebugger
     ////      OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
     ////}
 
+    /// <summary>VS Menu Command IDs. This must be insync with .vsct values.</summary>
     private sealed class CommandIds
     {
       public const int CmdDebugOnly = 0x1003;

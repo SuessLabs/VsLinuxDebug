@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
+using VsLinuxDebugger.Core;
 
 namespace VsLinuxDebugger
 {
@@ -32,27 +33,27 @@ namespace VsLinuxDebugger
       AddMenuItem(cmd, CommandIds.CmdShowSettings, SetMenuTextAndVisibility, OnShowSettingsAsync);
     }
 
-    private async void ExecuteBuildAsync() // (BuildOptions buildOptions)
+    private async void ExecuteBuildAsync(BuildOptions buildOptions)
     {
-      throw new NotImplementedException();
+      MessageBox("Not implemented");
     }
 
     private void OnDebugOnlyAsync(object sender, EventArgs e)
     {
-      // ExecuteBuildAsync(BuildOptions.Debug);
-      throw new NotImplementedException();
+      ExecuteBuildAsync(BuildOptions.Debug);
+      MessageBox("Not implemented");
     }
 
     private async void OnDeployAndDebugAsync(object sender, EventArgs e)
     {
-      // ExecuteBuildAsync(BuildOptions.Deploy | BuildOptions.Debug);
-      throw new NotImplementedException();
+      ExecuteBuildAsync(BuildOptions.Deploy | BuildOptions.Debug);
+      MessageBox("Not implemented");
     }
 
     private void OnDeployOnlyAsync(object sender, EventArgs e)
     {
       // ExecuteBuildAsync(BuildOptions.Deploy);
-      throw new NotImplementedException();
+      MessageBox("Not implemented");
     }
 
     private void OnShowLog(object sender, EventArgs e)
@@ -60,6 +61,8 @@ namespace VsLinuxDebugger
       // Not implemented yet
       if (sender is OleMenuCommand cmd)
         cmd.Enabled = false;
+
+      MessageBox("Not implemented");
     }
 
     private async void OnShowSettingsAsync(object sender, EventArgs e)
@@ -69,7 +72,7 @@ namespace VsLinuxDebugger
         cmd.Enabled = false;
 
       await Task.Yield();
-      throw new NotImplementedException();
+      MessageBox("Not implemented");
     }
 
     private void SetMenuTextAndVisibility(object sender, EventArgs e)

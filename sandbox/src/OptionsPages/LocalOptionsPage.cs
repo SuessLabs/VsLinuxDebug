@@ -7,8 +7,7 @@ namespace VSLinuxDebugger.OptionsPages
   {
     [Category("Local Machine")]
     [DisplayName("Publish")]
-    [Description("Publish the solution instead of building. " +
-      "Apply setting for ASP.NET/Blazor projects.")]
+    [Description("Publish the solution instead of building. Apply setting for ASP.NET/Blazor projects.")]
     public bool Publish { get; set; } = false;
 
     [Category("Local Machine")]
