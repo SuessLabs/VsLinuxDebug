@@ -47,7 +47,6 @@
   <ItemGroup>
     <Compile Include="Commands.Impl.cs" />
     <Compile Include="Core\LaunchSettings.cs" />
-    <Compile Include="DebuggerPackage.Impl.cs" />
     <Compile Include="OptionsPage\BuildOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>

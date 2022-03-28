@@ -79,7 +79,7 @@
         <!--<CommandFlag>DefaultDisabled</CommandFlag>-->
         <Icon guid="DeployAndDebug_16x" id="imgDeployAndDebug" />
         <Strings>
-          <ButtonText>Deploy only</ButtonText>
+          <ButtonText>Deploy and Debug</ButtonText>
         </Strings>
       </Button>
       

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Design;
-using System.Globalization;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
 
 namespace VsLinuxDebugger
@@ -29,7 +27,8 @@ namespace VsLinuxDebugger
     /// <param name="commandService">Command service to add command to, not null.</param>
     private Commands(AsyncPackage package, OleMenuCommandService commandService)
     {
-      this._package = package ?? throw new ArgumentNullException(nameof(package));
+      _package = package ?? throw new ArgumentNullException(nameof(package));
+      //// _vsExtension = IVsPackageExtensionProvider ?? throw new ArgumentNullException(nameof(vsExtension));
       commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
       InstallMenu(commandService);
@@ -71,28 +70,28 @@ namespace VsLinuxDebugger
       return menuCommand;
     }
 
-    /// <summary>
-    ///   This function is the callback used to execute the command when the menu item is clicked.
-    ///   See the constructor to see how the menu item is associated with this function using
-    ///   OleMenuCommandService service and MenuCommand class.
-    /// </summary>
-    /// <param name="sender">Event sender.</param>
-    /// <param name="e">Event args.</param>
-    private void Execute(object sender, EventArgs e)
-    {
-      ThreadHelper.ThrowIfNotOnUIThread();
-      string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-      string title = "SshDebugCommand";
-
-      // Show a message box to prove we were here
-      VsShellUtilities.ShowMessageBox(
-          this._package,
-          message,
-          title,
-          OLEMSGICON.OLEMSGICON_INFO,
-          OLEMSGBUTTON.OLEMSGBUTTON_OK,
-          OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-    }
+    /////// <summary>
+    ///////   This function is the callback used to execute the command when the menu item is clicked.
+    ///////   See the constructor to see how the menu item is associated with this function using
+    ///////   OleMenuCommandService service and MenuCommand class.
+    /////// </summary>
+    /////// <param name="sender">Event sender.</param>
+    /////// <param name="e">Event args.</param>
+    ////private void Execute(object sender, EventArgs e)
+    ////{
+    ////  ThreadHelper.ThrowIfNotOnUIThread();
+    ////  string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
+    ////  string title = "SshDebugCommand";
+    ////
+    ////  // Show a message box to prove we were here
+    ////  VsShellUtilities.ShowMessageBox(
+    ////      this._package,
+    ////      message,
+    ////      title,
+    ////      OLEMSGICON.OLEMSGICON_INFO,
+    ////      OLEMSGBUTTON.OLEMSGBUTTON_OK,
+    ////      OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+    ////}
 
     private sealed class CommandIds
     {

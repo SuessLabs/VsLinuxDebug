@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 
@@ -9,10 +6,90 @@ namespace VsLinuxDebugger
 {
   internal sealed partial class Commands
   {
-    private void InstallMenu(OleMenuCommandService cmd)
+    /// <summary>Override standard button text with.</summary>
+    /// <param name="commandId">Command Id.</param>
+    /// <returns>Text to display.</returns>
+    public string GetMenuText(int commandId)
     {
-      //// AddMenuItem(cmd, CommandIds.)
+      switch (commandId)
+      {
+        case CommandIds.CmdDeployAndDebug: return "Deploy and Debug";
+        case CommandIds.CmdDeployOnly: return "Deploy Only";
+        case CommandIds.CmdDebugOnly: return "Debug Only";
+        case CommandIds.CmdShowLog: return "Show Log";
+        case CommandIds.CmdShowSettings: return "Settings";
+        default: return $"Unknown CommandId ({commandId})";
+      }
     }
 
+    private void InstallMenu(OleMenuCommandService cmd)
+    {
+      AddMenuItem(cmd, CommandIds.CmdDeployAndDebug, SetMenuTextAndVisibility, OnDeployAndDebugAsync);
+      AddMenuItem(cmd, CommandIds.CmdDeployOnly, SetMenuTextAndVisibility, OnDeployOnlyAsync);
+      AddMenuItem(cmd, CommandIds.CmdDebugOnly, SetMenuTextAndVisibility, OnDebugOnlyAsync);
+
+      AddMenuItem(cmd, CommandIds.CmdShowLog, SetMenuTextAndVisibility, OnShowLog);
+      AddMenuItem(cmd, CommandIds.CmdShowSettings, SetMenuTextAndVisibility, OnShowSettingsAsync);
+    }
+
+    private async void ExecuteBuildAsync() // (BuildOptions buildOptions)
+    {
+      throw new NotImplementedException();
+    }
+
+    private void OnDebugOnlyAsync(object sender, EventArgs e)
+    {
+      // ExecuteBuildAsync(BuildOptions.Debug);
+      throw new NotImplementedException();
+    }
+
+    private async void OnDeployAndDebugAsync(object sender, EventArgs e)
+    {
+      // ExecuteBuildAsync(BuildOptions.Deploy | BuildOptions.Debug);
+      throw new NotImplementedException();
+    }
+
+    private void OnDeployOnlyAsync(object sender, EventArgs e)
+    {
+      // ExecuteBuildAsync(BuildOptions.Deploy);
+      throw new NotImplementedException();
+    }
+
+    private void OnShowLog(object sender, EventArgs e)
+    {
+      // Not implemented yet
+      if (sender is OleMenuCommand cmd)
+        cmd.Enabled = false;
+    }
+
+    private async void OnShowSettingsAsync(object sender, EventArgs e)
+    {
+      // Not implemented yet
+      if (sender is OleMenuCommand cmd)
+        cmd.Enabled = false;
+
+      await Task.Yield();
+      throw new NotImplementedException();
+    }
+
+    private void SetMenuTextAndVisibility(object sender, EventArgs e)
+    {
+      ThreadHelper.ThrowIfNotOnUIThread();
+
+      if (sender is OleMenuCommand cmd)
+      {
+        // TODO: Enhance by displaying IP Address
+        ////var settings = SettingsManager.Instance.Load();
+        //// cmd.Text = $"{GetMenuText(cmd.CommandID.ID)} ({settings.HostIp})";
+        //// cmd.Enabled = _extension.IsStartupProjectAvailable();
+
+        if (cmd.CommandID.ID == CommandIds.CmdShowLog
+          || cmd.CommandID.ID == CommandIds.CmdDebugOnly
+          || cmd.CommandID.ID == CommandIds.CmdShowSettings)
+        {
+          cmd.Enabled = false;
+        }
+      }
+    }
   }
 }
