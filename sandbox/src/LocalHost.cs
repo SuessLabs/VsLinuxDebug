@@ -6,7 +6,12 @@ namespace VSLinuxDebugger
 {
   internal class LocalHost
   {
-    internal LocalHost(string remoteUserName, string remoteUserPass, string remoteIP, string remoteVsDbgPath, string remoteDotnetPath, string remoteDebugFolderPath, bool useSshKey = false, bool usePlink = false)
+    internal LocalHost(string remoteUserName, string remoteUserPass, 
+      string remoteIP, 
+      string remoteVsDbgPath, string remoteDotnetPath, 
+      string remoteDebugFolderPath, 
+      bool useSshKey = false, 
+      bool usePlink = false)
     {
       _remoteUserName = remoteUserName;
       _remoteUserPass = remoteUserPass;

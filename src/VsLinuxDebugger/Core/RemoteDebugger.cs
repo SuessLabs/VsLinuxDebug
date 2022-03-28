@@ -146,8 +146,6 @@ namespace VsLinuxDebugger.Core
       //// dte.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{_launchJsonPath}\"");
     }
 
-
-
     private bool Initialize()
     {
       ThreadHelper.ThrowIfNotOnUIThread();
@@ -229,6 +227,7 @@ namespace VsLinuxDebugger.Core
       return sb.LastBuildInfo;
     }
     */
+
     /////// <summary>Build is ready for the next steps.</summary>
     ////private async void BuildEvents_OnBuildDoneAsync(vsBuildScope scope, vsBuildAction action)
     ////{
