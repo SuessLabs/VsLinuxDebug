@@ -46,7 +46,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands.Impl.cs" />
+    <Compile Include="Core\BuildOptions.cs" />
+    <Compile Include="Core\RemoteDebugger.cs" />
+    <Compile Include="Core\LaunchBuilder.cs" />
     <Compile Include="Core\LaunchJson.cs" />
+    <Compile Include="Core\LaunchJsonConfig.cs" />
+    <Compile Include="Core\SshTool.cs" />
+    <Compile Include="Core\UserOptions.cs" />
+    <Compile Include="Extensions\ProcessExtension.cs" />
+    <Compile Include="Extensions\SolutionExtension.cs" />
     <Compile Include="OptionsPages\OptionsPage.Ssh.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -77,6 +85,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.32112.339" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.2.1087-preview2" />
+    <PackageReference Include="SSH.NET">
+      <Version>2020.0.1</Version>
+    </PackageReference>
     <PackageReference Include="System.Text.Json">
       <Version>6.0.2</Version>
     </PackageReference>

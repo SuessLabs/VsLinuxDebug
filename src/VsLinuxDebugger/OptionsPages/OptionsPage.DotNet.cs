@@ -11,7 +11,7 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     [Category(RemoteDebugger)]
     [DisplayName("Upload to folder")]
     [Description("Folder for to transfer files to. For HOME folder, use './VLSDbg' and not '~/VLSDbg'")]
-    public string RemoteDeploymentBasePath { get; set; } = $"./VSLinuxDbg"; // "VSLDebugger"
+    public string RemoteDeployBasePath { get; set; } = $"./VSLinuxDbg"; // "VSLDebugger"
 
     [Category(RemoteDebugger)]
     [DisplayName(".NET Path")]

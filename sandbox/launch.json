@@ -1,15 +1,17 @@
 {
   "version": "0.2.0",
   "adapter": "C:\\work\\tools\\PuTTY\\plink.exe",
-  "adapterArgs": "-ssh -pw PassWord UserName@HostIP -batch -T ~/vsdbg/vsdbg --interpreter=vscode",
-  "configurations":
-  [
+  "adapterArgs": "-pw gstk09 damian@192.168.1.205 -batch -T ~/.vsdbg/vsdbg --interpreter=vscode",
+  "configurations": [
     {
       "name": ".NET Core Launch",
       "type": "coreclr",
-      "cwd": "/home/UserName/VSLinuxDbg/TMP",
-      "program": "ConsoleApp1.dll",
-      "request": "launch"
+      "request": "launch",
+      "program": "dotnet",
+      "args": ["ConsoleApp1.dll"],
+      "cwd": "/home/damian/VSLinuxDbg/TMP",
+      "console": "internalConsole",
+      "stopAtEntry": true
     }
   ]
 }

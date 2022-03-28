@@ -3,9 +3,8 @@ namespace VsLinuxDebugger.Core
 {
   public class LaunchJsonConfig
   {
-    public LaunchJsonConfig(string program, string[] progArgs, string workingDirecotry)
+    public LaunchJsonConfig()
     {
-      Cwd = workingDirecotry;
     }
 
     public string Name { get; set; } = ".NET Core Launch";
@@ -14,12 +13,12 @@ namespace VsLinuxDebugger.Core
 
     public string Program { get; set; } = "dotnet";
 
-    public string[] args { get; set; }
+    public string[] args { get; set; } = new[] { "" };
 
     public string Cwd { get; set; }
 
     public string Request { get; set; } = "launch";
 
-    public bool StopAtEntry { get; set; }
+    public bool StopAtEntry { get; set; } = true;
   }
 }

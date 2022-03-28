@@ -33,27 +33,43 @@ namespace VsLinuxDebugger
       AddMenuItem(cmd, CommandIds.CmdShowSettings, SetMenuTextAndVisibility, OnShowSettingsAsync);
     }
 
-    private async void ExecuteBuildAsync(BuildOptions buildOptions)
+    private async Task<bool> ExecuteBuildAsync(BuildOptions buildOptions)
     {
-      MessageBox("Not implemented");
+      await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+      var options = ToUserOptions();
+      var dbg = new RemoteDebugger(options);
+
+      if (!dbg.IsProjectValid())
+      {
+        Console.WriteLine("No C# startup project/solution loaded.");
+        return false;
+      }
+
+      if(!await dbg.BeginAsync(buildOptions))
+      {
+        Console.WriteLine("Failed to perform actions.");
+        return false;
+      }
+
+      return true;
     }
 
-    private void OnDebugOnlyAsync(object sender, EventArgs e)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "asdf")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD200:Avoid async void methods", Justification = "asdf")]
+    private async void OnDebugOnlyAsync(object sender, EventArgs e)
     {
-      ExecuteBuildAsync(BuildOptions.Debug);
-      MessageBox("Not implemented");
+      await ExecuteBuildAsync(BuildOptions.Build | BuildOptions.Debug);
     }
 
     private async void OnDeployAndDebugAsync(object sender, EventArgs e)
     {
-      ExecuteBuildAsync(BuildOptions.Deploy | BuildOptions.Debug);
-      MessageBox("Not implemented");
+      await ExecuteBuildAsync(BuildOptions.Build | BuildOptions.Deploy | BuildOptions.Debug);
     }
 
-    private void OnDeployOnlyAsync(object sender, EventArgs e)
+    private async void OnDeployOnlyAsync(object sender, EventArgs e)
     {
-      // ExecuteBuildAsync(BuildOptions.Deploy);
-      MessageBox("Not implemented");
+      await ExecuteBuildAsync(BuildOptions.Build | BuildOptions.Deploy);
     }
 
     private void OnShowLog(object sender, EventArgs e)
@@ -93,6 +109,33 @@ namespace VsLinuxDebugger
           cmd.Enabled = false;
         }
       }
+    }
+
+    private UserOptions ToUserOptions()
+    {
+      return new UserOptions
+      {
+        HostIp = Settings.HostIp,
+        HostPort = Settings.HostPort,
+
+        LocalPlinkEnabled = Settings.LocalPlinkEnabled,
+        LocalPLinkPath = Settings.LocalPLinkPath,
+
+        RemoteDeployBasePath = Settings.RemoteDeployBasePath,
+        RemoteDeployDebugPath = Settings.RemoteDeployDebugPath,
+        RemoteDeployReleasePath = Settings.RemoteDeployReleasePath,
+        RemoteDotNetPath = Settings.RemoteDotNetPath,
+        RemoteVsDbgPath = Settings.RemoteVsDbgPath,
+
+        UseCommandLineArgs = Settings.UseCommandLineArgs,
+        UsePublish = Settings.UsePublish,
+
+        UserPrivateKeyEnabled = Settings.UserPrivateKeyEnabled,
+        UserPrivateKeyPath = Settings.UserPrivateKeyPath,
+        UserName = Settings.UserName,
+        UserPass = Settings.UserPass,
+        UserGroupName = Settings.UserGroupName,
+      };
     }
   }
 }

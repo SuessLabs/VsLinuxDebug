@@ -6,42 +6,45 @@ namespace VsLinuxDebugger.Core
 {
   internal class LaunchBuilder
   {
-    private string _sshPassword;
-    private bool _usePlink = false;
-    private bool _useSshKey = false;
-
     internal const string AdapterFileName = "launch.json";
-    internal static string DotNetPath;
-    internal static string HomePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-    internal static string IpAddress;
-    internal static string OutputFolder;
-    internal static string UserName;
-    internal static string UserPass;
-    internal static string VsDbgPath;
 
-    internal LaunchBuilder(string ipAddress, string userName, string password, string vsDbgPath, string dotNetPath, string outputFolder)
+    private UserOptions _options;
+
+    internal LaunchBuilder(UserOptions o)
     {
-      IpAddress = ipAddress;
-      UserName = userName;
-      UserPass = password;
-      VsDbgPath = vsDbgPath;
-      DotNetPath = dotNetPath;
-      OutputFolder = outputFolder;
+      _options = o;
+
     }
 
-    internal static string SshKeyPath => Path.Combine(HomePath, ".ssh\\id_rsa");
+    internal string AssemblyName { get; set; }
+
+    internal string OutputDirFullName { get; set; }
+
+    internal string OutputDirName { get; set; }
+
+    internal string ProjectConfigName { get; set; }
+
+    internal string ProjectFullName { get; set; }
+
+    internal string ProjectName { get; set; }
+
+    internal string SolutionDirPath { get; set; }
+
+    internal string SolutionFullName { get; set; }
 
     internal string CommandLineArgs { get; set; } = string.Empty;
 
-    public string Adapter => !_usePlink ? "ssh.exe" : "";
-
-    public string AdapterArgs => !_usePlink
-      ? $"-i {SshKeyPath} {UserName}@{IpAddress} {VsDbgPath} --interpreter=vscode"
-      : "";
-
     internal string ToJson()
     {
-      var launch = new LaunchJson();
+      ////Adapter => !_options.LocalPlinkEnabled ? "ssh.exe" : "";
+      ////
+      ////AdapterArgs => !_options.LocalPlinkEnabled
+      ////  ? $"-i {SshKeyPath} {_options.UserName}@{_options.HostIp} {_options.RemoteVsDbgPath} --interpreter=vscode"
+      ////  : "";
+
+    var launch = new LaunchJson();
+      var launchCfg = new LaunchJsonConfig();
+
       var opts = new JsonSerializerOptions
       {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -50,6 +53,5 @@ namespace VsLinuxDebugger.Core
 
       return JsonSerializer.Serialize(launch, opts);
     }
-
   }
 }

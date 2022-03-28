@@ -2,7 +2,8 @@
 {
   public enum BuildOptions
   {
-    Debug,
+    Build,
     Deploy,
+    Debug,
   }
 }

@@ -34,24 +34,25 @@ namespace VsLinuxDebugger
     public const string PackageGuidString = "19f87f23-7a2c-4279-ac7c-c9267776bbf9";
 
     public string HostIp => _optionsPage.HostIp;
-    public uint HostPort => _optionsPage.HostPort;
+    public int HostPort => _optionsPage.HostPort;
 
     public bool LocalPlinkEnabled => _optionsPage.PLinkEnabled;
     public string LocalPLinkPath => _optionsPage.PLinkPath;
 
-    public string RemoteDeployBasePath => _optionsPage.RemoteDeploymentBasePath;
-    public string RemoteDeployDebugPath => $"{_optionsPage.RemoteDeploymentBasePath}/TMP";
-    public string RemoteDeployReleasePath => $"{_optionsPage.RemoteDeploymentBasePath}/TMP";
+    public string RemoteDeployBasePath => _optionsPage.RemoteDeployBasePath;
+    public string RemoteDeployDebugPath => $"{_optionsPage.RemoteDeployBasePath}/TMP";
+    public string RemoteDeployReleasePath => $"{_optionsPage.RemoteDeployBasePath}/TMP";
     public string RemoteDotNetPath => _optionsPage.RemoteDotNetPath;
     public string RemoteVsDbgPath => _optionsPage.RemoteVsDbgPath;
 
     public bool UseCommandLineArgs => _optionsPage.UseCommandLineArgs;
     public bool UsePublish => _optionsPage.Publish;
 
-    public bool UserKeyFileEnabled => _optionsPage.SshPrivateKeyEnabled;
-    public string UserKeyFilePath => _optionsPage.SshPrivateKeyPath;
+    public string UserGroupName => _optionsPage.UserGroupName;
     public string UserName => _optionsPage.UserName;
     public string UserPass => _optionsPage.UserPass;
+    public bool UserPrivateKeyEnabled => _optionsPage.UserPrivateKeyEnabled;
+    public string UserPrivateKeyPath => _optionsPage.UserPrivateKeyPath;
 
     private OptionsPage _optionsPage => (OptionsPage)GetDialogPage(typeof(OptionsPage));
 
