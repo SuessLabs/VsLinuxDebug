@@ -26,7 +26,7 @@ namespace VsLinuxDebugger
   [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
   [Guid(DebuggerPackage.PackageGuidString)]
   [ProvideMenuResource("Menus.ctmenu", 1)]
-  public sealed class DebuggerPackage : AsyncPackage
+  public sealed partial class DebuggerPackage : AsyncPackage
   {
     /// <summary>
     /// VsLinuxDebuggerPackage GUID string.
@@ -49,7 +49,7 @@ namespace VsLinuxDebugger
       // When initialized asynchronously, the current thread may be a background thread at this point.
       // Do any initialization that requires the UI thread after switching to the UI thread.
       await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-      await SshDebugCommand.InitializeAsync(this);
+      await Commands.InitializeAsync(this);
     }
 
     #endregion

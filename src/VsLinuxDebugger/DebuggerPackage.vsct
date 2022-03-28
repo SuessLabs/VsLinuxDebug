@@ -31,13 +31,30 @@
     group; your package should define its own command set in order to avoid collisions
     with command ids defined by other packages. -->
 
+    <Menus>
+      <Menu guid="GuidLinuxDebugerMenu" id="LinuxRemoteMainMenu" priority="0x100" type="Menu">
+        <!-- Groups on the VS Menu Bar: https://msdn.microsoft.com/en-us/library/cc826118.aspx -->
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_BUILDDEBUGRUN" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>Linux &amp;Debugger</ButtonText>
+          <CommandName>Linux &amp;Debugger</CommandName>
+        </Strings>
+      </Menu>
+    </Menus>
+    
     <!-- In this section you can define new menu groups. A menu group is a container for
          other menus or buttons (commands); from a visual point of view you can see the
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
+    <!--<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />-->
     <Groups>
-      <Group guid="guidVsLinuxDebuggerPackageCmdSet" id="MyMenuGroup" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
+      <Group guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" priority="0x0600">
+        <Parent guid="GuidLinuxDebugerMenu" id="LinuxRemoteMainMenu" />
+      </Group>
+      <Group guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel2" priority="0x0700">
+        <Parent guid="GuidLinuxDebugerMenu" id="LinuxRemoteMainMenu" />
       </Group>
     </Groups>
 
@@ -45,53 +62,131 @@
     <!--This section defines the elements the user can interact with, like a menu command or a button
         or combo box in a toolbar. -->
     <Buttons>
-      <!--To define a menu group you have to specify its ID, the parent menu and its display priority.
-          The command is visible and enabled by default. If you need to change the visibility, status, etc, you can use
-          the CommandFlag node.
-          You can add more than one CommandFlag node e.g.:
-              <CommandFlag>DefaultInvisible</CommandFlag>
-              <CommandFlag>DynamicVisibility</CommandFlag>
-          If you do not want an image next to your command, remove the Icon node /> -->
-      <Button guid="guidVsLinuxDebuggerPackageCmdSet" id="SshDebugCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidVsLinuxDebuggerPackageCmdSet" id="MyMenuGroup" />
-        <!--<Icon guid="guidImages" id="bmpPic1" />-->
-        <Icon guid="buildIcon" id="buildIcon1"/>
+      <!--
+        To define a menu group you have to specify its ID, the parent menu and its display priority.
+        The command is visible and enabled by default. If you need to change the visibility, status, etc, you can use
+        the CommandFlag node.
+        You can add more than one CommandFlag node e.g.:
+            <CommandFlag>DefaultInvisible</CommandFlag>
+            <CommandFlag>DynamicVisibility</CommandFlag>
+        If you do not want an image next to your command, remove the Icon node />
+      -->
+
+      <Button guid="GuidLinuxDebugerMenu" id="CmdDeployAndDebug" priority="0x0400" type="Button">
+        <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <!--<CommandFlag>DefaultDisabled</CommandFlag>-->
+        <Icon guid="DeployAndDebug_16x" id="imgDeployAndDebug" />
         <Strings>
-          <ButtonText>SSH Debug</ButtonText>
+          <ButtonText>Deploy only</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="GuidLinuxDebugerMenu" id="CmdDeployOnly" priority="0x0401" type="Button">
+        <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Icon guid="DeployOnly_16x" id="imgDeployOnly" />
+        <Strings>
+          <ButtonText>Deploy only</ButtonText>
         </Strings>
       </Button>
 
-      <!--<Button guid="guidAddIconCmdSet" id="cmdIdMyCommand" priority="0x0100" type="Button">
-        <Parent guid="guidAddIconCmdSet" id="MyMenuGroup" />
-        <Icon guid="buildIcon" id="buildIcon1" />
+      <Button guid="GuidLinuxDebugerMenu" id="CmdDebugOnly" priority="0x0402" type="Button">
+        <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Icon guid="DebugOnly_16x" id="imgDebugOnly" />
         <Strings>
-          <ButtonText>TEST BUILD ICON</ButtonText>
+          <ButtonText>Debug only</ButtonText>
         </Strings>
-      </Button>-->
+      </Button>
+
+      <Button guid="GuidLinuxDebugerMenu" id="CmdOpenLogs" priority="0x0500" type="Button">
+        <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel2" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <Icon guid="ShowLog_16x" id="imgShowLog" />
+        <Strings>
+          <ButtonText>Show Log</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="GuidLinuxDebugerMenu" id="CmdOpenSettings" priority="0x0501" type="Button">
+        <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel2" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <Icon guid="Settings_16x" id="imgSettings" />
+        <Strings>
+          <ButtonText>Settings</ButtonText>
+        </Strings>
+      </Button>
+
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
     <Bitmaps>
-      <!--  The bitmap id is defined in a way that is a little bit different from the others:
-            the declaration starts with a guid for the bitmap strip, then there is the resource id of the
-            bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
-            inside a button definition. An important aspect of this declaration is that the element id
-            must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
+      <!--
+        The bitmap id is defined in a way that is a little bit different from the others:
+        the declaration starts with a guid for the bitmap strip, then there is the resource id of the
+        bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
+        inside a button definition. An important aspect of this declaration is that the element id
+        must be the actual index (1-based) of the bitmap inside the bitmap strip.
+      -->
+      <Bitmap guid="DeployAndDebug_16x" href="Resources\DeployAndDebug_16x.png" usedList="imgDeployAndDebug" />
+      <Bitmap guid="DeployOnly_16x" href="Resources\DeployOnly_16x.png" usedList="imgDeployOnly" />
+      <Bitmap guid="DebugOnly_16x" href="Resources\DebugOnly_16x.png" usedList="imgDebugOnly" />
+      <Bitmap guid="ShowLog_16x" href="Resources\ShowLog_16x.png" usedList="imgShowLog" />
+      <Bitmap guid="Settings_16x" href="Resources\Settings_16x.png" usedList="imgSettings" />
+      <!--
       <Bitmap guid="guidImages" href="Resources\SshDebugCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
       <Bitmap guid="buildIcon" href="Resources\BuildIcon.png" usedList="buildIcon1" />
+      -->
     </Bitmaps>
   </Commands>
 
   <Symbols>
+
     <!-- This is the package guid. -->
     <GuidSymbol name="guidVsLinuxDebuggerPackage" value="{19f87f23-7a2c-4279-ac7c-c9267776bbf9}" />
 
     <!-- This is the guid used to group the menu commands together -->
-    <GuidSymbol name="guidVsLinuxDebuggerPackageCmdSet" value="{da478db6-b5f9-4b11-ab42-4e08c5d1db07}">
-      <IDSymbol name="MyMenuGroup" value="0x1020" />
-      <IDSymbol name="SshDebugCommandId" value="0x0100" />
+    <GuidSymbol name="GuidLinuxDebugerMenu" value="{da478db6-b5f9-4b11-ab42-4e08c5d1db07}">
+      <IDSymbol name="LinuxRemoteMainMenu" value="0x1000" />
+      <IDSymbol name="RemoteMainMenuGroupLevel1" value="0x1100" />
+      <IDSymbol name="RemoteMainMenuGroupLevel2" value="0x1200" />
+      
+      <IDSymbol name="CmdDeployAndDebug" value="0x1001" />
+      <IDSymbol name="CmdDeployOnly" value="0x1002" />
+      <IDSymbol name="CmdDebugOnly" value="0x1003" />
+      <IDSymbol name="CmdOpenLogs" value="0x1004" />
+      <IDSymbol name="CmdOpenSettings" value="0x1005" />
+    </GuidSymbol>
+  
+    <GuidSymbol name="DeployAndDebug_16x" value="{B3A9DD89-C898-4AFE-AC48-3A4C84122475}" >
+      <IDSymbol name="imgDeployAndDebug" value="1" />
+    </GuidSymbol>
+    
+    <GuidSymbol name="DeployOnly_16x" value="{00AD8C85-F4CF-4EFA-8C8E-3ADE51071088}" >
+      <IDSymbol name="imgDeployOnly" value="1" />
     </GuidSymbol>
 
+    <GuidSymbol name="DebugOnly_16x" value="{0164DE8A-8EAB-40CE-9607-C6D15882A91A}" >
+      <IDSymbol name="imgDebugOnly" value="1" />
+    </GuidSymbol>
+
+    <GuidSymbol name="ShowLog_16x" value="{5B4A8C21-9884-4A10-B028-1BC98C324B10}" >
+      <IDSymbol name="imgShowLog" value="1" />
+    </GuidSymbol>
+    
+    <GuidSymbol name="Settings_16x" value="{AFAE921E-9A65-44E9-90CE-022DB84EE5BB}" >
+      <IDSymbol name="imgSettings" value="1" />
+    </GuidSymbol>
+
+    <!--
     <GuidSymbol name="guidImages" value="{61ef2868-e5c3-4bd2-b5ea-94a222ccd276}">
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />
@@ -104,5 +199,6 @@
     <GuidSymbol name="buildIcon" value="{2E19B3A7-B49F-4C5F-A543-B9811B9AA093}">
       <IDSymbol name ="buildIcon1" value="1" />
     </GuidSymbol>
+    -->
   </Symbols>
 </CommandTable>

@@ -10,7 +10,7 @@ namespace VsLinuxDebugger
   /// <summary>
   /// Command handler
   /// </summary>
-  internal sealed class SshDebugCommand
+  internal sealed partial class Commands
   {
     /// <summary>Command ID.</summary>
     public const int CommandId = 0x0100;
@@ -21,35 +21,31 @@ namespace VsLinuxDebugger
     /// <summary>VS Package that provides this command, not null.</summary>
     private readonly AsyncPackage _package;
 
-    private DebuggerPackage Settings => _package as DebuggerPackage;
-
     /// <summary>
-    ///   Initializes a new instance of the <see cref="SshDebugCommand"/> class.
+    ///   Initializes a new instance of the <see cref="Commands"/> class.
     ///   Adds our command handlers for menu (commands must exist in the command table file)
     /// </summary>
     /// <param name="package">Owner package, not null.</param>
     /// <param name="commandService">Command service to add command to, not null.</param>
-    private SshDebugCommand(AsyncPackage package, OleMenuCommandService commandService)
+    private Commands(AsyncPackage package, OleMenuCommandService commandService)
     {
       this._package = package ?? throw new ArgumentNullException(nameof(package));
       commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
-      var menuCommandID = new CommandID(CommandSet, CommandId);
-      var menuItem = new MenuCommand(this.Execute, menuCommandID);
-      commandService.AddCommand(menuItem);
+      InstallMenu(commandService);
+
+      //// var menuCommandID = new CommandID(CommandSet, CommandId);
+      //// var menuItem = new MenuCommand(this.Execute, menuCommandID);
+      //// commandService.AddCommand(menuItem);
     }
 
     /// <summary>Gets the instance of the command.</summary>
-    public static SshDebugCommand Instance { get; private set; }
+    public static Commands Instance { get; private set; }
 
     /// <summary>Gets the service provider from the owner package.</summary>
-    private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider
-    {
-      get
-      {
-        return this._package;
-      }
-    }
+    private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider => this._package;
+
+    private DebuggerPackage Settings => _package as DebuggerPackage;
 
     /// <summary>Initializes the singleton instance of the command.</summary>
     /// <param name="package">Owner package, not null.</param>
@@ -60,7 +56,19 @@ namespace VsLinuxDebugger
       await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 
       OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
-      Instance = new SshDebugCommand(package, commandService);
+      Instance = new Commands(package, commandService);
+    }
+
+    private OleMenuCommand AddMenuItem(OleMenuCommandService mcs, int cmdCode, EventHandler check, EventHandler action)
+    {
+      var commandID = new CommandID(CommandSet, cmdCode);
+      var menuCommand = new OleMenuCommand(action, commandID);
+      if (check != null)
+        menuCommand.BeforeQueryStatus += check;
+
+      mcs.AddCommand(menuCommand);
+
+      return menuCommand;
     }
 
     /// <summary>
@@ -84,6 +92,18 @@ namespace VsLinuxDebugger
           OLEMSGICON.OLEMSGICON_INFO,
           OLEMSGBUTTON.OLEMSGBUTTON_OK,
           OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+    }
+
+    private sealed class CommandIds
+    {
+      public const int CmdDebugOnly = 0x1003;
+      public const int CmdDeployAndDebug = 0x1001;
+      public const int CmdDeployOnly = 0x1002;
+      public const int CmdShowLog = 0x1004;
+      public const int CmdShowSettings = 0x1005;
+      public const int LinuxRemoteMainMenu = 0x1000;
+      public const int RemoteMainMenuGroupLevel1 = 0x1100;
+      public const int RemoteMainMenuGroupLevel2 = 0x1200;
     }
   }
 }
