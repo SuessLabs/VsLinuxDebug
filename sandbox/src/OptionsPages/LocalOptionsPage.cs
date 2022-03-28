@@ -25,6 +25,11 @@ namespace VSLinuxDebugger.OptionsPages
       "GUI applications on remote devices.")]
     public bool DisplayInGui { get; set; } = true;
 
+    [Category("Local Machine")]
+    [DisplayName("Use PLink instead of SSH")]
+    [Description("Set to TRUE to debug with PLINK.EXE and FALSE for SSH.")]
+    public bool UsePLinkForDebugging { get; set; } = false;
+
     // TODO: Move to menu items.
     [Category("Local Machine")]
     [DisplayName("Build and deploy only.")]

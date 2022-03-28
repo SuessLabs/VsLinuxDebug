@@ -37,6 +37,7 @@ namespace VSLinuxDebugger
     private VSLinuxDebuggerPackage Settings => _package as VSLinuxDebuggerPackage;
     private LocalHost _localhost;
     private bool _isBuildSucceeded;
+    private string _launchJsonPath = string.Empty;
 
     public static BuildEvents BuildEvents { get; set; }
 
@@ -169,7 +170,7 @@ namespace VSLinuxDebugger
         return false;
       }
 
-      _localhost = new LocalHost(Settings.UserName, Settings.UserPass, Settings.IP, Settings.VsDbgPath, Settings.DotnetPath, Settings.DebugFolderPath, Settings.UseSshKeyFile);
+      _localhost = new LocalHost(Settings.UserName, Settings.UserPass, Settings.IP, Settings.VsDbgPath, Settings.DotnetPath, Settings.DebugFolderPath, Settings.UseSshKeyFile, Settings.UsePlinkForDebugging);
 
       _localhost.ProjectFullName = project.FullName;
       _localhost.ProjectName = project.Name;
@@ -514,15 +515,16 @@ namespace VSLinuxDebugger
     /// </summary>
     private void Debug()
     {
+      _launchJsonPath = _localhost.ToJson();
+      
       var dte = (DTE2)Package.GetGlobalService(typeof(SDTE));
-      string jsonPath = _localhost.ToJson();
-      dte.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{jsonPath}\"");
-
-      File.Delete(jsonPath);
+      dte.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{_launchJsonPath}\"");
     }
 
     private void Cleanup()
     {
+      File.Delete(_launchJsonPath);
+
       BuildEvents.OnBuildDone -= BuildEvents_OnBuildDoneAsync;
       BuildEvents.OnBuildProjConfigDone -= BuildEvents_OnBuildProjConfigDone;
     }

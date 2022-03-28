@@ -56,7 +56,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteDebugCommand.cs" />
-    <Compile Include="VSRemoteDebuggerPackage.cs" />
+    <Compile Include="VSLinuxDebuggerPackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -94,7 +94,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="VSRemoteDebuggerPackage.vsct">
+    <VSCTCompile Include="VSLinuxDebuggerPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
   </ItemGroup>

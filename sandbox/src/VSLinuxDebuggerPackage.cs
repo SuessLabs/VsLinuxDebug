@@ -28,8 +28,8 @@ namespace VSLinuxDebugger
   [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
   [Guid(PackageGuidString)]
   [ProvideMenuResource("Menus.ctmenu", 1)]
-  [ProvideOptionPage(typeof(RemoteOptionsPage), "SSH Debugger", "Remote Machine", 0, 0, true)]
-  [ProvideOptionPage(typeof(LocalOptionsPage), "SSH Debugger", "Local Machine", 0, 0, true)]
+  [ProvideOptionPage(typeof(RemoteOptionsPage), "Linux Debugger", "Remote Machine", 0, 0, true)]
+  [ProvideOptionPage(typeof(LocalOptionsPage), "Linux Debugger", "Local Machine", 0, 0, true)]
   public sealed class VSLinuxDebuggerPackage : AsyncPackage
   {
     private RemoteOptionsPage RemotePage => (RemoteOptionsPage)GetDialogPage(typeof(RemoteOptionsPage));
@@ -47,6 +47,8 @@ namespace VSLinuxDebugger
     public string GroupName => RemotePage.GroupName;
 
     public bool UseSshKeyFile => RemotePage.UseSshKeyFile;
+
+    public bool UsePlinkForDebugging => LocalPage.UsePLinkForDebugging;
 
     public string VsDbgPath => RemotePage.VsDbgPath;
     public string DotnetPath => RemotePage.DotNetPath;
