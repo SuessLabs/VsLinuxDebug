@@ -1,40 +1,37 @@
-﻿using System;
-using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace VsLinuxDebugger.Core
 {
-  internal class LaunchBuilder
+  public class LaunchBuilder
   {
-    internal const string AdapterFileName = "launch.json";
+    public const string AdapterFileName = "launch.json";
 
     private UserOptions _options;
 
-    internal LaunchBuilder(UserOptions o)
+    public LaunchBuilder(UserOptions o)
     {
       _options = o;
-
     }
 
-    internal string AssemblyName { get; set; }
+    public string AssemblyName { get; set; }
 
-    internal string OutputDirFullName { get; set; }
+    public string CommandLineArgs { get; set; } = string.Empty;
 
-    internal string OutputDirName { get; set; }
+    public string OutputDirFullName { get; set; }
 
-    internal string ProjectConfigName { get; set; }
+    public string OutputDirName { get; set; }
 
-    internal string ProjectFullName { get; set; }
+    public string ProjectConfigName { get; set; }
 
-    internal string ProjectName { get; set; }
+    public string ProjectFullName { get; set; }
 
-    internal string SolutionDirPath { get; set; }
+    public string ProjectName { get; set; }
 
-    internal string SolutionFullName { get; set; }
+    public string SolutionDirPath { get; set; }
 
-    internal string CommandLineArgs { get; set; } = string.Empty;
+    public string SolutionFullName { get; set; }
 
-    internal string ToJson()
+    public string ToJson()
     {
       ////Adapter => !_options.LocalPlinkEnabled ? "ssh.exe" : "";
       ////
@@ -42,7 +39,7 @@ namespace VsLinuxDebugger.Core
       ////  ? $"-i {SshKeyPath} {_options.UserName}@{_options.HostIp} {_options.RemoteVsDbgPath} --interpreter=vscode"
       ////  : "";
 
-    var launch = new LaunchJson();
+      var launch = new LaunchJson();
       var launchCfg = new LaunchJsonConfig();
 
       var opts = new JsonSerializerOptions

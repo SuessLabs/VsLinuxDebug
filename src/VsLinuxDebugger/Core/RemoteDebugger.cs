@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,7 +45,7 @@ namespace VsLinuxDebugger.Core
           return false;
         }
 
-        using (var ssh = new SshTool(_options))
+        using (var ssh = new SshTool(_options, _launchBuilder))
         {
           if (!ssh.Connect())
           {
@@ -55,15 +57,23 @@ namespace VsLinuxDebugger.Core
 
           ssh.TryInstallVsDbg();
           ssh.MakeDeploymentFolder();
-          ssh.Clean();
+          ssh.CleanDeploymentFolder();
 
           if (buildOptions.HasFlag(BuildOptions.Build))
           {
-            Build();
+            BuildBegin();
           }
 
           if (buildOptions.HasFlag(BuildOptions.Deploy))
           {
+            if (_options.RemoteDebugDisplayGui)
+              ssh.Bash("export DISPLAY=:0");
+
+            ssh.UploadFilesAsync();
+          }
+          else if (buildOptions.HasFlag(BuildOptions.Publish))
+          {
+            // NOT IMPL
           }
 
           if (buildOptions.HasFlag(BuildOptions.Debug))
@@ -98,7 +108,7 @@ namespace VsLinuxDebugger.Core
       // TODO: Create Launch.JSON file.
     }
 
-    private void Build()
+    private void BuildBegin()
     {
       ThreadHelper.ThrowIfNotOnUIThread();
       var dte = (DTE)Package.GetGlobalService(typeof(DTE));
@@ -122,6 +132,21 @@ namespace VsLinuxDebugger.Core
       //// BuildEvents.OnBuildDone -= BuildEvents_OnBuildDoneAsync;
       //// BuildEvents.OnBuildProjConfigDone -= BuildEvents_OnBuildProjConfigDone;
     }
+
+    /// <summary>
+    /// Start debugging using the remote visual studio server adapter
+    /// </summary>
+    private void BuildDebug()
+    {
+      throw new NotImplementedException();
+
+      //// _launchJsonPath = _localhost.ToJson();
+      //// 
+      //// var dte = (DTE2)Package.GetGlobalService(typeof(SDTE));
+      //// dte.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{_launchJsonPath}\"");
+    }
+
+
 
     private bool Initialize()
     {

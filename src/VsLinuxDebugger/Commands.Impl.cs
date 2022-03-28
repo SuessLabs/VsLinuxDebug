@@ -23,16 +23,6 @@ namespace VsLinuxDebugger
       }
     }
 
-    private void InstallMenu(OleMenuCommandService cmd)
-    {
-      AddMenuItem(cmd, CommandIds.CmdDeployAndDebug, SetMenuTextAndVisibility, OnDeployAndDebugAsync);
-      AddMenuItem(cmd, CommandIds.CmdDeployOnly, SetMenuTextAndVisibility, OnDeployOnlyAsync);
-      AddMenuItem(cmd, CommandIds.CmdDebugOnly, SetMenuTextAndVisibility, OnDebugOnlyAsync);
-
-      AddMenuItem(cmd, CommandIds.CmdShowLog, SetMenuTextAndVisibility, OnShowLog);
-      AddMenuItem(cmd, CommandIds.CmdShowSettings, SetMenuTextAndVisibility, OnShowSettingsAsync);
-    }
-
     private async Task<bool> ExecuteBuildAsync(BuildOptions buildOptions)
     {
       await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -46,13 +36,23 @@ namespace VsLinuxDebugger
         return false;
       }
 
-      if(!await dbg.BeginAsync(buildOptions))
+      if (!await dbg.BeginAsync(buildOptions))
       {
         Console.WriteLine("Failed to perform actions.");
         return false;
       }
 
       return true;
+    }
+
+    private void InstallMenu(OleMenuCommandService cmd)
+    {
+      AddMenuItem(cmd, CommandIds.CmdDeployAndDebug, SetMenuTextAndVisibility, OnDeployAndDebugAsync);
+      AddMenuItem(cmd, CommandIds.CmdDeployOnly, SetMenuTextAndVisibility, OnDeployOnlyAsync);
+      AddMenuItem(cmd, CommandIds.CmdDebugOnly, SetMenuTextAndVisibility, OnDebugOnlyAsync);
+
+      AddMenuItem(cmd, CommandIds.CmdShowLog, SetMenuTextAndVisibility, OnShowLog);
+      AddMenuItem(cmd, CommandIds.CmdShowSettings, SetMenuTextAndVisibility, OnShowSettingsAsync);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "asdf")]
@@ -121,6 +121,7 @@ namespace VsLinuxDebugger
         LocalPlinkEnabled = Settings.LocalPlinkEnabled,
         LocalPLinkPath = Settings.LocalPLinkPath,
 
+        RemoteDebugDisplayGui = Settings.RemoteDebugDisplayGui,
         RemoteDeployBasePath = Settings.RemoteDeployBasePath,
         RemoteDeployDebugPath = Settings.RemoteDeployDebugPath,
         RemoteDeployReleasePath = Settings.RemoteDeployReleasePath,

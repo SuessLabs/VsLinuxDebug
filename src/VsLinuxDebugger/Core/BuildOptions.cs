@@ -4,6 +4,7 @@
   {
     Build,
     Deploy,
+    Publish,
     Debug,
   }
 }

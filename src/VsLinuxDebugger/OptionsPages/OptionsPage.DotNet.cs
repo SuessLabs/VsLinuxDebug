@@ -5,8 +5,15 @@ namespace Xeno.VsLinuxDebug.OptionsPages
 {
   public partial class OptionsPage : DialogPage
   {
-    private const string RemoteDebugger = "Remote Debugger";
     private const string Experimental = "Expermimental";
+    private const string RemoteDebugger = "Remote Debugger";
+
+    [Category(Experimental)]
+    [DisplayName("Debug Display GUI")]
+    [Description(
+      "Display application on remote machine. This is helpful for debugging " +
+      "GUI applications on remote devices.")]
+    public bool RemoteDebugDisplayGui { get; set; } = false;
 
     [Category(RemoteDebugger)]
     [DisplayName("Upload to folder")]
@@ -22,13 +29,6 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     [DisplayName("Visual Studio Debugger Path")]
     [Description("Remote Machine Visual Studio Debugger Path")]
     public string RemoteVsDbgPath { get; set; } = "~/.vs-debugger/vs2022";
-
-    [Category(Experimental)]
-    [DisplayName("Display GUI")]
-    [Description(
-      "Display application on remote machine. This is helpful for debugging " +
-      "GUI applications on remote devices.")]
-    public bool DebuggerDisplayInGui { get; set; } = false;
 
     [Category(Experimental)]
     [DisplayName("Use Command Line Arguments")]

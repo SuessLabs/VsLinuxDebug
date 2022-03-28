@@ -121,6 +121,7 @@ namespace VSLinuxDebugger
 
         if (!Settings.Publish)
         {
+          Bash($"export DISPLAY=:0");
           Build(); // once this finishes it will raise an event; see BuildEvents_OnBuildDone
         }
         else
