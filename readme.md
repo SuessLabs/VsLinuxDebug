@@ -1,6 +1,6 @@
 # [VS .NET SSH Debugger](https://github.com/SuessLabs/RemoteDebug.git)
 
-<image align="right" src="https://github.com/SuessLabs/VsLinuxDebug/blob/master/docs/TuxDebug.png" />
+<image align="right" width="200" height="200" src="https://github.com/SuessLabs/VsLinuxDebug/blob/master/docs/TuxDebug.png" />
 
 Remotely deploy and debug your .NET C# apps via SSH to Linux using Visual Studio 2022.
 
