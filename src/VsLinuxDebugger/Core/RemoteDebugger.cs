@@ -158,8 +158,8 @@ namespace VsLinuxDebugger.Core
 
     private void BuildCleanup()
     {
-      // TODO: The file should be located in the project's output
-      File.Delete(_launchJsonPath);
+      if (File.Exists(_launchJsonPath))
+        File.Delete(_launchJsonPath);
 
       //// BuildEvents.OnBuildDone -= BuildEvents_OnBuildDoneAsync;
       //// BuildEvents.OnBuildProjConfigDone -= BuildEvents_OnBuildProjConfigDone;

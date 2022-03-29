@@ -43,7 +43,7 @@
         </Strings>
       </Menu>
     </Menus>
-    
+
     <!-- In this section you can define new menu groups. A menu group is a container for
          other menus or buttons (commands); from a visual point of view you can see the
          group as the part of a menu contained between two lines. The parent of a group
@@ -92,7 +92,7 @@
           <ButtonText>Build, Deploy and Debug</ButtonText>
         </Strings>
       </Button>
-      
+
       <Button guid="GuidLinuxDebugerMenu" id="CmdDebugOnly" priority="0x0402" type="Button">
         <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" />
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -102,6 +102,10 @@
           <ButtonText>Debug only</ButtonText>
         </Strings>
       </Button>
+
+      <!--
+      TODO: Publish & Publish and Debug
+      -->
 
       <Button guid="GuidLinuxDebugerMenu" id="CmdOpenLogs" priority="0x0500" type="Button">
         <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel2" />
@@ -124,7 +128,6 @@
           <ButtonText>Settings</ButtonText>
         </Strings>
       </Button>
-
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -165,24 +168,24 @@
       <IDSymbol name="CmdOpenLogs" value="0x1004" />
       <IDSymbol name="CmdOpenSettings" value="0x1005" />
     </GuidSymbol>
-  
-    <GuidSymbol name="DeployAndDebug_16x" value="{B3A9DD89-C898-4AFE-AC48-3A4C84122475}" >
+
+    <GuidSymbol name="DeployAndDebug_16x" value="{B3A9DD89-C898-4AFE-AC48-3A4C84122475}">
       <IDSymbol name="imgDeployAndDebug" value="1" />
     </GuidSymbol>
-    
-    <GuidSymbol name="DeployOnly_16x" value="{00AD8C85-F4CF-4EFA-8C8E-3ADE51071088}" >
+
+    <GuidSymbol name="DeployOnly_16x" value="{00AD8C85-F4CF-4EFA-8C8E-3ADE51071088}">
       <IDSymbol name="imgDeployOnly" value="1" />
     </GuidSymbol>
 
-    <GuidSymbol name="DebugOnly_16x" value="{0164DE8A-8EAB-40CE-9607-C6D15882A91A}" >
+    <GuidSymbol name="DebugOnly_16x" value="{0164DE8A-8EAB-40CE-9607-C6D15882A91A}">
       <IDSymbol name="imgDebugOnly" value="1" />
     </GuidSymbol>
 
-    <GuidSymbol name="ShowLog_16x" value="{5B4A8C21-9884-4A10-B028-1BC98C324B10}" >
+    <GuidSymbol name="ShowLog_16x" value="{5B4A8C21-9884-4A10-B028-1BC98C324B10}">
       <IDSymbol name="imgShowLog" value="1" />
     </GuidSymbol>
-    
-    <GuidSymbol name="Settings_16x" value="{AFAE921E-9A65-44E9-90CE-022DB84EE5BB}" >
+
+    <GuidSymbol name="Settings_16x" value="{AFAE921E-9A65-44E9-90CE-022DB84EE5BB}">
       <IDSymbol name="imgSettings" value="1" />
     </GuidSymbol>
 

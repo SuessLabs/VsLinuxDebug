@@ -10,8 +10,8 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     private const string Credientials = "Remote Credientials";
 
     [Category(Credientials)]
-    [DisplayName("IP Address")]
-    [Description("IP Address")]
+    [DisplayName("Host IP Address")]
+    [Description("Host IP Address. On VMs using 'NAT', set IP to '127.0.0.1' and forward Port 22. PCs and VMs 'Bridged', have their own IP.")]
     public string HostIp { get; set; } = "127.0.0.1";
 
     [Category(Credientials)]

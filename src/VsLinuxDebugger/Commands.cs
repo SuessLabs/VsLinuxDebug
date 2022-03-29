@@ -78,8 +78,8 @@ namespace VsLinuxDebugger
     /// <summary>VS Menu Command IDs. This must be insync with .vsct values.</summary>
     private sealed class CommandIds
     {
-      public const int CmdBuildDeployDebug = 0x1002;
       public const int CmdBuildDeployOnly = 0x1001;
+      public const int CmdBuildDeployDebug = 0x1002;
       public const int CmdDebugOnly = 0x1003;
       ////public const int CmdPublishOnly = 0x1006;
       ////public const int CmdPublishDebug= 0x1007;

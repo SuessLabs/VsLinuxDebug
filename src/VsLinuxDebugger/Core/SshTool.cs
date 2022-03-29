@@ -37,6 +37,7 @@ namespace VsLinuxDebugger.Core
             return "Cannot connect to remote host to execute Bash command.";
         }
 
+        LogOutput($"BASH> {command}");
         var cmd = _ssh.RunCommand(command);
 
         return cmd.Result;
@@ -48,18 +49,26 @@ namespace VsLinuxDebugger.Core
     }
 
     /// <summary>Cleans the contents of the deployment path.</summary>
-    public void CleanDeploymentFolder() => Bash($"sudo rm -rf {_opts.RemoteDeployBasePath}/*");
+    public void CleanDeploymentFolder()
+    {
+      //// Bash($"sudo rm -rf {_opts.RemoteDeployBasePath}/*");
+      Bash($"rm -rf {_opts.RemoteDeployBasePath}/*");
+    }
 
     public bool Connect()
     {
       PrivateKeyFile keyFile = null;
       try
       {
-        keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath);
+        if (_opts.UserPrivateKeyEnabled)
+          keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath);
         //// keyFile = new PrivateKeyFile(_opts.UserKeyFilePath, password);
       }
-      catch (Exception)
+      catch (Exception ex)
       {
+        LogOutput($"Private key error - {ex.Message}");
+        LogOutput("Issue obtaining private key. Please check your settings to ensure a valid file exists (Tools > Options).");
+        return false;
       }
 
       try
@@ -114,9 +123,10 @@ namespace VsLinuxDebugger.Core
 
     public void MakeDeploymentFolder()
     {
-      Bash($"sudo mkdir -p {_opts.RemoteDeployBasePath}");
-      Bash($"sudo mkdir -p {_opts.RemoteDeployDebugPath}");
-      Bash($"sudo mkdir -p {_opts.RemoteDeployReleasePath}");
+      // do we need SUDO?
+      Bash($"mkdir -p {_opts.RemoteDeployBasePath}");
+      Bash($"mkdir -p {_opts.RemoteDeployDebugPath}");
+      Bash($"mkdir -p {_opts.RemoteDeployReleasePath}");
 
       var group = string.IsNullOrEmpty(_opts.UserGroupName)
         ? string.Empty
@@ -363,8 +373,10 @@ namespace VsLinuxDebugger.Core
     {
       try
       {
-        var cmd = $"set -e;cd \"{_opts.RemoteDeployDebugPath}\"";
-        cmd += $";tar -zxf \"{pathBuildTarGz}\"";
+        var cmd = "set -e";
+        cmd += $";cd \"{_opts.RemoteDeployDebugPath}\"";
+        cmd += $";tar -zxf \"{_tarGzFileName}\"";
+        ////cmd += $";tar -zxf \"{pathBuildTarGz}\"";
 
         if (removeTarGz)
           cmd += $";rm \"{pathBuildTarGz}\"";
