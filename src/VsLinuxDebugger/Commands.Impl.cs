@@ -5,6 +5,8 @@ using VsLinuxDebugger.Core;
 
 namespace VsLinuxDebugger
 {
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "Its annoying")]
+  [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD200:Avoid async void methods", Justification = "Its annoying")]
   internal sealed partial class Commands
   {
     /// <summary>Override standard button text with.</summary>
@@ -58,8 +60,6 @@ namespace VsLinuxDebugger
       AddMenuItem(cmd, CommandIds.CmdShowSettings, SetMenuTextAndVisibility, OnShowSettingsAsync);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "asdf")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD200:Avoid async void methods", Justification = "asdf")]
     private async void OnDebugOnlyAsync(object sender, EventArgs e)
     {
       await ExecuteBuildAsync(BuildOptions.Build | BuildOptions.Debug);
