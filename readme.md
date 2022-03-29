@@ -10,7 +10,10 @@ This project was inspired by [VS Mono Debugger](https://github.com/GordianDotNet
 
 ## Overview
 
-Allow developers to build, deploy and debug projects on their remote Linux (Ubuntu, Raspberry PI, etc) devices! Users can choose to use SSH with either a _private key_ or _password_.
+Now developers can build, deploy and debug projects on their remote Linux (Ubuntu, Raspberry PI, etc) devices! Customize your SSH connection to use either a _password_ or a _private key_.
+
+### Work in Progress
+This project is currently in the early alpha stages, so only Building and Deployment is available. This extension aims to allow you to automatically attach for debugging over the network. For now, that step is still manual. On the plus side, we just saved you 1.5 min of manual upload and `chown -R`.
 
 ### Usage
 
@@ -33,6 +36,12 @@ In order to get this project moving, the following must be done.
   * [X] IP, User, Pass, default-folder `"~/VsLinuxDbg/(proj-name)"`
 * [X] Perform upload to remote machine
 * [ ] Attach to process
+
+## Developers Wanted
+
+Contributors and Q/A are welcomed!
+
+To contribute, please pick off an item from the project or issue page. We'd love to hear your enhancement ideas as well.
 
 ## References
 
