@@ -84,7 +84,7 @@ namespace VsLinuxDebugger.Core
 
           if (buildOptions.HasFlag(BuildOptions.Debug))
           {
-            BuildDebugAttacher();
+            // BuildDebugAttacher();
           }
         }
 
@@ -153,7 +153,7 @@ namespace VsLinuxDebugger.Core
       ////BuildEvents.OnBuildProjConfigDone += BuildEvents_OnBuildProjConfigDone;
 
       dte.SuppressUI = false;
-      dte.Solution.SolutionBuild.BuildProject(_launchBuilder.ProjectConfigName, _launchBuilder.ProjectFullName);
+      dte.Solution.SolutionBuild.BuildProject(_launchBuilder.ProjectConfigName, _launchBuilder.ProjectFileFullPath);
     }
 
     private void BuildCleanup()

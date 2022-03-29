@@ -21,31 +21,31 @@ namespace VsLinuxDebugger.Core
 
       AssemblyName = dteProject.Properties.Item("AssemblyName").Value.ToString();
       ProjectConfigName = dteProject.ConfigurationManager.ActiveConfiguration.ConfigurationName;
-      ProjectFullName = dteProject.FullName;
+      ProjectFileFullPath = dteProject.FullName;
       ProjectName = dteProject.Name;
-      SolutionFullName = dte.Solution.FullName;
+      SolutionFileFullPath = dte.Solution.FullName;
       SolutionDirPath = Path.GetDirectoryName(dte.Solution.FullName);
       OutputDirName = dteProject.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
-      OutputDirFullName = Path.Combine(Path.GetDirectoryName(dteProject.FullName), OutputDirName);
+      OutputDirFullPath = Path.Combine(Path.GetDirectoryName(dteProject.FullName), OutputDirName);
     }
 
     public string AssemblyName { get; set; }
 
     public string CommandLineArgs { get; set; } = string.Empty;
 
-    public string OutputDirFullName { get; set; }
+    public string OutputDirFullPath { get; set; }
 
     public string OutputDirName { get; set; }
 
     public string ProjectConfigName { get; set; }
 
-    public string ProjectFullName { get; set; }
+    public string ProjectFileFullPath { get; set; }
 
     public string ProjectName { get; set; }
 
     public string SolutionDirPath { get; set; }
 
-    public string SolutionFullName { get; set; }
+    public string SolutionFileFullPath { get; set; }
 
     /// <summary>Generates the project's `launch.json` file.</summary>
     /// <returns>Returns the local path to the file.</returns>

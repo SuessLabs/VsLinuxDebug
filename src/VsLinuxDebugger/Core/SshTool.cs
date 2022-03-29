@@ -26,6 +26,8 @@ namespace VsLinuxDebugger.Core
       _launch = launch;
     }
 
+    public string RemoteDeployPath => $"{_opts.RemoteDeployBasePath}/{_launch.ProjectName}";
+
     public string Bash(string command)
     {
       try
@@ -125,8 +127,8 @@ namespace VsLinuxDebugger.Core
     {
       // do we need SUDO?
       Bash($"mkdir -p {_opts.RemoteDeployBasePath}");
-      Bash($"mkdir -p {_opts.RemoteDeployDebugPath}");
-      Bash($"mkdir -p {_opts.RemoteDeployReleasePath}");
+      //// Bash($"mkdir -p {_opts.RemoteDeployDebugPath}");
+      //// Bash($"mkdir -p {_opts.RemoteDeployReleasePath}");
 
       var group = string.IsNullOrEmpty(_opts.UserGroupName)
         ? string.Empty
@@ -163,21 +165,21 @@ namespace VsLinuxDebugger.Core
     {
       try
       {
-        Bash($@"mkdir -p {_opts.RemoteDeployDebugPath}");
+        Bash($@"mkdir -p {RemoteDeployPath}");
 
         // TODO: Rev1 - Iterate through each file and upload it via SCP client or SFTP.
         // TODO: Rev2 - Compress _localHost.OutputDirFullName, upload ZIP, and unzip it.
         // TODO: Rev3 - Allow for both SFTP and SCP as a backup. This separating connection to a new disposable class.
         //// LogOutput($"Connected to {_connectionInfo.Username}@{_connectionInfo.Host}:{_connectionInfo.Port} via SSH and {(_sftpClient != null ? "SFTP" : "SCP")}");
 
-        var srcDirInfo = new DirectoryInfo(_launch.OutputDirFullName);
+        var srcDirInfo = new DirectoryInfo(_launch.OutputDirFullPath);
         if (!srcDirInfo.Exists)
-          throw new DirectoryNotFoundException($"Directory '{_launch.OutputDirFullName}' not found!");
+          throw new DirectoryNotFoundException($"Directory '{_launch.OutputDirFullPath}' not found!");
 
         // Compress files to upload as single `tar.gz`.
         // TODO: Use base folder path: var pathTarGz = $"{_opts.RemoteDeployBasePath}/{_tarGzFileName}";
 
-        var destTarGz = $"{_opts.RemoteDeployDebugPath}/{_tarGzFileName}";
+        var destTarGz = $"{RemoteDeployPath}/{_tarGzFileName}";
         var success = PayloadCompressAndUpload(_sftp, srcDirInfo, destTarGz);
 
         // Decompress file
@@ -374,7 +376,7 @@ namespace VsLinuxDebugger.Core
       try
       {
         var cmd = "set -e";
-        cmd += $";cd \"{_opts.RemoteDeployDebugPath}\"";
+        cmd += $";cd \"{RemoteDeployPath}\"";
         cmd += $";tar -zxf \"{_tarGzFileName}\"";
         ////cmd += $";tar -zxf \"{pathBuildTarGz}\"";
 

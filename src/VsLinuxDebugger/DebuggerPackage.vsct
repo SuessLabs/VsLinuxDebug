@@ -86,14 +86,14 @@
         <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
-        <!--<CommandFlag>DefaultDisabled</CommandFlag>-->
+        <CommandFlag>DefaultDisabled</CommandFlag>
         <Icon guid="DeployAndDebug_16x" id="imgDeployAndDebug" />
         <Strings>
           <ButtonText>Build, Deploy and Debug</ButtonText>
         </Strings>
       </Button>
 
-      <Button guid="GuidLinuxDebugerMenu" id="CmdDebugOnly" priority="0x0402" type="Button">
+      <!--<Button guid="GuidLinuxDebugerMenu" id="CmdDebugOnly" priority="0x0402" type="Button">
         <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
@@ -101,7 +101,7 @@
         <Strings>
           <ButtonText>Debug only</ButtonText>
         </Strings>
-      </Button>
+      </Button>-->
 
       <!--
       TODO: Publish & Publish and Debug

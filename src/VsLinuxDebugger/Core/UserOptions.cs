@@ -9,9 +9,9 @@
     public string LocalPLinkPath { get; set; }
 
     public bool RemoteDebugDisplayGui { get; set; }
-    public string RemoteDeployBasePath { get; set; }
-    public string RemoteDeployDebugPath { get; set; }
-    public string RemoteDeployReleasePath { get; set; }
+    public string RemoteDeployBasePath { get; set; }  // TODO: Scrub trailing '/\' chars
+    ////public string RemoteDeployDebugPath { get; set; }
+    ////public string RemoteDeployReleasePath { get; set; }
     public string RemoteDotNetPath { get; set; }
     public string RemoteVsDbgPath { get; set; }
 

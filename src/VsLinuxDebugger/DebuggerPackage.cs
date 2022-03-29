@@ -39,8 +39,8 @@ namespace VsLinuxDebugger
 
     public bool RemoteDebugDisplayGui => _optionsPage.RemoteDebugDisplayGui;
     public string RemoteDeployBasePath => _optionsPage.RemoteDeployBasePath;
-    public string RemoteDeployDebugPath => $"{_optionsPage.RemoteDeployBasePath}/TMP";
-    public string RemoteDeployReleasePath => $"{_optionsPage.RemoteDeployBasePath}/TMP";
+    ////public string RemoteDeployDebugPath => $"{_optionsPage.RemoteDeployBasePath}/TMP";
+    ////public string RemoteDeployReleasePath => $"{_optionsPage.RemoteDeployBasePath}/TMP";
     public string RemoteDotNetPath => _optionsPage.RemoteDotNetPath;
     public string RemoteVsDbgPath => _optionsPage.RemoteVsDbgPath;
 
