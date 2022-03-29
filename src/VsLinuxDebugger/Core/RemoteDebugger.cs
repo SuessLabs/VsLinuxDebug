@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +13,7 @@ namespace VsLinuxDebugger.Core
   public class RemoteDebugger
   {
     private bool _buildSuccessful;
+    private TaskCompletionSource<bool> _buildTask = null;
     private DTE _dte;
     private LaunchBuilder _launchBuilder;
     private string _launchJsonPath = string.Empty;
@@ -45,6 +44,20 @@ namespace VsLinuxDebugger.Core
           return false;
         }
 
+        if (buildOptions.HasFlag(BuildOptions.Build))
+        {
+          BuildBegin();
+
+          await _buildTask.Task;
+
+          // Work completed
+          if (!_buildSuccessful)
+          {
+            LogOutput("Build was not successful.");
+            return false;
+          }
+        }
+
         using (var ssh = new SshTool(_options, _launchBuilder))
         {
           if (!ssh.Connect())
@@ -53,39 +66,33 @@ namespace VsLinuxDebugger.Core
             return false;
           }
 
-          //// _ssh = ssh;
-
           ssh.TryInstallVsDbg();
           ssh.MakeDeploymentFolder();
           ssh.CleanDeploymentFolder();
-
-          if (buildOptions.HasFlag(BuildOptions.Build))
-          {
-            BuildBegin();
-          }
 
           if (buildOptions.HasFlag(BuildOptions.Deploy))
           {
             if (_options.RemoteDebugDisplayGui)
               ssh.Bash("export DISPLAY=:0");
 
-            ssh.UploadFilesAsync();
+            await ssh.UploadFilesAsync();
           }
           else if (buildOptions.HasFlag(BuildOptions.Publish))
           {
-            // NOT IMPL
+            // This is PUBLISH not our 'deployer'
           }
 
           if (buildOptions.HasFlag(BuildOptions.Debug))
           {
-            //// AttachToProcess();
+            BuildDebugAttacher();
           }
-
-          //// _ssh = null;
         }
+
+        BuildCleanup();
       }
       catch (Exception ex)
       {
+        LogOutput($"An error occurred during the build process. {ex.Message}");
         return false;
       }
 
@@ -110,9 +117,33 @@ namespace VsLinuxDebugger.Core
 
     private void BuildBegin()
     {
+      // TODO: Disable the menu buttons.
       ThreadHelper.ThrowIfNotOnUIThread();
+
       var dte = (DTE)Package.GetGlobalService(typeof(DTE));
       BuildEvents = dte.Events.BuildEvents;
+
+      _buildTask = new TaskCompletionSource<bool>();
+
+      BuildEvents.OnBuildProjConfigDone += (string project, string projectConfig, string platform, string solutionConfig, bool success) =>
+      {
+        LogOutput($"Project: {project} --- Success: {success}\n");
+
+        if (!success)
+          BuildCleanup();
+
+        _buildSuccessful = Path.GetFileName(project) == $"{_launchBuilder.ProjectName}.csproj" && success;
+      };
+
+      BuildEvents.OnBuildDone += (vsBuildScope scope, vsBuildAction action) =>
+      {
+        // TODO: Re-endable the menu buttons.
+        // Inform system that the task is complete
+        _buildTask?.TrySetResult(true);
+
+        var not = !_buildSuccessful ? "not" : "";
+        LogOutput($"Build was {not}successful");
+      };
 
       // For some reason, cleanup isn't actually always ran when there has been an error.
       // This removes the fact that if you run a debug attempt, get a file error, that you don't get 2 message boxes, 3 message boxes, etc for each attempt.
@@ -127,6 +158,7 @@ namespace VsLinuxDebugger.Core
 
     private void BuildCleanup()
     {
+      // TODO: The file should be located in the project's output
       File.Delete(_launchJsonPath);
 
       //// BuildEvents.OnBuildDone -= BuildEvents_OnBuildDoneAsync;
@@ -136,14 +168,12 @@ namespace VsLinuxDebugger.Core
     /// <summary>
     /// Start debugging using the remote visual studio server adapter
     /// </summary>
-    private void BuildDebug()
+    private void BuildDebugAttacher()
     {
-      throw new NotImplementedException();
+      _launchJsonPath = _launchBuilder.GenerateLaunchJson();
 
-      //// _launchJsonPath = _localhost.ToJson();
-      //// 
-      //// var dte = (DTE2)Package.GetGlobalService(typeof(SDTE));
-      //// dte.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{_launchJsonPath}\"");
+      var dte = (DTE2)Package.GetGlobalService(typeof(SDTE));
+      dte.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{_launchJsonPath}\"");
     }
 
     private bool Initialize()
@@ -155,18 +185,9 @@ namespace VsLinuxDebugger.Core
       if (project == null)
         return false;
 
-      _launchBuilder = new LaunchBuilder(_options)
-      {
-        AssemblyName = project.Properties.Item("AssemblyName").Value.ToString(),
-        ProjectConfigName = project.ConfigurationManager.ActiveConfiguration.ConfigurationName,
-        ProjectFullName = project.FullName,
-        ProjectName = project.Name,
-        SolutionFullName = dte.Solution.FullName,
-        SolutionDirPath = Path.GetDirectoryName(dte.Solution.FullName),
-        OutputDirName = project.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString(),
-        OutputDirFullName = Path.Combine(Path.GetDirectoryName(project.FullName), _launchBuilder.OutputDirName),
-      };
+      _launchBuilder = new LaunchBuilder(dte, project, _options);
 
+      // TODO: Commandline Args
       //// if (_options.UseCommandLineArgs)
       ////   _launchBuilder.CommandLineArgs = ... extract from localSettings.json
 
@@ -174,6 +195,8 @@ namespace VsLinuxDebugger.Core
     }
 
     /*
+     * Borrowed from VSMonoDebugger
+     * 
     public async Task BuildStartupProjectAsync()
     {
       await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -227,38 +250,6 @@ namespace VsLinuxDebugger.Core
       return sb.LastBuildInfo;
     }
     */
-
-    /////// <summary>Build is ready for the next steps.</summary>
-    ////private async void BuildEvents_OnBuildDoneAsync(vsBuildScope scope, vsBuildAction action)
-    ////{
-    ////  if (_buildSuccessful)
-    ////  {
-    ////    string errormessage = await TransferFiles2Async().ConfigureAwait(true);
-    ////
-    ////    if (errormessage == "")
-    ////    {
-    ////      StartDebug();
-    ////      BuildCleanup();
-    ////    }
-    ////    else
-    ////    {
-    ////      Output($"Transferring files failed: {errormessage}");
-    ////    }
-    ////  }
-    ////}
-    ////
-    /////// <summary>The build finised sucessfully and no errors were found.</summary>
-    ////private void BuildEvents_OnBuildProjConfigDone(string project, string projectConfig, string platform, string solutionConfig, bool success)
-    ////{
-    ////  string debugtext = $"Project: {project} --- Success: {success}\n";
-    ////
-    ////  if (!success)
-    ////  {
-    ////    BuildCleanup();
-    ////  }
-    ////
-    ////  _buildSuccessful = Path.GetFileName(project) == _localhost.ProjectName + ".csproj" && success;
-    ////}
 
     private bool IsCSharpProject(Project vsProject)
     {

@@ -1,4 +1,9 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.IO;
+using System.Text.Json;
+using EnvDTE;
+using EnvDTE80;
+using Microsoft.VisualStudio.Shell;
 
 namespace VsLinuxDebugger.Core
 {
@@ -8,9 +13,20 @@ namespace VsLinuxDebugger.Core
 
     private UserOptions _options;
 
-    public LaunchBuilder(UserOptions o)
+    public LaunchBuilder(DTE2 dte, Project dteProject, UserOptions o)
     {
+      ThreadHelper.ThrowIfNotOnUIThread();
+
       _options = o;
+
+      AssemblyName = dteProject.Properties.Item("AssemblyName").Value.ToString();
+      ProjectConfigName = dteProject.ConfigurationManager.ActiveConfiguration.ConfigurationName;
+      ProjectFullName = dteProject.FullName;
+      ProjectName = dteProject.Name;
+      SolutionFullName = dte.Solution.FullName;
+      SolutionDirPath = Path.GetDirectoryName(dte.Solution.FullName);
+      OutputDirName = dteProject.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
+      OutputDirFullName = Path.Combine(Path.GetDirectoryName(dteProject.FullName), OutputDirName);
     }
 
     public string AssemblyName { get; set; }
@@ -31,7 +47,9 @@ namespace VsLinuxDebugger.Core
 
     public string SolutionFullName { get; set; }
 
-    public string ToJson()
+    /// <summary>Generates the project's `launch.json` file.</summary>
+    /// <returns>Returns the local path to the file.</returns>
+    public string GenerateLaunchJson()
     {
       ////Adapter => !_options.LocalPlinkEnabled ? "ssh.exe" : "";
       ////
@@ -48,7 +66,11 @@ namespace VsLinuxDebugger.Core
         WriteIndented = true,
       };
 
-      return JsonSerializer.Serialize(launch, opts);
+      var json = JsonSerializer.Serialize(launch, opts);
+
+      throw new NotImplementedException();
+
+      return string.Empty;
     }
   }
 }

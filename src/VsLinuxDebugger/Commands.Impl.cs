@@ -14,9 +14,11 @@ namespace VsLinuxDebugger
     {
       switch (commandId)
       {
-        case CommandIds.CmdDeployAndDebug: return "Deploy and Debug";
-        case CommandIds.CmdDeployOnly: return "Deploy Only";
+        case CommandIds.CmdBuildDeployOnly: return "Build and Deploy";
+        case CommandIds.CmdBuildDeployDebug: return "Build, Deploy and Debug";
         case CommandIds.CmdDebugOnly: return "Debug Only";
+        ////case CommandIds.CmdPublishOnly: return "Publish Only";
+        ////case CommandIds.CmdPublishDebug: return "Publish and Debug";
         case CommandIds.CmdShowLog: return "Show Log";
         case CommandIds.CmdShowSettings: return "Settings";
         default: return $"Unknown CommandId ({commandId})";
@@ -45,10 +47,11 @@ namespace VsLinuxDebugger
       return true;
     }
 
-    private void InstallMenu(OleMenuCommandService cmd)
+    private void CreateVsMenu(OleMenuCommandService cmd)
     {
-      AddMenuItem(cmd, CommandIds.CmdDeployAndDebug, SetMenuTextAndVisibility, OnDeployAndDebugAsync);
-      AddMenuItem(cmd, CommandIds.CmdDeployOnly, SetMenuTextAndVisibility, OnDeployOnlyAsync);
+      AddMenuItem(cmd, CommandIds.CmdBuildDeployOnly, SetMenuTextAndVisibility, OnBuildDeployAsync);
+      AddMenuItem(cmd, CommandIds.CmdBuildDeployDebug, SetMenuTextAndVisibility, OnBuildDeployDebugAsync);
+      ////AddMenuItem(cmd, CommandIds.CmdPublishDebug, SetMenuTextAndVisibility, OnPublishDebugAsyc);
       AddMenuItem(cmd, CommandIds.CmdDebugOnly, SetMenuTextAndVisibility, OnDebugOnlyAsync);
 
       AddMenuItem(cmd, CommandIds.CmdShowLog, SetMenuTextAndVisibility, OnShowLog);
@@ -62,12 +65,12 @@ namespace VsLinuxDebugger
       await ExecuteBuildAsync(BuildOptions.Build | BuildOptions.Debug);
     }
 
-    private async void OnDeployAndDebugAsync(object sender, EventArgs e)
+    private async void OnBuildDeployDebugAsync(object sender, EventArgs e)
     {
       await ExecuteBuildAsync(BuildOptions.Build | BuildOptions.Deploy | BuildOptions.Debug);
     }
 
-    private async void OnDeployOnlyAsync(object sender, EventArgs e)
+    private async void OnBuildDeployAsync(object sender, EventArgs e)
     {
       await ExecuteBuildAsync(BuildOptions.Build | BuildOptions.Deploy);
     }
