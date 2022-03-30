@@ -106,11 +106,14 @@ namespace VsLinuxDebugger
         //// cmd.Enabled = _extension.IsStartupProjectAvailable();
 
         if (cmd.CommandID.ID == CommandIds.CmdShowLog
-          || cmd.CommandID.ID == CommandIds.CmdBuildDeployDebug
           || cmd.CommandID.ID == CommandIds.CmdDebugOnly
           || cmd.CommandID.ID == CommandIds.CmdShowSettings)
         {
           cmd.Enabled = false;
+        }
+        else
+        {
+          cmd.Enabled = true;
         }
       }
     }
@@ -119,6 +122,8 @@ namespace VsLinuxDebugger
     {
       return new UserOptions
       {
+        DeleteLaunchJsonAfterBuild = Settings.DeleteLaunchJsonAfterBuild,
+
         HostIp = Settings.HostIp,
         HostPort = Settings.HostPort,
 
@@ -133,7 +138,7 @@ namespace VsLinuxDebugger
         RemoteVsDbgPath = Settings.RemoteVsDbgPath,
 
         UseCommandLineArgs = Settings.UseCommandLineArgs,
-        UsePublish = Settings.UsePublish,
+        //// UsePublish = Settings.UsePublish,
 
         UserPrivateKeyEnabled = Settings.UserPrivateKeyEnabled,
         UserPrivateKeyPath = Settings.UserPrivateKeyPath,

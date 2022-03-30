@@ -74,9 +74,9 @@
 
       <Button guid="GuidLinuxDebugerMenu" id="CmdBuildDeployOnly" priority="0x0400" type="Button">
         <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" />
+        <Icon guid="DeployOnly_16x" id="imgDeployOnly" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
-        <Icon guid="DeployOnly_16x" id="imgDeployOnly" />
         <Strings>
           <ButtonText>Build and Deploy</ButtonText>
         </Strings>
@@ -84,24 +84,27 @@
 
       <Button guid="GuidLinuxDebugerMenu" id="CmdBuildDeployDebug" priority="0x0401" type="Button">
         <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" />
+        <Icon guid="DeployAndDebug_16x" id="imgDeployAndDebug" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
-        <CommandFlag>DefaultDisabled</CommandFlag>
-        <Icon guid="DeployAndDebug_16x" id="imgDeployAndDebug" />
+        <!--<CommandFlag>DefaultDisabled</CommandFlag>-->
         <Strings>
           <ButtonText>Build, Deploy and Debug</ButtonText>
         </Strings>
       </Button>
 
-      <!--<Button guid="GuidLinuxDebugerMenu" id="CmdDebugOnly" priority="0x0402" type="Button">
+      <!--
+      Allows user to debug again without having to redeploy.
+      <Button guid="GuidLinuxDebugerMenu" id="CmdDebugOnly" priority="0x0402" type="Button">
         <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" />
+        <Icon guid="DebugOnly_16x" id="imgDebugOnly" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
-        <Icon guid="DebugOnly_16x" id="imgDebugOnly" />
         <Strings>
           <ButtonText>Debug only</ButtonText>
         </Strings>
-      </Button>-->
+      </Button>
+      -->
 
       <!--
       TODO: Publish & Publish and Debug
@@ -109,10 +112,10 @@
 
       <Button guid="GuidLinuxDebugerMenu" id="CmdOpenLogs" priority="0x0500" type="Button">
         <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel2" />
+        <Icon guid="ShowLog_16x" id="imgShowLog" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
         <CommandFlag>DefaultDisabled</CommandFlag>
-        <Icon guid="ShowLog_16x" id="imgShowLog" />
         <Strings>
           <ButtonText>Show Log</ButtonText>
         </Strings>
@@ -120,10 +123,10 @@
 
       <Button guid="GuidLinuxDebugerMenu" id="CmdOpenSettings" priority="0x0501" type="Button">
         <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel2" />
+        <Icon guid="Settings_16x" id="imgSettings" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
         <CommandFlag>DefaultDisabled</CommandFlag>
-        <Icon guid="Settings_16x" id="imgSettings" />
         <Strings>
           <ButtonText>Settings</ButtonText>
         </Strings>
