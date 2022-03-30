@@ -106,6 +106,7 @@ namespace VsLinuxDebugger
         //// cmd.Enabled = _extension.IsStartupProjectAvailable();
 
         if (cmd.CommandID.ID == CommandIds.CmdShowLog
+          || cmd.CommandID.ID == CommandIds.CmdBuildDeployDebug
           || cmd.CommandID.ID == CommandIds.CmdDebugOnly
           || cmd.CommandID.ID == CommandIds.CmdShowSettings)
         {
