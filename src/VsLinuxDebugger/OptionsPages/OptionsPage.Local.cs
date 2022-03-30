@@ -11,10 +11,10 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     //// [DisplayName("Use Command Line Arguments")]
     //// public bool DeployWithoutDebugging { get; set; } = false;
 
-    [Category(Local)]
-    [DisplayName("Use Publish")]
-    [Description("Publish the solution instead of building. Apply setting for ASP.NET/Blazor projects.")]
-    public bool Publish { get; set; } = false;
+    ////[Category(Experimental)]
+    ////[DisplayName("Use Publish")]
+    ////[Description("Publish the solution instead of building. Apply setting for ASP.NET/Blazor projects.")]
+    ////public bool Publish { get; set; } = false;
 
     [Category(Local)]
     [DisplayName("PLink: Enable Plink instead of SSH")]
@@ -25,5 +25,10 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     [DisplayName("PLink: Local Path")]
     [Description(@"Full path to local PLINK.EXE file. (i.e. 'C:\temp\plink.exe')")]
     public string PLinkPath { get; set; } = "";
+
+    [Category(Local)]
+    [DisplayName("Delete 'launch.json' after build.")]
+    [Description(@"The `launch.json` is generated in your build folder. You may keep this for debugging.")]
+    public bool DeleteLaunchJsonAfterBuild { get; set; } = true;
   }
 }
