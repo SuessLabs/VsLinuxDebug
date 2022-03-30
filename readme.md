@@ -4,6 +4,8 @@
 
 Remotely deploy and debug your .NET C# apps via SSH to Linux using Visual Studio 2022.
 
+Get it on the [VS MarketPlace](https://marketplace.visualstudio.com/items?itemName=SuessLabs.VSLinuxDebugger)!
+
 > WARNING: This is a work in progress!
 
 Visual Studio's "attach to process via SSH" is cute, but it lacks deployment and automatic attaching. This project aims to allow you to do just that when programming for your Linux VM or Raspberry Pi over the network.
