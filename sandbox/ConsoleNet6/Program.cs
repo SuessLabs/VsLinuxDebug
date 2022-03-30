@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello from, VS Linux Debugger!");
+Console.WriteLine("Hello .NET 6, VS Linux Debugger!");
 
 Console.WriteLine("Apply breakpoint here!");
 
