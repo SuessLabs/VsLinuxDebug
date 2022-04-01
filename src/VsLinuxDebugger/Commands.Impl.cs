@@ -142,6 +142,7 @@ namespace VsLinuxDebugger
 
         UserPrivateKeyEnabled = Settings.UserPrivateKeyEnabled,
         UserPrivateKeyPath = Settings.UserPrivateKeyPath,
+        UserPrivateKeyPassword = Settings.UserPrivateKeyPassword,
         UserName = Settings.UserName,
         UserPass = Settings.UserPass,
         UserGroupName = Settings.UserGroupName,

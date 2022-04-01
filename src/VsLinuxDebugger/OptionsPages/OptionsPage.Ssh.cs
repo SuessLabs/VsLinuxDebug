@@ -21,7 +21,7 @@ namespace Xeno.VsLinuxDebug.OptionsPages
 
     [Category(Credientials)]
     [DisplayName("User Group Name (optional)")]
-    [Description("Remote Machine Group Name. For RaspberryPI  you may use, 'pi'.")]
+    [Description("Remote Machine Group Name. For basic setups (i.e. RaspberryPI) it's the same as UserName.")]
     public string UserGroupName { get; set; } = "";
 
     [Category(Credientials)]
@@ -45,5 +45,10 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     public string UserPrivateKeyPath { get; set; } = Path.Combine(
       Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
       ".ssh\\id_rsa");
+
+    [Category(Credientials)]
+    [DisplayName("SSH Private Key Password (optional)")]
+    [Description("Private key password (only if it was set).")]
+    public string UserPrivateKeyPassword { get; set; } = "";
   }
 }

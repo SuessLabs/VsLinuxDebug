@@ -31,6 +31,25 @@ This project is currently in the early alpha stages, so only Building and Deploy
 
 ![Tools Options](docs/ScreenShot-ToolsOptions.png)
 
+### Generating Private Key (optional)
+
+The following steps are options if you wish to use an SSH Private Key. These steps were written for Windows 10, however, on Linux the steps are similar.
+
+1. Open PowerShell:
+2. **Generate key** (_with old PEM format_)
+   1. `ssh-keygen -m PEM -t rsa -b 4096`
+   2. In the future, we'll be able to use `ssh-keygen`.. just not yet.
+3. Set output name (_default is okay for basic setups_)
+4. Input a passphrase for the key _(OPTIONAL)_
+5. Windows will now generate your RSA public/private key pair.
+   1. Default location: `%UserProfile%\.ssh` (WINOWS)
+   2. The public key will be stored as `id_rsa.pub` in the directory
+6. **Upload the public key** to your remote machine
+   1. Navigate to folder, `~/.ssh/` on Linux device
+   2. If `~/.ssh/authorized_keys` exists, append the contents of `id_rsa.pub` to the next line.
+   3. If it does not exist, simply upload `id_rsa.pub` and rename it to, `authorized_keys`
+7. DONE!
+
 ## Action Items
 
 In order to get this project moving, the following must be done.
