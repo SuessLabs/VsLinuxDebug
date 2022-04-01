@@ -31,6 +31,8 @@ namespace VsLinuxDebugger
     /// <summary>Package GUID string.</summary>
     public const string PackageGuidString = "19f87f23-7a2c-4279-ac7c-c9267776bbf9";
 
+    public bool DeleteLaunchJsonAfterBuild => _optionsPage.DeleteLaunchJsonAfterBuild;
+
     public string HostIp => _optionsPage.HostIp;
     public int HostPort => _optionsPage.HostPort;
 
@@ -45,13 +47,14 @@ namespace VsLinuxDebugger
     public string RemoteVsDbgPath => _optionsPage.RemoteVsDbgPath;
 
     public bool UseCommandLineArgs => _optionsPage.UseCommandLineArgs;
-    public bool UsePublish => _optionsPage.Publish;
+    //// public bool UsePublish => _optionsPage.Publish;
 
     public string UserGroupName => _optionsPage.UserGroupName;
     public string UserName => _optionsPage.UserName;
     public string UserPass => _optionsPage.UserPass;
     public bool UserPrivateKeyEnabled => _optionsPage.UserPrivateKeyEnabled;
     public string UserPrivateKeyPath => _optionsPage.UserPrivateKeyPath;
+    public string UserPrivateKeyPassword => _optionsPage.UserPrivateKeyPassword;
 
     private OptionsPage _optionsPage => (OptionsPage)GetDialogPage(typeof(OptionsPage));
 

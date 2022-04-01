@@ -22,13 +22,13 @@ namespace Xeno.VsLinuxDebug.OptionsPages
 
     [Category(RemoteDebugger)]
     [DisplayName(".NET Path")]
-    [Description("Path to .NET on remote machine.")]
-    public string RemoteDotNetPath { get; set; } = "~/.dotnet/dotnet";
+    [Description("Path to .NET on remote machine. (Samples: `dotnet`, `~/.dotnet/dotnet`")]
+    public string RemoteDotNetPath { get; set; } = "dotnet";
 
     [Category(RemoteDebugger)]
     [DisplayName("Visual Studio Debugger Path")]
-    [Description("Remote Machine Visual Studio Debugger Path")]
-    public string RemoteVsDbgPath { get; set; } = "~/.vs-debugger/vs2022";
+    [Description("Remote Machine Visual Studio Debugger Path (Samples: `vsdbg`, `/.vsdbg/vsdbg`, `~/.vs-debugger/vs2022/vsdbg`")]
+    public string RemoteVsDbgPath { get; set; } = "vsdbg";
 
     [Category(Experimental)]
     [DisplayName("Use Command Line Arguments")]

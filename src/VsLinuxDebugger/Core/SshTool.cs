@@ -3,6 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Renci.SshNet;
 using SharpCompress.Common;
 using SharpCompress.Writers;
@@ -25,8 +28,6 @@ namespace VsLinuxDebugger.Core
       _opts = opts;
       _launch = launch;
     }
-
-    public string RemoteDeployPath => $"{_opts.RemoteDeployBasePath}/{_launch.ProjectName}";
 
     public string Bash(string command)
     {
@@ -51,20 +52,31 @@ namespace VsLinuxDebugger.Core
     }
 
     /// <summary>Cleans the contents of the deployment path.</summary>
-    public void CleanDeploymentFolder()
+    /// <param name="fullScrub">Clear entire base deployment folder (TRUE) or just our project.</param>
+    public void CleanDeploymentFolder(bool fullScrub = false)
     {
       //// Bash($"sudo rm -rf {_opts.RemoteDeployBasePath}/*");
-      Bash($"rm -rf {_opts.RemoteDeployBasePath}/*");
+      
+      if (fullScrub)
+        Bash($"rm -rf {_opts.RemoteDeployBasePath}/*");
+      else
+        Bash($"rm -rf \"{_launch.RemoteDeployAppPath}/*\"");
     }
 
     public bool Connect()
     {
       PrivateKeyFile keyFile = null;
+
       try
       {
         if (_opts.UserPrivateKeyEnabled)
-          keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath);
-        //// keyFile = new PrivateKeyFile(_opts.UserKeyFilePath, password);
+        {
+          if (string.IsNullOrEmpty(_opts.UserPrivateKeyPassword))
+            keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath);
+          else
+            keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath, _opts.UserPrivateKeyPassword);
+        }
+
       }
       catch (Exception ex)
       {
@@ -165,7 +177,7 @@ namespace VsLinuxDebugger.Core
     {
       try
       {
-        Bash($@"mkdir -p {RemoteDeployPath}");
+        Bash($@"mkdir -p {_launch.RemoteDeployFolder}");
 
         // TODO: Rev1 - Iterate through each file and upload it via SCP client or SFTP.
         // TODO: Rev2 - Compress _localHost.OutputDirFullName, upload ZIP, and unzip it.
@@ -179,7 +191,10 @@ namespace VsLinuxDebugger.Core
         // Compress files to upload as single `tar.gz`.
         // TODO: Use base folder path: var pathTarGz = $"{_opts.RemoteDeployBasePath}/{_tarGzFileName}";
 
-        var destTarGz = $"{RemoteDeployPath}/{_tarGzFileName}";
+        //// var destTarGz = $"{RemoteDeployPath}/{_tarGzFileName}";
+        var destTarGz = LinuxPath.Combine(_launch.RemoteDeployFolder, _tarGzFileName);
+        LogOutput($"Destination Tar.GZ: '{destTarGz}'");
+
         var success = PayloadCompressAndUpload(_sftp, srcDirInfo, destTarGz);
 
         // Decompress file
@@ -274,8 +289,30 @@ namespace VsLinuxDebugger.Core
 
     private void LogOutput(string message)
     {
-      // TODO: Send to VS Output Window
+      // Reference:
+      //  - https://stackoverflow.com/a/1852535/249492
+      //  - https://docs.microsoft.com/en-us/visualstudio/extensibility/extending-the-output-window?view=vs-2022
+      //  - https://github.com/microsoft/VSSDK-Extensibility-Samples/blob/master/Reference_Services/C%23/Reference.Services/HelperFunctions.cs
+      //
       Console.WriteLine($">> {message}");
+
+      // TODO:
+      //  1) Consider passing in IServiceProvider from Commands class
+      //  2) Use the MS GitHub example
+      //
+      ////// TODO: Use main thread
+      ////////await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
+      ////ThreadHelper.ThrowIfNotOnUIThread();
+      ////
+      ////IVsOutputWindow output = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+      ////
+      ////// Guid debugPaneGuid = VSConstants.GUID_OutWindowDebugPane;
+      ////Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
+      ////IVsOutputWindowPane generalPane;
+      ////output.GetPane(ref generalPaneGuid, out generalPane);
+      ////
+      ////generalPane.OutputStringThreadSafe(message);
+      ////generalPane.Activate(); // Brings this pane into view
     }
 
     /// <summary>Compress build contents and upload to remote host.</summary>
@@ -376,7 +413,7 @@ namespace VsLinuxDebugger.Core
       try
       {
         var cmd = "set -e";
-        cmd += $";cd \"{RemoteDeployPath}\"";
+        cmd += $";cd \"{_launch.RemoteDeployFolder}\"";
         cmd += $";tar -zxf \"{_tarGzFileName}\"";
         ////cmd += $";tar -zxf \"{pathBuildTarGz}\"";
 

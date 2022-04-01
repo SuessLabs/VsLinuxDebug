@@ -84,7 +84,7 @@ namespace VsLinuxDebugger.Core
 
           if (buildOptions.HasFlag(BuildOptions.Debug))
           {
-            // BuildDebugAttacher();
+            BuildDebugAttacher();
           }
         }
 
@@ -158,7 +158,8 @@ namespace VsLinuxDebugger.Core
 
     private void BuildCleanup()
     {
-      if (File.Exists(_launchJsonPath))
+      // Not really needed
+      if (_launchBuilder.DeleteLaunchJsonAfterBuild && File.Exists(_launchJsonPath))
         File.Delete(_launchJsonPath);
 
       //// BuildEvents.OnBuildDone -= BuildEvents_OnBuildDoneAsync;
@@ -170,10 +171,16 @@ namespace VsLinuxDebugger.Core
     /// </summary>
     private void BuildDebugAttacher()
     {
-      _launchJsonPath = _launchBuilder.GenerateLaunchJson();
+      ////_launchJsonPath = _launchBuilder.GenerateLaunchJson();
 
-      var dte = (DTE2)Package.GetGlobalService(typeof(SDTE));
-      dte.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{_launchJsonPath}\"");
+      _launchJsonPath = _launchBuilder.GenerateLaunchJson(true);
+      if (string.IsNullOrEmpty(_launchJsonPath))
+      {
+        LogOutput("Could not generate 'launch.json'. Potential folder creation permissions in project's output directory.");
+      }
+
+      DTE2 dte2 = (DTE2)Package.GetGlobalService(typeof(SDTE));
+      dte2.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{_launchJsonPath}\"");
     }
 
     private bool Initialize()
@@ -196,7 +203,7 @@ namespace VsLinuxDebugger.Core
 
     /*
      * Borrowed from VSMonoDebugger
-     * 
+     *
     public async Task BuildStartupProjectAsync()
     {
       await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -268,8 +275,30 @@ namespace VsLinuxDebugger.Core
 
     private void LogOutput(string message)
     {
-      // TODO: Send to VS Output Window
+      // Reference:
+      //  - https://stackoverflow.com/a/1852535/249492
+      //  - https://docs.microsoft.com/en-us/visualstudio/extensibility/extending-the-output-window?view=vs-2022
+      //  - https://github.com/microsoft/VSSDK-Extensibility-Samples/blob/master/Reference_Services/C%23/Reference.Services/HelperFunctions.cs
+      //
       Console.WriteLine($">> {message}");
+
+      // TODO: ERROR, 'generalPane' is NULL!
+      //  1) Consider passing in IServiceProvider from Commands class
+      //  2) Use the MS GitHub example
+      //
+      ////// TODO: Use main thread
+      ////////await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
+      ////ThreadHelper.ThrowIfNotOnUIThread();
+      ////
+      ////IVsOutputWindow output = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+      ////
+      ////// Guid debugPaneGuid = VSConstants.GUID_OutWindowDebugPane;
+      ////Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
+      ////IVsOutputWindowPane generalPane;
+      ////output.GetPane(ref generalPaneGuid, out generalPane);
+      ////
+      ////generalPane.OutputStringThreadSafe(message);
+      ////generalPane.Activate(); // Brings this pane into view
     }
   }
 }

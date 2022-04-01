@@ -2,6 +2,8 @@
 {
   public class UserOptions
   {
+    public bool DeleteLaunchJsonAfterBuild { get; set; }
+
     public string HostIp { get; set; }
     public int HostPort { get; set; }
 
@@ -10,8 +12,6 @@
 
     public bool RemoteDebugDisplayGui { get; set; }
     public string RemoteDeployBasePath { get; set; }  // TODO: Scrub trailing '/\' chars
-    ////public string RemoteDeployDebugPath { get; set; }
-    ////public string RemoteDeployReleasePath { get; set; }
     public string RemoteDotNetPath { get; set; }
     public string RemoteVsDbgPath { get; set; }
 
@@ -23,5 +23,6 @@
     public string UserPass { get; set; }
     public bool UserPrivateKeyEnabled { get; set; }
     public string UserPrivateKeyPath { get; set; }
+    public string UserPrivateKeyPassword { get; set; }
   }
 }
