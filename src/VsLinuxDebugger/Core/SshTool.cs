@@ -66,11 +66,17 @@ namespace VsLinuxDebugger.Core
     public bool Connect()
     {
       PrivateKeyFile keyFile = null;
+
       try
       {
         if (_opts.UserPrivateKeyEnabled)
-          keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath);
-        //// keyFile = new PrivateKeyFile(_opts.UserKeyFilePath, password);
+        {
+          if (string.IsNullOrEmpty(_opts.UserPrivateKeyPassword))
+            keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath);
+          else
+            keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath, _opts.UserPrivateKeyPassword);
+        }
+
       }
       catch (Exception ex)
       {

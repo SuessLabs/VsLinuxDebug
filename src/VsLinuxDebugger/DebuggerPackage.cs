@@ -54,6 +54,7 @@ namespace VsLinuxDebugger
     public string UserPass => _optionsPage.UserPass;
     public bool UserPrivateKeyEnabled => _optionsPage.UserPrivateKeyEnabled;
     public string UserPrivateKeyPath => _optionsPage.UserPrivateKeyPath;
+    public string UserPrivateKeyPassword => _optionsPage.UserPrivateKeyPassword;
 
     private OptionsPage _optionsPage => (OptionsPage)GetDialogPage(typeof(OptionsPage));
 

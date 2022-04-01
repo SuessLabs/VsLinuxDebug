@@ -23,5 +23,6 @@
     public string UserPass { get; set; }
     public bool UserPrivateKeyEnabled { get; set; }
     public string UserPrivateKeyPath { get; set; }
+    public string UserPrivateKeyPassword { get; set; }
   }
 }
