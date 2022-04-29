@@ -14,9 +14,9 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     [Description("Host IP Address. On VMs using 'NAT', set IP to '127.0.0.1' and forward Port 22. PCs and VMs 'Bridged', have their own IP.")]
     public string HostIp { get; set; } = "127.0.0.1";
 
-    [Category(Credientials)]
-    [DisplayName("Host Port Number (22)")]
-    [Description("Remote Host Port Number (SSH Default is 22)")]
+    ////[Category(Credientials)]
+    ////[DisplayName("Host Port Number (22)")]
+    ////[Description("Remote Host Port Number (SSH Default is 22)")]
     public int HostPort { get; set; } = 22;
 
     [Category(Credientials)]
