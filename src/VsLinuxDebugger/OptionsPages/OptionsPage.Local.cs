@@ -29,6 +29,6 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     [Category(Local)]
     [DisplayName("Delete 'launch.json' after build.")]
     [Description(@"The `launch.json` is generated in your build folder. You may keep this for debugging.")]
-    public bool DeleteLaunchJsonAfterBuild { get; set; } = true;
+    public bool DeleteLaunchJsonAfterBuild { get; set; } = false;
   }
 }

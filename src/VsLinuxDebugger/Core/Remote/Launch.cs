@@ -16,7 +16,7 @@ namespace VsLinuxDebugger.Core.Remote
     /// <param name="remoteAppFileName">Name of app(.dll) or full path on remote machine.</param>
     /// <param name="remoteOutputFolder">Working directory (CWD) where app resides.</param>
     /// <param name="envVariables">Custom environment variables.</param>
-    public Launch(string dotNetPath, string remoteAppFileName, string remoteOutputFolder, string envVariables, bool stopAtEntry = false)
+    public Launch(string dotNetPath, string remoteAppFileName, string remoteOutputFolder, string envVariables = default, bool stopAtEntry = false)
     {
       ////string appPath = LinuxPath.Combine(remoteDebugFolder, $"{appName}.dll");
       string appToLaunch = remoteAppFileName;
@@ -32,9 +32,6 @@ namespace VsLinuxDebugger.Core.Remote
       {
         new Configuration
         {
-          Name = ".NET Launch",   // TESTING overriding name
-          Request = "attach",     // TESTING attach as an alternative
-
           Program = _remoteDotNetPath,
           Args = _args,
           Cwd = _remoteOutputFolder,

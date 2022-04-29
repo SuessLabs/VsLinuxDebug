@@ -185,6 +185,9 @@ namespace VsLinuxDebugger.Core
       DTE2 dte2 = (DTE2)Package.GetGlobalService(typeof(SDTE));
       dte2.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{_launchJsonPath}\"");
 
+      // launchConfigName = "Debug on Linux";
+      // DebugAdapterHost.Launch /LaunchJson:LaunchTester\Properties\launch.json /ConfigurationName:"{launchConfigName}"
+
       LogOutput("Debug session complete.");
     }
 

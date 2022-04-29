@@ -90,7 +90,8 @@ namespace VsLinuxDebugger.Core
         ? $"-pw {_opts.UserPass}"
         : $"-i {_opts.UserPrivateKeyPath}";
 
-      var sshEndpoint = $"{_opts.UserName}@{_opts.HostIp}:{_opts.HostPort}";
+      //// var sshEndpoint = $"{_opts.UserName}@{_opts.HostIp}:{_opts.HostPort}";
+      var sshEndpoint = $"{_opts.UserName}@{_opts.HostIp}";
 
       var vsdbgLogPath = "";
       if (vsdbgLogging)
@@ -108,7 +109,9 @@ namespace VsLinuxDebugger.Core
         //// var plinkPath = Path.Combine(GetExtensionDirectory(), "plink.exe").Trim('"');
 
         adapter = _opts.LocalPLinkPath;
-        adapterArgs = $"-ssh -pw {RemoteUserPass} {RemoteUserName}@{RemoteHostIp} -batch -T {RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}";
+        adapterArgs = $"-ssh -pw {RemoteUserPass} {RemoteUserName}@{RemoteHostIp} -batch -T {RemoteVsDbgPath} {vsdbgLogPath}";
+
+        //// adapterArgs = $"-ssh -pw {RemoteUserPass} {RemoteUserName}@{RemoteHostIp} -batch -T {RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}";
         //// adapterArgs = $"-ssh -pw {_options.UserPass} {_options.UserName}@{_options.HostIp}:{_options.HostPort} -batch -T {_options.RemoteVsDbgPath} --interpreter=vscode";
       }
 
@@ -116,7 +119,7 @@ namespace VsLinuxDebugger.Core
           RemoteDotNetPath,
           $"{AssemblyName}.dll", /// RemoteDeployAppPath,
           RemoteDeployFolder,
-          string.Empty,
+          default,
           false)
       {
         Adapter = "ssh.exe",
