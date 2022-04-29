@@ -50,7 +50,9 @@
     <Compile Include="Core\LinuxPath.cs" />
     <Compile Include="Core\RemoteDebugger.cs" />
     <Compile Include="Core\LaunchBuilder.cs" />
-    <Compile Include="Core\LaunchJson.cs" />
+    <Compile Include="Core\Remote\Configuration.cs" />
+    <Compile Include="Core\Remote\Launch.cs" />
+    <Compile Include="Core\Remote\PipeTransport.cs" />
     <Compile Include="Core\SshTool.cs" />
     <Compile Include="Core\UserOptions.cs" />
     <Compile Include="Extensions\JsonExtension.cs" />
@@ -120,6 +122,7 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

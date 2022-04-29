@@ -179,8 +179,16 @@ namespace VsLinuxDebugger.Core
         LogOutput("Could not generate 'launch.json'. Potential folder creation permissions in project's output directory.");
       }
 
+      LogOutput("Debugger launching...");
+      LogOutput($"  - launch.json path: '{_launchJsonPath}'");
+
       DTE2 dte2 = (DTE2)Package.GetGlobalService(typeof(SDTE));
       dte2.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{_launchJsonPath}\"");
+
+      // launchConfigName = "Debug on Linux";
+      // DebugAdapterHost.Launch /LaunchJson:LaunchTester\Properties\launch.json /ConfigurationName:"{launchConfigName}"
+
+      LogOutput("Debug session complete.");
     }
 
     private bool Initialize()

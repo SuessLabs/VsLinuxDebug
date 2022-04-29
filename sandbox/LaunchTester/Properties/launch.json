@@ -1,0 +1,28 @@
+﻿{
+  "version": "0.2.0",
+  "adapter": "c:\\work\\tools\\putty\\plink.exe",
+
+  // NOTE: Must include ~/vsdbg
+  "adapterArgs": "-pw XXXX damian@192.168.1.205 -batch -T ~/vsdbg/vsdbg",
+  "configurations": [
+    {
+      "name": ".NET Launch",
+      "type": "coreclr",
+      "request": "launch",
+      "program": "dotnet",
+      "args": [ "LaunchTester.dll" ],
+      // MUST USE "~/VSLinuxDbg/..."
+      "cwd": "./VSLinuxDbg/LaunchTester",
+      "console": "internalConsole"
+    },
+    {
+      "name": ".NET Attach",
+      "type": "coreclr",
+      "request": "attach",
+      "program": "dotnet",
+      "args": [ "LaunchTester.dll" ],
+      "cwd": "./VSLinuxDbg/LaunchTester",
+      "console": "internalConsole"
+    }
+  ]
+}

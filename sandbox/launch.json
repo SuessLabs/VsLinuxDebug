@@ -1,7 +1,7 @@
 {
   "version": "0.2.0",
   "adapter": "C:\\work\\tools\\PuTTY\\plink.exe",
-  "adapterArgs": "-pw gstk09 damian@192.168.1.205 -batch -T ~/.vsdbg/vsdbg --interpreter=vscode",
+  "adapterArgs": "-pw XXXX USERNAME@IPADDRESS -batch -T ~/.vsdbg/vsdbg --interpreter=vscode",
   "configurations": [
     {
       "name": ".NET Core Launch",
@@ -9,7 +9,7 @@
       "request": "launch",
       "program": "dotnet",
       "args": ["ConsoleApp1.dll"],
-      "cwd": "/home/damian/VSLinuxDbg/TMP",
+      "cwd": "./VSLinuxDbg/",
       "console": "internalConsole",
       "stopAtEntry": true
     }

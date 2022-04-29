@@ -4,6 +4,7 @@ using System.Text.Json;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
+using VsLinuxDebugger.Core.Remote;
 
 namespace VsLinuxDebugger.Core
 {
@@ -84,12 +85,8 @@ namespace VsLinuxDebugger.Core
     {
       string adapter, adapterArgs;
 
-      //// $"-i \"{connectionInfo.PrivateKeyPath}\" -o \"StrictHostKeyChecking no\" {connectionInfo.User}@{connectionInfo.Host} {PackageHelper.RemoteDebuggerPath} --interpreter=vscode {engineLogging}")
-      var sshPassword = !_opts.UserPrivateKeyEnabled
-        ? $"-pw {_opts.UserPass}"
-        : $"-i {_opts.UserPrivateKeyPath}";
-
-      var sshEndpoint = $"{_opts.UserName}@{_opts.HostIp}:{_opts.HostPort}";
+      //// var sshEndpoint = $"{_opts.UserName}@{_opts.HostIp}:{_opts.HostPort}";
+      var sshEndpoint = $"{_opts.UserName}@{_opts.HostIp}";
 
       var vsdbgLogPath = "";
       if (vsdbgLogging)
@@ -97,6 +94,12 @@ namespace VsLinuxDebugger.Core
 
       if (!_opts.LocalPlinkEnabled)
       {
+        //// SSH Key alt-args:
+        //// $"-i \"{_opts.UserPrivateKeyPath}\" -o \"StrictHostKeyChecking no\" {RemoteUserName}@{RemoteHostIp} {_opts.RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}")
+        var sshPassword = !_opts.UserPrivateKeyEnabled
+          ? $"-pw {_opts.UserPass}"
+          : $"-i {_opts.UserPrivateKeyPath} -o \"StrictHostKeyChecking no\"";
+
         adapter = "ssh.exe";
         adapterArgs = $"{sshPassword} {sshEndpoint} {_opts.RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}";
       }
@@ -107,18 +110,20 @@ namespace VsLinuxDebugger.Core
         //// var plinkPath = Path.Combine(GetExtensionDirectory(), "plink.exe").Trim('"');
 
         adapter = _opts.LocalPLinkPath;
-        adapterArgs = $"-ssh -pw {RemoteUserPass} {RemoteUserName}@{RemoteHostIp} -batch -T {RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}";
+        adapterArgs = $"-ssh -pw {RemoteUserPass} {RemoteUserName}@{RemoteHostIp} -batch -T {RemoteVsDbgPath} {vsdbgLogPath}";
+
+        //// adapterArgs = $"-ssh -pw {RemoteUserPass} {RemoteUserName}@{RemoteHostIp} -batch -T {RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}";
         //// adapterArgs = $"-ssh -pw {_options.UserPass} {_options.UserName}@{_options.HostIp}:{_options.HostPort} -batch -T {_options.RemoteVsDbgPath} --interpreter=vscode";
       }
 
-      var obj = new LaunchJson(
+      var obj = new Launch(
           RemoteDotNetPath,
           $"{AssemblyName}.dll", /// RemoteDeployAppPath,
           RemoteDeployFolder,
-          string.Empty,
+          default,
           false)
       {
-        Adapter = "ssh.exe",
+        Adapter = adapter,
         AdapterArgs = adapterArgs,
       };
 
