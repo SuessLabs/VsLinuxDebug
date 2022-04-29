@@ -4,6 +4,7 @@ using System.Text.Json;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
+using VsLinuxDebugger.Core.Remote;
 
 namespace VsLinuxDebugger.Core
 {
@@ -111,7 +112,7 @@ namespace VsLinuxDebugger.Core
         //// adapterArgs = $"-ssh -pw {_options.UserPass} {_options.UserName}@{_options.HostIp}:{_options.HostPort} -batch -T {_options.RemoteVsDbgPath} --interpreter=vscode";
       }
 
-      var obj = new LaunchJson(
+      var obj = new Launch(
           RemoteDotNetPath,
           $"{AssemblyName}.dll", /// RemoteDeployAppPath,
           RemoteDeployFolder,
