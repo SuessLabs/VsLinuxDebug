@@ -28,7 +28,7 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     [Category(RemoteDebugger)]
     [DisplayName("Visual Studio Debugger Path")]
     [Description("Remote Machine Visual Studio Debugger Path (Samples: `vsdbg`, `/.vsdbg/vsdbg`, `~/.vs-debugger/vs2022/vsdbg`")]
-    public string RemoteVsDbgPath { get; set; } = "vsdbg";
+    public string RemoteVsDbgPath { get; set; } = "~/vsdbg/vsdbg";
 
     [Category(Experimental)]
     [DisplayName("Use Command Line Arguments")]

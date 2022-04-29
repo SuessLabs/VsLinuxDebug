@@ -22,35 +22,35 @@ namespace VsLinuxDebugger.Core.Remote
 
     /// <summary>Executable or file to run when launching the debugger.</summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string Program { get; set; }   //// _remoteDotNetPath;
+    public string Program { get; set; }   
 
     /// <summary>Arugments passed to the program to debug.</summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string[] Args { get; set; }    //// => _args;
+    public string[] Args { get; set; }    
 
     /// <summary>Current working directory for finding dependencies and other files.</summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string Cwd { get; set; }       //// => _remoteDebugFolder;
+    public string Cwd { get; set; }       
 
     /// <summary>Break immediately when the program launches.</summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public bool StopAtEntry { get; set; } //// => _stopAtEntry;
+    public bool StopAtEntry { get; set; } 
 
     /// <summary>What kind of console to use. For example, 'internalConsole', 'integratedTerminal', or 'externalTerminal'.</summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string Console => "internalConsole";
+    public string Console => "integratedTerminal"; // "internalConsole";
 
     /// <summary>Environment variables (the value null can be used to "undefine" a variable).</summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string Env { get; set; }       //// => _environmentVariables;
+    public string Env { get; set; }
 
     //// ---- TESTING PHASE BELOW ----
-
-    /// <summary>Program name to debug (i.e. 'TestApp.exe').</summary>
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public string ProcessName { get; set; }
-
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public PipeTransport PipeTransport { get; set; }
+    ////
+    //// /// <summary>Program name to debug (i.e. 'TestApp.exe').</summary>
+    //// [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    //// public string ProcessName { get; set; }
+    //// 
+    //// [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    //// public PipeTransport PipeTransport { get; set; }
   }
 }

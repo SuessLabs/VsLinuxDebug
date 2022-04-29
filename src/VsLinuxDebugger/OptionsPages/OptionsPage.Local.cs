@@ -23,7 +23,7 @@ namespace Xeno.VsLinuxDebug.OptionsPages
 
     [Category(Local)]
     [DisplayName("PLink: Local Path")]
-    [Description(@"Full path to local PLINK.EXE file. (i.e. 'C:\temp\plink.exe')")]
+    [Description(@"Full path to local PLINK.EXE file. (i.e. 'C:\temp\putty\plink.exe')")]
     public string PLinkPath { get; set; } = "";
 
     [Category(Local)]
