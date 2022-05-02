@@ -19,7 +19,7 @@ Now developers can build, deploy and debug projects on their remote Linux (Ubunt
 ![VS Menu](docs/ScreenShot-MenuItems.png)
 
 * Build and upload to remote devices (_yes, this is a real pain_)
-* Remote debugging (_P-Link only_)
+* Remote debugging (_[P-Link](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) only_)
 * VS Linux Debugger will automatically detect and install `vsdbg` for you!
 
 ### Customize your connections
@@ -77,6 +77,7 @@ To contribute, please pick off an item from the project or issue page. We'd love
 
 ## References
 
+* [PuTTY PLink](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)
 * [Extension Docs](https://docs.microsoft.com/en-us/visualstudio/extensibility/creating-a-settings-category?view=vs-2022)
 * [Extension Sample](https://github.com/microsoft/VSSDK-Extensibility-Samples/tree/master/Options)
 * [Offroad Debugging](https://github.com/Microsoft/MIEngine/wiki/Offroad-Debugging-of-.NET-Core-on-Linux---OSX-from-Visual-Studio)
