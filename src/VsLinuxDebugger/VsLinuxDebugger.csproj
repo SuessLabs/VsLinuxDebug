@@ -58,6 +58,7 @@
     <Compile Include="Extensions\JsonExtension.cs" />
     <Compile Include="Extensions\ProcessExtension.cs" />
     <Compile Include="Extensions\SolutionExtension.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="OptionsPages\OptionsPage.Ssh.cs">
       <SubType>Component</SubType>
     </Compile>

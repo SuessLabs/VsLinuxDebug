@@ -11,8 +11,10 @@ namespace ConsoleNet5
 
       Console.WriteLine("Apply breakpoint here!");
 
-      Console.WriteLine("Press any key to exit.."); 
-      var x = Console.ReadLine();
+      Console.WriteLine("All done.");
+
+      //// Console.WriteLine("Press any key to exit.."); 
+      //// var x = Console.ReadLine();
     }
   }
 }

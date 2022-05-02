@@ -40,7 +40,7 @@ namespace VsLinuxDebugger.Core
             return "Cannot connect to remote host to execute Bash command.";
         }
 
-        LogOutput($"BASH> {command}");
+        Logger.Output($"BASH> {command}");
         var cmd = _ssh.RunCommand(command);
 
         return cmd.Result;
@@ -80,8 +80,8 @@ namespace VsLinuxDebugger.Core
       }
       catch (Exception ex)
       {
-        LogOutput($"Private key error - {ex.Message}");
-        LogOutput("Issue obtaining private key. Please check your settings to ensure a valid file exists (Tools > Options).");
+        Logger.Output($"Private key error - {ex.Message}");
+        Logger.Output("Issue obtaining private key. Please check your settings to ensure a valid file exists (Tools > Options).");
         return false;
       }
 
@@ -95,7 +95,7 @@ namespace VsLinuxDebugger.Core
       }
       catch (Exception ex)
       {
-        LogOutput($"Unable to connect to SSH. {ex.Message}");
+        Logger.Output($"Unable to connect to SSH. {ex.Message}");
         return false;
       }
 
@@ -119,7 +119,7 @@ namespace VsLinuxDebugger.Core
 
       var _connectionInfo = _ssh.ConnectionInfo;
 
-      LogOutput($"Connected to {_connectionInfo.Username}@{_connectionInfo.Host}:{_connectionInfo.Port} via SSH and {(_sftp != null ? "SFTP" : "SCP")}");
+      Logger.Output($"Connected to {_connectionInfo.Username}@{_connectionInfo.Host}:{_connectionInfo.Port} via SSH and {(_sftp != null ? "SFTP" : "SCP")}");
 
       _isConnected = true;
 
@@ -184,6 +184,8 @@ namespace VsLinuxDebugger.Core
         // TODO: Rev3 - Allow for both SFTP and SCP as a backup. This separating connection to a new disposable class.
         //// LogOutput($"Connected to {_connectionInfo.Username}@{_connectionInfo.Host}:{_connectionInfo.Port} via SSH and {(_sftpClient != null ? "SFTP" : "SCP")}");
 
+        Bash($@"mkdir -p {_launch.RemoteDeployFolder}");
+
         var srcDirInfo = new DirectoryInfo(_launch.OutputDirFullPath);
         if (!srcDirInfo.Exists)
           throw new DirectoryNotFoundException($"Directory '{_launch.OutputDirFullPath}' not found!");
@@ -193,7 +195,7 @@ namespace VsLinuxDebugger.Core
 
         //// var destTarGz = $"{RemoteDeployPath}/{_tarGzFileName}";
         var destTarGz = LinuxPath.Combine(_launch.RemoteDeployFolder, _tarGzFileName);
-        LogOutput($"Destination Tar.GZ: '{destTarGz}'");
+        Logger.Output($"Destination Tar.GZ: '{destTarGz}'");
 
         var success = PayloadCompressAndUpload(_sftp, srcDirInfo, destTarGz);
 
@@ -227,7 +229,7 @@ namespace VsLinuxDebugger.Core
         //// _scpDestinationDirectory = destinationDirectory;
       }
 
-      LogOutput($"Working directory changed to '{destinationDirectory}'");
+      Logger.Output($"Working directory changed to '{destinationDirectory}'");
     }
 
     /// <summary>Get all files, including subdirectories.</summary>
@@ -264,7 +266,13 @@ namespace VsLinuxDebugger.Core
         if (files != null)
         {
           for (int i = 0; i < files.Length; i++)
+          {
+            // Don't include "launch.json"
+            if (files[i].EndsWith("launch.json"))
+              continue;
+
             yield return files[i];
+          }
         }
       }
     }
@@ -283,36 +291,14 @@ namespace VsLinuxDebugger.Core
         localFileCache[cleanedRelativeFilePath] = new FileInfo(file);
       });
 
-      LogOutput($"Local file cache created");
+      Logger.Output($"Local file cache created");
       return localFileCache;
     }
 
     private void LogOutput(string message)
     {
-      // Reference:
-      //  - https://stackoverflow.com/a/1852535/249492
-      //  - https://docs.microsoft.com/en-us/visualstudio/extensibility/extending-the-output-window?view=vs-2022
-      //  - https://github.com/microsoft/VSSDK-Extensibility-Samples/blob/master/Reference_Services/C%23/Reference.Services/HelperFunctions.cs
-      //
       Console.WriteLine($">> {message}");
-
-      // TODO:
-      //  1) Consider passing in IServiceProvider from Commands class
-      //  2) Use the MS GitHub example
-      //
-      ////// TODO: Use main thread
-      ////////await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
-      ////ThreadHelper.ThrowIfNotOnUIThread();
-      ////
-      ////IVsOutputWindow output = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-      ////
-      ////// Guid debugPaneGuid = VSConstants.GUID_OutWindowDebugPane;
-      ////Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
-      ////IVsOutputWindowPane generalPane;
-      ////output.GetPane(ref generalPaneGuid, out generalPane);
-      ////
-      ////generalPane.OutputStringThreadSafe(message);
-      ////generalPane.Activate(); // Brings this pane into view
+      Logger.Output(message);
     }
 
     /// <summary>Compress build contents and upload to remote host.</summary>
