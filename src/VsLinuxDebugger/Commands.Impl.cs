@@ -36,13 +36,13 @@ namespace VsLinuxDebugger
 
       if (!dbg.IsProjectValid())
       {
-        Console.WriteLine("No C# startup project/solution loaded.");
+        Logger.Output("No C# startup project/solution loaded.");
         return false;
       }
 
       if (!await dbg.BeginAsync(buildOptions))
       {
-        Console.WriteLine("Failed to perform actions.");
+        Logger.Output("Failed to perform actions.");
         return false;
       }
 
