@@ -19,6 +19,19 @@ namespace VsLinuxDebugger
     private static OutputWindowType _outputType = OutputWindowType.Debug;
     private static IServiceProvider _provider;
 
+    private static string FormattedTime
+    {
+      get
+      {
+        return string.Format(
+          "{0:00}:{1:00}:{2:00}.{3:000}",
+          DateTime.Now.Hour,
+          DateTime.Now.Minute,
+          DateTime.Now.Second,
+          DateTime.Now.Millisecond);
+      }
+    }
+
     public static void Init(IServiceProvider provider, OutputWindowType outputType = OutputWindowType.Debug, string name = "Remote Debugger")
     {
       _provider = provider;
@@ -34,7 +47,7 @@ namespace VsLinuxDebugger
 
         if (HasOutputWindow())
         {
-          _outputPane.OutputStringThreadSafe(message + Environment.NewLine);
+          _outputPane.OutputStringThreadSafe($"{FormattedTime}: {message}{Environment.NewLine}");
           _outputPane.Activate(); // Brings this pane into view
         }
       }

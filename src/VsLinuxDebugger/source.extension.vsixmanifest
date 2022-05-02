@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="VsLinuxDebugger.4d7bf4de-5015-4e24-92c0-7f9f3397b2da" Version="1.7.0" Language="en-US" Publisher="Suess Labs" />
+        <Identity Id="VsLinuxDebugger.4d7bf4de-5015-4e24-92c0-7f9f3397b2da" Version="1.8.0" Language="en-US" Publisher="Suess Labs" />
         <DisplayName>VS Linux Debugger</DisplayName>
         <Description xml:space="preserve">Remotely deploy and debug your .NET apps visa SSH on your Linux device using Visual Studio 2022. Works with popular Linux distrobutions such as Ubuntu, Raspberry Pi, and more!</Description>
         <MoreInfo>https://github.com/SuessLabs/VsLinuxDebug</MoreInfo>
