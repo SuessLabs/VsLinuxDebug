@@ -176,6 +176,7 @@ namespace VsLinuxDebugger.Core
 
       Logger.Output("Debugger launching...");
       Logger.Output($"- launch.json path: '{_launchJsonPath}'");
+      Logger.Output($"- DebugAdapterHost.Launch /LaunchJson:\"{_launchJsonPath}\"");
 
       DTE2 dte2 = (DTE2)Package.GetGlobalService(typeof(SDTE));
       dte2.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{_launchJsonPath}\"");
