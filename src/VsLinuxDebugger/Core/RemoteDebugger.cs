@@ -53,7 +53,7 @@ namespace VsLinuxDebugger.Core
           // Work completed
           if (!_buildSuccessful)
           {
-            LogOutput("Build was not successful.");
+            Logger.Output("Build was not successful.");
             return false;
           }
         }
@@ -92,7 +92,7 @@ namespace VsLinuxDebugger.Core
       }
       catch (Exception ex)
       {
-        LogOutput($"An error occurred during the build process. {ex.Message}");
+        Logger.Output($"An error occurred during the build process. {ex.Message}");
         return false;
       }
 
@@ -127,7 +127,7 @@ namespace VsLinuxDebugger.Core
 
       BuildEvents.OnBuildProjConfigDone += (string project, string projectConfig, string platform, string solutionConfig, bool success) =>
       {
-        LogOutput($"Project: {project} --- Success: {success}\n");
+        Logger.Output($"Project: {project} --- Success: {success}\n");
 
         if (!success)
           BuildCleanup();
@@ -142,7 +142,7 @@ namespace VsLinuxDebugger.Core
         _buildTask?.TrySetResult(true);
 
         var not = !_buildSuccessful ? "not" : "";
-        LogOutput($"Build was {not}successful");
+        Logger.Output($"Build was {not}successful");
       };
 
       // For some reason, cleanup isn't actually always ran when there has been an error.
@@ -173,14 +173,14 @@ namespace VsLinuxDebugger.Core
     {
       ////_launchJsonPath = _launchBuilder.GenerateLaunchJson();
 
-      _launchJsonPath = _launchBuilder.GenerateLaunchJson(true);
+      _launchJsonPath = _launchBuilder.GenerateLaunchJson(vsdbgLogging: true);
       if (string.IsNullOrEmpty(_launchJsonPath))
       {
-        LogOutput("Could not generate 'launch.json'. Potential folder creation permissions in project's output directory.");
+        Logger.Output("Could not generate 'launch.json'. Potential folder creation permissions in project's output directory.");
       }
 
-      LogOutput("Debugger launching...");
-      LogOutput($"  - launch.json path: '{_launchJsonPath}'");
+      Logger.Output("Debugger launching...");
+      Logger.Output($"  - launch.json path: '{_launchJsonPath}'");
 
       DTE2 dte2 = (DTE2)Package.GetGlobalService(typeof(SDTE));
       dte2.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{_launchJsonPath}\"");
@@ -188,7 +188,7 @@ namespace VsLinuxDebugger.Core
       // launchConfigName = "Debug on Linux";
       // DebugAdapterHost.Launch /LaunchJson:LaunchTester\Properties\launch.json /ConfigurationName:"{launchConfigName}"
 
-      LogOutput("Debug session complete.");
+      Logger.Output("Debug session complete.");
     }
 
     private bool Initialize()
@@ -276,37 +276,9 @@ namespace VsLinuxDebugger.Core
       }
       catch (Exception ex)
       {
-        LogOutput($"Project doesn't support property vsProject.CodeModel.Language! No CSharp project. {ex.Message}");
+        Logger.Output($"Project doesn't support property vsProject.CodeModel.Language! No CSharp project. {ex.Message}");
         return false;
       }
-    }
-
-    private void LogOutput(string message)
-    {
-      // Reference:
-      //  - https://stackoverflow.com/a/1852535/249492
-      //  - https://docs.microsoft.com/en-us/visualstudio/extensibility/extending-the-output-window?view=vs-2022
-      //  - https://github.com/microsoft/VSSDK-Extensibility-Samples/blob/master/Reference_Services/C%23/Reference.Services/HelperFunctions.cs
-      //
-      Console.WriteLine($">> {message}");
-
-      // TODO: ERROR, 'generalPane' is NULL!
-      //  1) Consider passing in IServiceProvider from Commands class
-      //  2) Use the MS GitHub example
-      //
-      ////// TODO: Use main thread
-      ////////await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
-      ////ThreadHelper.ThrowIfNotOnUIThread();
-      ////
-      ////IVsOutputWindow output = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-      ////
-      ////// Guid debugPaneGuid = VSConstants.GUID_OutWindowDebugPane;
-      ////Guid generalPaneGuid = VSConstants.GUID_OutWindowGeneralPane;
-      ////IVsOutputWindowPane generalPane;
-      ////output.GetPane(ref generalPaneGuid, out generalPane);
-      ////
-      ////generalPane.OutputStringThreadSafe(message);
-      ////generalPane.Activate(); // Brings this pane into view
     }
   }
 }

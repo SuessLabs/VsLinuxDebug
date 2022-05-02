@@ -73,6 +73,9 @@ namespace VsLinuxDebugger
       // Do any initialization that requires the UI thread after switching to the UI thread.
       await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
       await Commands.InitializeAsync(this);
+
+      Logger.Init(this, OutputWindowType.Custom);
+      Logger.Output("InitializeAsync");
     }
 
     #endregion Package Members
