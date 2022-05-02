@@ -1,4 +1,4 @@
-# [VS .NET SSH Debugger](https://github.com/SuessLabs/RemoteDebug.git)
+# [VS .NET Linux Debugger](https://github.com/SuessLabs/RemoteDebug.git)
 
 <image align="right" width="200" height="200" src="https://github.com/SuessLabs/VsLinuxDebug/blob/master/docs/TuxDebug.png" />
 
@@ -6,9 +6,7 @@ Remotely deploy and debug your .NET C# apps via SSH to Linux using Visual Studio
 
 Get it on the [VS MarketPlace](https://marketplace.visualstudio.com/items?itemName=SuessLabs.VSLinuxDebugger)!
 
-> WARNING: This is a work in progress!
-
-Visual Studio's "attach to process via SSH" is cute, but it lacks deployment and automatic attaching. This project aims to allow you to do just that when programming for your Linux VM or Raspberry Pi over the network.
+Visual Studio's "attach to process via SSH" is cute, but it lacks deployment and automatic attaching. This project allows you to do just that on your Linux VM or Raspberry Pi over the network!
 
 This project was inspired by [VS Mono Debugger](https://github.com/GordianDotNet/VSMonoDebugger) and their amazing efforts for cross-platform development.
 
@@ -16,22 +14,19 @@ This project was inspired by [VS Mono Debugger](https://github.com/GordianDotNet
 
 Now developers can build, deploy and debug projects on their remote Linux (Ubuntu, Raspberry PI, etc) devices! Customize your SSH connection to use either a _password_ or a _private key_.
 
-### Work in Progress
-
-This project is currently in the early alpha stages, so only Building and Deployment is available. This extension aims to allow you to automatically attach for debugging over the network. For now, that step is still manual. On the plus side, we just saved you 1.5 min of manual upload and `chown -R`.
-
 ### Usage
 
 ![VS Menu](docs/ScreenShot-MenuItems.png)
 
 * Build and upload to remote devices (_yes, this is a real pain_)
-* Remote debugging (_Work-in-Progress_)
+* Remote debugging (_P-Link only_)
+* VS Linux Debugger will automatically detect and install `vsdbg` for you!
 
 ### Customize your connections
 
 ![Tools Options](docs/ScreenShot-ToolsOptions.png)
 
-### Generating Private Key (optional)
+### Generating Private Key
 
 The following steps are options if you wish to use an SSH Private Key. These steps were written for Windows 10, however, on Linux the steps are similar.
 
@@ -52,14 +47,27 @@ The following steps are options if you wish to use an SSH Private Key. These ste
 
 ## Action Items
 
-In order to get this project moving, the following must be done.
+### Work-in-Progress Items
 
-* [X] Create extension project for VS2022
-* [X] SSH, SFTP, and SCP communication
-* [X] Store settings (globally; per-project)
-  * [X] IP, User, Pass, default-folder `"~/VsLinuxDbg/(proj-name)"`
-* [X] Perform upload to remote machine
-* [ ] Attach to process - _in testing phase_
+Currently, debugging successfully works with **PLink.exe**. SSH debugging is still a work-in-progress.
+
+### Manually Attaching (for GUI apps)
+
+For GUI projects, you can use **Build and Deploy** and then manually attach to the process via SSH by using Visual Studio's built-in tool
+
+1. Deploy to remote machine via
+   1. Extensions > Linux Debugger > **"Build and Deploy"**
+2. Run GUI app on remote machine
+   1. `dotnet MyGuiApp.dll`
+3. Debug > **"Attach to Process.."**
+4. Connection Type: **SSH**
+5. Connection Target: **(Remote machine's IP)**
+6. (Select process)
+7. Click, **Attach**
+8. Check, **"Managed (.NET Core for Unix)"**
+9. Click, **OK**
+
+This will save you 1.5 minutes on every build of manual uploading and updating rights via `chown -R`.
 
 ## Developers Wanted
 
