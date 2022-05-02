@@ -41,18 +41,21 @@ namespace VsLinuxDebugger
 
     public static void Output(string message)
     {
+      var msg = $"{FormattedTime}: {message}{Environment.NewLine}";
+
       try
       {
         ThreadHelper.ThrowIfNotOnUIThread();
 
         if (HasOutputWindow())
         {
-          _outputPane.OutputStringThreadSafe($"{FormattedTime}: {message}{Environment.NewLine}");
-          _outputPane.Activate(); // Brings this pane into view
+          _outputPane.OutputStringThreadSafe(msg);
+          _outputPane.Activate(); // Brings pane into view
         }
       }
       catch (Exception)
       {
+        Console.Write($"Failed to Output: '{msg}'");
       }
     }
 

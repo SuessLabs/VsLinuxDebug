@@ -3,9 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Renci.SshNet;
 using SharpCompress.Common;
 using SharpCompress.Writers;
@@ -53,14 +51,23 @@ namespace VsLinuxDebugger.Core
 
     /// <summary>Cleans the contents of the deployment path.</summary>
     /// <param name="fullScrub">Clear entire base deployment folder (TRUE) or just our project.</param>
-    public void CleanDeploymentFolder(bool fullScrub = false)
+    public void CleanDeploymentFolder(bool fullScrub = true)
     {
       //// Bash($"sudo rm -rf {_opts.RemoteDeployBasePath}/*");
-      
+
       if (fullScrub)
-        Bash($"rm -rf {_opts.RemoteDeployBasePath}/*");
+      {
+        // Whole deployment folder and hidden files
+        // rm -rf xxx/*      == Contents of the folder but not the folder itself
+        // rm -rf xxx/{*,.*} == All hidden files and folders
+        var filesAndFolders = "{*,.*}";
+        Bash($"rm -rf \"{_opts.RemoteDeployBasePath}/{filesAndFolders}\"");
+      }
       else
-        Bash($"rm -rf \"{_launch.RemoteDeployAppPath}/*\"");
+      {
+        // Full path to the file we'll execute (i.e. "/home/USER/VsLinuxDbg/PROJECT/AppName.dll").
+        Bash($"rm -rf \"{_launch.RemoteDeployAssemblyFilePath}\"");
+      }
     }
 
     public bool Connect()
@@ -76,7 +83,6 @@ namespace VsLinuxDebugger.Core
           else
             keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath, _opts.UserPrivateKeyPassword);
         }
-
       }
       catch (Exception ex)
       {
@@ -177,7 +183,8 @@ namespace VsLinuxDebugger.Core
     {
       try
       {
-        Bash($@"mkdir -p {_launch.RemoteDeployFolder}");
+        // Clean output folder just incase
+        //// Bash($@"rm -rf {_launch.RemoteDeployFolder}");
 
         // TODO: Rev1 - Iterate through each file and upload it via SCP client or SFTP.
         // TODO: Rev2 - Compress _localHost.OutputDirFullName, upload ZIP, and unzip it.
@@ -191,16 +198,13 @@ namespace VsLinuxDebugger.Core
           throw new DirectoryNotFoundException($"Directory '{_launch.OutputDirFullPath}' not found!");
 
         // Compress files to upload as single `tar.gz`.
-        // TODO: Use base folder path: var pathTarGz = $"{_opts.RemoteDeployBasePath}/{_tarGzFileName}";
-
-        //// var destTarGz = $"{RemoteDeployPath}/{_tarGzFileName}";
         var destTarGz = LinuxPath.Combine(_launch.RemoteDeployFolder, _tarGzFileName);
         Logger.Output($"Destination Tar.GZ: '{destTarGz}'");
 
-        var success = PayloadCompressAndUpload(_sftp, srcDirInfo, destTarGz);
+        var success = await PayloadCompressAndUploadAsync(_sftp, srcDirInfo, destTarGz);
 
         // Decompress file
-        PayloadDecompress(destTarGz, false);
+        await PayloadDecompressAsync(destTarGz, false);
 
         return string.Empty;
       }
@@ -306,7 +310,7 @@ namespace VsLinuxDebugger.Core
     /// <param name="srcDirInfo">Build (source) contents directory info.</param>
     /// <param name="pathBuildTarGz">Upload path and filename of build's tar.gz file.</param>
     /// <returns></returns>
-    private bool PayloadCompressAndUpload(SftpClient sftp, DirectoryInfo srcDirInfo, string pathBuildTarGz)
+    private async Task<bool> PayloadCompressAndUploadAsync(SftpClient sftp, DirectoryInfo srcDirInfo, string pathBuildTarGz)
     {
       var success = false;
       var localFiles = GetLocalFiles(srcDirInfo);
@@ -314,57 +318,64 @@ namespace VsLinuxDebugger.Core
       // TODO: Delta remote files against local files for changes.
       using (Stream tarGzStream = new MemoryStream())
       {
-        try
+        var outputMsg = string.Empty;
+
+        await Task.Run(() =>
         {
-          using (var tarGzWriter = WriterFactory.Open(tarGzStream, ArchiveType.Tar, CompressionType.GZip))
+          try
           {
-            using (MemoryStream fileStream = new MemoryStream())
+            using (var tarGzWriter = WriterFactory.Open(tarGzStream, ArchiveType.Tar, CompressionType.GZip))
             {
-              using (BinaryWriter fileWriter = new BinaryWriter(fileStream))
+              using (MemoryStream fileStream = new MemoryStream())
               {
-                fileWriter.Write(localFiles.Count);
-
-                var updateFileCount = 0;
-                long updateFileSize = 0;
-                var allFileCount = 0;
-                long allFileSize = 0;
-
-                foreach (var file in localFiles)
+                using (BinaryWriter fileWriter = new BinaryWriter(fileStream))
                 {
-                  allFileCount++;
-                  allFileSize += file.Value.Length;
+                  fileWriter.Write(localFiles.Count);
 
-                  // TODO: Add new cache file entry
-                  //// UpdateCacheEntry.WriteToStream(newCacheFileWriter, file.Key, file.Value);
+                  var updateFileCount = 0;
+                  long updateFileSize = 0;
+                  var allFileCount = 0;
+                  long allFileSize = 0;
 
-                  updateFileCount++;
-                  updateFileSize += file.Value.Length;
+                  foreach (var file in localFiles)
+                  {
+                    allFileCount++;
+                    allFileSize += file.Value.Length;
 
-                  try
-                  {
-                    tarGzWriter.Write(file.Key, file.Value);
+                    // TODO: Add new cache file entry
+                    //// UpdateCacheEntry.WriteToStream(newCacheFileWriter, file.Key, file.Value);
+
+                    updateFileCount++;
+                    updateFileSize += file.Value.Length;
+
+                    try
+                    {
+                      tarGzWriter.Write(file.Key, file.Value);
+                    }
+                    catch (IOException ioEx)
+                    {
+                      outputMsg += $"Exception: {ioEx.Message}{Environment.NewLine}";
+                    }
+                    catch (Exception ex)
+                    {
+                      outputMsg += $"Exception: {ex.Message}{Environment.NewLine}{ex.StackTrace}{Environment.NewLine}";
+                    }
                   }
-                  catch (IOException ioEx)
-                  {
-                    LogOutput($"Exception: {ioEx.Message}");
-                  }
-                  catch (Exception ex)
-                  {
-                    LogOutput($"Exception: {ex.Message}\n{ex.StackTrace}");
-                  }
+
+                  outputMsg += $"Update file count: {updateFileCount}; File Size: [{updateFileSize} bytes] of Total Files: {allFileCount} [{allFileSize} bytes] need to be updated";
                 }
-
-                LogOutput($"{updateFileCount,7:n0} [{updateFileSize,13:n0} bytes] of {allFileCount,7:n0} [{allFileSize,13:n0} bytes] files need to be updated");
               }
             }
-          }
 
-          success = true;
-        }
-        catch (Exception ex)
-        {
-          LogOutput($"Error while compressing file contents. {ex.Message}\n{ex.StackTrace}");
-        }
+            success = true;
+          }
+          catch (Exception ex)
+          {
+            outputMsg += $"Error while compressing file contents. {ex.Message}\n{ex.StackTrace}";
+          }
+        });
+
+        Logger.Output(outputMsg);
 
         // Upload the file
         if (success)
@@ -372,9 +383,13 @@ namespace VsLinuxDebugger.Core
           try
           {
             var tarGzSize = tarGzStream.Length;
-            tarGzStream.Seek(0, SeekOrigin.Begin);
 
-            sftp.UploadFile(tarGzStream, pathBuildTarGz);
+            await Task.Run(() =>
+            {
+              tarGzStream.Seek(0, SeekOrigin.Begin);
+
+              sftp.UploadFile(tarGzStream, pathBuildTarGz);
+            });
 
             LogOutput($"Uploaded '{_tarGzFileName}' [{tarGzSize,13:n0} bytes].");
             success = true;
@@ -394,10 +409,12 @@ namespace VsLinuxDebugger.Core
     /// <param name="pathBuildTarGz">Path to upload to.</param>
     /// <param name="removeTarGz">Remove our build's tar.gz file. Set to FALSE for debugging. (default=true)</param>
     /// <returns>Returns true on success.</returns>
-    private bool PayloadDecompress(string pathBuildTarGz, bool removeTarGz = true)
+    private async Task<bool> PayloadDecompressAsync(string pathBuildTarGz, bool removeTarGz = true)
     {
       try
       {
+        var decompressOutput = string.Empty;
+
         var cmd = "set -e";
         cmd += $";cd \"{_launch.RemoteDeployFolder}\"";
         cmd += $";tar -zxf \"{_tarGzFileName}\"";
@@ -406,8 +423,12 @@ namespace VsLinuxDebugger.Core
         if (removeTarGz)
           cmd += $";rm \"{pathBuildTarGz}\"";
 
-        var output = Bash(cmd);
-        LogOutput(output);
+        await Task.Run(() =>
+        {
+          decompressOutput = Bash(cmd);
+        });
+
+        Logger.Output($"Payload Decompress results: '{decompressOutput}' (blank=OK)");
 
         return true;
       }
