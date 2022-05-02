@@ -55,11 +55,10 @@ namespace VsLinuxDebugger.Core
     public string ProjectName { get; set; }
 
     /// <summary>Full path to the remote assembly. (i.e. `/home/USER/VLSDbg/Proj/ConsoleApp1.dll`)</summary>
-    public string RemoteDeployAssemblyFilePath => LinuxPath.Combine(RemoteDeployFolder, $"{AssemblyName}.dll");
+    public string RemoteDeployAssemblyFilePath => LinuxPath.Combine(RemoteDeployProjectFolder, $"{AssemblyName}.dll");
 
     /// <summary>Folder of our remote assembly. (i.e. `/home/USER/VLSDbg/Proj`)</summary>
-    public string RemoteDeployFolder =>
-      LinuxPath.Combine(_opts.RemoteDeployBasePath, ProjectName);
+    public string RemoteDeployProjectFolder => LinuxPath.Combine(_opts.RemoteDeployBasePath, ProjectName);
 
     public string RemoteDotNetPath => _opts.RemoteDotNetPath;
 
@@ -90,7 +89,7 @@ namespace VsLinuxDebugger.Core
 
       var vsdbgLogPath = "";
       if (vsdbgLogging)
-        vsdbgLogPath = $" --engineLogging={LinuxPath.Combine(RemoteDeployFolder, "_vsdbg.log")}";
+        vsdbgLogPath = $" --engineLogging={LinuxPath.Combine(RemoteDeployProjectFolder, "_vsdbg.log")}";
 
       if (!_opts.LocalPlinkEnabled)
       {
@@ -119,7 +118,7 @@ namespace VsLinuxDebugger.Core
       var obj = new Launch(
           RemoteDotNetPath,
           $"{AssemblyName}.dll", /// RemoteDeployAppPath,
-          RemoteDeployFolder,
+          RemoteDeployProjectFolder,
           default,
           false)
       {
@@ -142,7 +141,7 @@ namespace VsLinuxDebugger.Core
       }
       catch (Exception ex)
       {
-        Console.WriteLine($"Error writing 'launch.json' to path, '{outputPath}'!\n{ex.Message}");
+        Logger.Output($"Error writing 'launch.json' to path, '{outputPath}'!\n{ex.Message}");
         outputPath = string.Empty;
       }
 

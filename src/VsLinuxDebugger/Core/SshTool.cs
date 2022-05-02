@@ -51,22 +51,20 @@ namespace VsLinuxDebugger.Core
 
     /// <summary>Cleans the contents of the deployment path.</summary>
     /// <param name="fullScrub">Clear entire base deployment folder (TRUE) or just our project.</param>
-    public void CleanDeploymentFolder(bool fullScrub = true)
+    public void CleanDeploymentFolder(bool fullScrub = false)
     {
-      //// Bash($"sudo rm -rf {_opts.RemoteDeployBasePath}/*");
+      // Whole deployment folder and hidden files
+      // rm -rf xxx/*      == Contents of the folder but not the folder itself
+      // rm -rf xxx/{*,.*} == All hidden files and folders
+      var filesAndFolders = "{*,.*}";
 
       if (fullScrub)
       {
-        // Whole deployment folder and hidden files
-        // rm -rf xxx/*      == Contents of the folder but not the folder itself
-        // rm -rf xxx/{*,.*} == All hidden files and folders
-        var filesAndFolders = "{*,.*}";
         Bash($"rm -rf \"{_opts.RemoteDeployBasePath}/{filesAndFolders}\"");
       }
       else
       {
-        // Full path to the file we'll execute (i.e. "/home/USER/VsLinuxDbg/PROJECT/AppName.dll").
-        Bash($"rm -rf \"{_launch.RemoteDeployAssemblyFilePath}\"");
+        Bash($"rm -rf {_launch.RemoteDeployProjectFolder}/{filesAndFolders}");
       }
     }
 
@@ -189,16 +187,16 @@ namespace VsLinuxDebugger.Core
         // TODO: Rev1 - Iterate through each file and upload it via SCP client or SFTP.
         // TODO: Rev2 - Compress _localHost.OutputDirFullName, upload ZIP, and unzip it.
         // TODO: Rev3 - Allow for both SFTP and SCP as a backup. This separating connection to a new disposable class.
-        //// LogOutput($"Connected to {_connectionInfo.Username}@{_connectionInfo.Host}:{_connectionInfo.Port} via SSH and {(_sftpClient != null ? "SFTP" : "SCP")}");
+        //// Logger.Output($"Connected to {_connectionInfo.Username}@{_connectionInfo.Host}:{_connectionInfo.Port} via SSH and {(_sftpClient != null ? "SFTP" : "SCP")}");
 
-        Bash($@"mkdir -p {_launch.RemoteDeployFolder}");
+        Bash($@"mkdir -p {_launch.RemoteDeployProjectFolder}");
 
         var srcDirInfo = new DirectoryInfo(_launch.OutputDirFullPath);
         if (!srcDirInfo.Exists)
           throw new DirectoryNotFoundException($"Directory '{_launch.OutputDirFullPath}' not found!");
 
         // Compress files to upload as single `tar.gz`.
-        var destTarGz = LinuxPath.Combine(_launch.RemoteDeployFolder, _tarGzFileName);
+        var destTarGz = LinuxPath.Combine(_launch.RemoteDeployProjectFolder, _tarGzFileName);
         Logger.Output($"Destination Tar.GZ: '{destTarGz}'");
 
         var success = await PayloadCompressAndUploadAsync(_sftp, srcDirInfo, destTarGz);
@@ -299,12 +297,6 @@ namespace VsLinuxDebugger.Core
       return localFileCache;
     }
 
-    private void LogOutput(string message)
-    {
-      Console.WriteLine($">> {message}");
-      Logger.Output(message);
-    }
-
     /// <summary>Compress build contents and upload to remote host.</summary>
     /// <param name="sftp">SFTP connection.</param>
     /// <param name="srcDirInfo">Build (source) contents directory info.</param>
@@ -391,12 +383,12 @@ namespace VsLinuxDebugger.Core
               sftp.UploadFile(tarGzStream, pathBuildTarGz);
             });
 
-            LogOutput($"Uploaded '{_tarGzFileName}' [{tarGzSize,13:n0} bytes].");
+            Logger.Output($"Uploaded '{_tarGzFileName}' [{tarGzSize,13:n0} bytes].");
             success = true;
           }
           catch (Exception ex)
           {
-            LogOutput($"Error while uploading file. {ex.Message}\n{ex.StackTrace}");
+            Logger.Output($"Error while uploading file. {ex.Message}\n{ex.StackTrace}");
             success = false;
           }
         }
@@ -416,7 +408,7 @@ namespace VsLinuxDebugger.Core
         var decompressOutput = string.Empty;
 
         var cmd = "set -e";
-        cmd += $";cd \"{_launch.RemoteDeployFolder}\"";
+        cmd += $";cd \"{_launch.RemoteDeployProjectFolder}\"";
         cmd += $";tar -zxf \"{_tarGzFileName}\"";
         ////cmd += $";tar -zxf \"{pathBuildTarGz}\"";
 

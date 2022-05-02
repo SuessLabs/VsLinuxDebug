@@ -62,7 +62,7 @@ namespace VsLinuxDebugger.Core
         {
           if (!ssh.Connect())
           {
-            Console.WriteLine("Could not connect to remote device.");
+            Logger.Output("Could not connect to remote device.");
             return false;
           }
 

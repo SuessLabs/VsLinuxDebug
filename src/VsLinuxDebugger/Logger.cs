@@ -32,7 +32,10 @@ namespace VsLinuxDebugger
       }
     }
 
-    public static void Init(IServiceProvider provider, OutputWindowType outputType = OutputWindowType.Debug, string name = "Remote Debugger")
+    public static void Init(
+      IServiceProvider provider,
+      OutputWindowType outputType = OutputWindowType.Debug,
+      string name = "Linux Debugger")
     {
       _provider = provider;
       _outputType = outputType;
