@@ -16,13 +16,17 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     ////[Description("Publish the solution instead of building. Apply setting for ASP.NET/Blazor projects.")]
     ////public bool Publish { get; set; } = false;
 
-    [Category(Local)]
-    [DisplayName("PLink: Enable Plink instead of SSH")]
-    [Description("Set to TRUE to debug with PLINK.EXE and FALSE for SSH.")]
-    public bool PLinkEnabled { get; set; } = false;
+    ////[Category(Local)]
+    ////[DisplayName("PLink: Enable Plink instead of SSH")]
+    //// <summary>
+    //// [Category(Local)]
+    //// </summary> to TRUE to debug with PLINK.EXE and FALSE for SSH.")]
+    //// <summary>
+    //// [Category(Local)]
+    //// </summary>Enabled { get; set; } = false;
 
     [Category(Local)]
-    [DisplayName("PLink: Local Path")]
+    [DisplayName("PLink Local Path (blank to use embedded)")]
     [Description(@"Full path to local PLINK.EXE file. (i.e. 'C:\temp\putty\plink.exe')")]
     public string PLinkPath { get; set; } = "";
 

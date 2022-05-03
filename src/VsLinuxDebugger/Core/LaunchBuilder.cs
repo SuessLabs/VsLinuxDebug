@@ -84,36 +84,7 @@ namespace VsLinuxDebugger.Core
     {
       string adapter, adapterArgs;
 
-      //// var sshEndpoint = $"{_opts.UserName}@{_opts.HostIp}:{_opts.HostPort}";
-      var sshEndpoint = $"{_opts.UserName}@{_opts.HostIp}";
-
-      var vsdbgLogPath = "";
-      if (vsdbgLogging)
-        vsdbgLogPath = $" --engineLogging={LinuxPath.Combine(RemoteDeployProjectFolder, "_vsdbg.log")}";
-
-      if (!_opts.LocalPlinkEnabled)
-      {
-        //// SSH Key alt-args:
-        //// $"-i \"{_opts.UserPrivateKeyPath}\" -o \"StrictHostKeyChecking no\" {RemoteUserName}@{RemoteHostIp} {_opts.RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}")
-        var sshPassword = !_opts.UserPrivateKeyEnabled
-          ? $"-pw {_opts.UserPass}"
-          : $"-i {_opts.UserPrivateKeyPath} -o \"StrictHostKeyChecking no\"";
-
-        adapter = "ssh.exe";
-        adapterArgs = $"{sshPassword} {sshEndpoint} {_opts.RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}";
-      }
-      else
-      {
-        // TODO: Consider packing PLink.exe
-        //// "%LocalAppData%\\microsoft\\visualstudio\\16.0_c1d3f8c1\\extensions\\cruad2hg.efs\\plink.exe";
-        //// var plinkPath = Path.Combine(GetExtensionDirectory(), "plink.exe").Trim('"');
-
-        adapter = _opts.LocalPLinkPath;
-        adapterArgs = $"-ssh -pw {RemoteUserPass} {RemoteUserName}@{RemoteHostIp} -batch -T {RemoteVsDbgPath} {vsdbgLogPath}";
-
-        //// adapterArgs = $"-ssh -pw {RemoteUserPass} {RemoteUserName}@{RemoteHostIp} -batch -T {RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}";
-        //// adapterArgs = $"-ssh -pw {_options.UserPass} {_options.UserName}@{_options.HostIp}:{_options.HostPort} -batch -T {_options.RemoteVsDbgPath} --interpreter=vscode";
-      }
+      (adapter, adapterArgs) = GetAdapter(vsdbgLogging);
 
       var obj = new Launch(
           RemoteDotNetPath,
@@ -146,6 +117,82 @@ namespace VsLinuxDebugger.Core
       }
 
       return outputPath;
+    }
+
+    private (string adapterPath, string adapterArgs) GetAdapter(bool vsdbgLogging = false)
+    {
+      // NOTE: Removed ":{RemoteHostPort}" because it failed to launch with PLink
+      // var sshEndpoint = $"{_opts.UserName}@{_opts.HostIp}:{_opts.HostPort}";
+      var sshEndpoint = $"{RemoteUserName}@{RemoteHostIp}";
+
+      var vsdbgLogPath = "";
+      if (vsdbgLogging)
+        vsdbgLogPath = $" --engineLogging={LinuxPath.Combine(RemoteDeployProjectFolder, "_vsdbg.log")}";
+
+      ////if (!_opts.LocalPlinkEnabled)
+      ////{
+      ////  adapter = "ssh.exe";
+      ////  adapterArgs = $"{sshPassword} {sshEndpoint} {_opts.RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}";
+      ////}
+      ////else
+      ////{
+
+      string plinkPath = string.Empty;
+
+      // Adapter Path:
+      // PLink.exe - Use manual path or embedded
+      if (!string.IsNullOrEmpty(_opts.LocalPLinkPath) && File.Exists(_opts.LocalPLinkPath))
+      {
+        plinkPath = _opts.LocalPLinkPath;
+      }
+      else
+      {
+        plinkPath = Path.Combine(GetExtensionDirectory(), "plink.exe").Trim('"');
+      }
+
+      // Adapter Arguments:
+      // NOTE:
+      //  1. SSH Private Key ("-i PPK") fails with PLINK. Must use manual password until this is resolved.
+      //  2. Strict Host Key Checking is disabled by default; this doesn't need set.
+      //
+      // REF: https://linuxhint.com/ssh-stricthostkeychecking/
+      //      $"-i \"{_opts.UserPrivateKeyPath}\" -o \"StrictHostKeyChecking no\" {RemoteUserName}@{RemoteHostIp} {_opts.RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}")
+      //
+      //// var strictKeyChecking = " -o \"StrictHostKeyChecking no\"";
+      //// strictKeyChecking = "";
+      ////
+      ////var sshPassword = !_opts.UserPrivateKeyEnabled
+      ////  ? $"-pw {RemoteUserPass}"
+      ////  : $"-i \"{_opts.UserPrivateKeyPath}{strictKeyChecking}\"";
+      //
+      var sshPassword = $"-pw {RemoteUserPass}";
+
+      // TODO: Figure out why "-i <keyfile>" isn't working.
+      if (string.IsNullOrEmpty(RemoteUserPass))
+        Logger.Output("You must provide a User Password to debug.");
+
+      var adapter = plinkPath;
+      var adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {RemoteVsDbgPath} {vsdbgLogPath}";
+      //// adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}";
+
+      return (adapter, adapterArgs);
+    }
+
+    /// <summary>Attempt to get the extension's local directory.</summary>
+    /// <returns>Path of this VSIX or empty string.</returns>
+    private string GetExtensionDirectory()
+    {
+      var path = string.Empty;
+      try
+      {
+        var uri = new Uri(typeof(LaunchBuilder).Assembly.CodeBase, UriKind.Absolute);
+        path = Path.GetDirectoryName(uri.LocalPath);
+      }
+      catch (Exception)
+      {
+      }
+
+      return path;
     }
   }
 }
