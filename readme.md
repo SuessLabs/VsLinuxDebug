@@ -18,15 +18,22 @@ Now developers can build, deploy and debug projects on their remote Linux (Ubunt
 
 ![VS Menu](docs/ScreenShot-MenuItems.png)
 
-* Build and upload to remote devices (_yes, this is a real pain_)
-* Remote debugging (_[P-Link](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) only_)
+* Build and upload to remote devices
+* Remote debugging
 * VS Linux Debugger will automatically detect and install `vsdbg` for you!
 
-### Customize your connections
+### Getting Started
+
+To get started using the tool:
+
+1. Open Visual Studio (VS) > Tools > Options > **Linux Debugger**
+2. Input the remote host IP address
+3. Input the remote's user name and password
+4. VS > Extensions > **Linux Debugger** > **Build, Deploy, Debug**
 
 ![Tools Options](docs/ScreenShot-ToolsOptions.png)
 
-### Generating Private Key
+### Generating Private Key (optional)
 
 The following steps are options if you wish to use an SSH Private Key. These steps were written for Windows 10, however, on Linux the steps are similar.
 
@@ -49,7 +56,10 @@ The following steps are options if you wish to use an SSH Private Key. These ste
 
 ### Work-in-Progress Items
 
-Currently, debugging successfully works with **PLink.exe**. SSH debugging is still a work-in-progress.
+* [ ] **Debugging:** Launching of GUI apps for remote debugging
+* [ ] **Debugging:** PLink using PPK instead of manual password
+* [ ] **Options Window:** Multiple remote profile management
+* [ ] **Options Window:** SSH PPK generator assistant tool
 
 ### Manually Attaching (for GUI apps)
 
