@@ -133,4 +133,21 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+
+  <!-- Download PLink.exe to package with project -->
+  <PropertyGroup>
+    <PLinkUrl>https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe</PLinkUrl>
+  </PropertyGroup>
+  <Target Name="DownloadContentFiles" BeforeTargets="Build">
+    <DownloadFile SourceUrl="$(PLinkUrl)"
+                  DestinationFolder="$(MSBuildProjectDirectory)">
+      <Output TaskParameter="DownloadedFile" ItemName="Content" />
+    </DownloadFile>
+  </Target>
+  <ItemGroup>
+    <Content Include="plink.exe" Condition="Exists('plink.exe')">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>  
 </Project>

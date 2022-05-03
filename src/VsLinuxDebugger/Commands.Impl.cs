@@ -127,13 +127,10 @@ namespace VsLinuxDebugger
         HostIp = Settings.HostIp,
         HostPort = Settings.HostPort,
 
-        LocalPlinkEnabled = Settings.LocalPlinkEnabled,
         LocalPLinkPath = Settings.LocalPLinkPath,
 
         RemoteDebugDisplayGui = Settings.RemoteDebugDisplayGui,
         RemoteDeployBasePath = Settings.RemoteDeployBasePath,
-        ////RemoteDeployDebugPath = Settings.RemoteDeployDebugPath,
-        ////RemoteDeployReleasePath = Settings.RemoteDeployReleasePath,
         RemoteDotNetPath = Settings.RemoteDotNetPath,
         RemoteVsDbgPath = Settings.RemoteVsDbgPath,
 

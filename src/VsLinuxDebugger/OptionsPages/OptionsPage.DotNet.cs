@@ -5,7 +5,7 @@ namespace Xeno.VsLinuxDebug.OptionsPages
 {
   public partial class OptionsPage : DialogPage
   {
-    private const string Experimental = "Expermimental";
+    private const string Experimental = "Warning Expermimental";
     private const string RemoteDebugger = "Remote Debugger";
 
     [Category(Experimental)]
@@ -17,7 +17,7 @@ namespace Xeno.VsLinuxDebug.OptionsPages
 
     [Category(RemoteDebugger)]
     [DisplayName("Upload to folder")]
-    [Description("Folder for to transfer files to. For HOME folder, use './VLSDbg' and not '~/VLSDbg'")]
+    [Description("Folder for to transfer files to. For HOME folder, use './VSLinuxDbg' and not '~/VSLinuxDbg'")]
     public string RemoteDeployBasePath { get; set; } = $"./VSLinuxDbg"; // "VSLDebugger"
 
     [Category(RemoteDebugger)]
@@ -27,7 +27,7 @@ namespace Xeno.VsLinuxDebug.OptionsPages
 
     [Category(RemoteDebugger)]
     [DisplayName("Visual Studio Debugger Path")]
-    [Description("Remote Machine Visual Studio Debugger Path (Samples: `vsdbg`, `/.vsdbg/vsdbg`, `~/.vs-debugger/vs2022/vsdbg`")]
+    [Description("Remote Machine Visual Studio Debugger Path (Samples: `vsdbg`, `~/vsdbg/vsdbg`, `~/.vs-debugger/vs2022/vsdbg`")]
     public string RemoteVsDbgPath { get; set; } = "~/vsdbg/vsdbg";
 
     [Category(Experimental)]

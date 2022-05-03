@@ -78,3 +78,4 @@ TestResult.xml
 /[Dd]ocs/backup
 /[Tt]ests
 /[Tt]ools
+/src/VsLinuxDebugger/plink.exe

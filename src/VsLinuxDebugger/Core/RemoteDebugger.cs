@@ -12,6 +12,9 @@ namespace VsLinuxDebugger.Core
 {
   public class RemoteDebugger
   {
+    private const string DebugAdapterHost = "DebugAdapterHost.Launch";
+    private const string DebugAdapterLaunchJson = "/LaunchJson:";
+
     private bool _buildSuccessful;
     private TaskCompletionSource<bool> _buildTask = null;
     private DTE _dte;
@@ -179,7 +182,7 @@ namespace VsLinuxDebugger.Core
       Logger.Output($"- DebugAdapterHost.Launch /LaunchJson:\"{_launchJsonPath}\"");
 
       DTE2 dte2 = (DTE2)Package.GetGlobalService(typeof(SDTE));
-      dte2.ExecuteCommand("DebugAdapterHost.Launch", $"/LaunchJson:\"{_launchJsonPath}\"");
+      dte2.ExecuteCommand(DebugAdapterHost, $"{DebugAdapterLaunchJson}\"{_launchJsonPath}\"");
 
       // launchConfigName = "Debug on Linux";
       // DebugAdapterHost.Launch /LaunchJson:LaunchTester\Properties\launch.json /ConfigurationName:"{launchConfigName}"
