@@ -8,7 +8,7 @@ Get it on the [VS MarketPlace](https://marketplace.visualstudio.com/items?itemNa
 
 Visual Studio's "attach to process via SSH" is cute, but it lacks deployment and automatic attaching. This project allows you to do just that on your Linux VM or Raspberry Pi over the network!
 
-This project was inspired by [VS Mono Debugger](https://github.com/GordianDotNet/VSMonoDebugger) and their amazing efforts for cross-platform development.
+Suess Labs consulting is sponsored by _Xeno Innovations, Inc._
 
 ## Overview
 
@@ -87,6 +87,7 @@ To contribute, please pick off an item from the project or issue page. We'd love
 
 ## References
 
+* Inspired by [VS Mono Debugger](https://github.com/GordianDotNet/VSMonoDebugger) for their amazing Mono cross-platform efforts.
 * [PuTTY PLink](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)
 * [Extension Docs](https://docs.microsoft.com/en-us/visualstudio/extensibility/creating-a-settings-category?view=vs-2022)
 * [Extension Sample](https://github.com/microsoft/VSSDK-Extensibility-Samples/tree/master/Options)
