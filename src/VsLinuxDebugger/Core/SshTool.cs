@@ -161,7 +161,15 @@ namespace VsLinuxDebugger.Core
     {
       string arch = Bash("uname -m").Trim('\n');
 
-      Bash("[ -d ~/.vsdbg ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/.vsdbg");
+      var curl = Bash("which curl ; echo $?");
+      if (curl.Contains("1"))
+      {
+        // TODO: Need to pass in password.
+        Bash("sudo apt install curl");
+      }
+
+      var ret = Bash("[ -d ~/.vsdbg ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/.vsdbg");
+      Logger.Output($"Returned: {ret}");
     }
 
     public void UploadFile(Stream input, string path)
