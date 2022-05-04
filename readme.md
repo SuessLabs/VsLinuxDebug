@@ -34,9 +34,9 @@ sudo apt install curl
 **Windows**:
 
 1. Open Visual Studio (VS) > Tools > Options > **Linux Debugger**
-2. Input the remote host IP address
-3. Input the remote's user name and password
-4. VS > Extensions > **Linux Debugger** > **Build, Deploy, Debug**
+2. **Input:** Remote Host IP address
+3. **Input:** Remote's User Name and Password
+4. VS > Extensions > Linux Debugger > **Build, Deploy, Debug**
 
 ![Tools Options](docs/ScreenShot-ToolsOptions.png)
 
