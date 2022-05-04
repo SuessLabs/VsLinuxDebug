@@ -421,6 +421,7 @@ namespace VsLinuxDebugger.Core
             {
               tarGzStream.Seek(0, SeekOrigin.Begin);
 
+              //TODO: Use this --> UploadFile(tarGzStream, pathBuildTarGz);
               sftp.UploadFile(tarGzStream, pathBuildTarGz);
             });
 
