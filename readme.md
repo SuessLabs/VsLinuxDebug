@@ -24,12 +24,19 @@ Now developers can build, deploy and debug projects on their remote Linux (Ubunt
 
 ### Getting Started
 
-To get started using the tool:
+**Linux**, we'll need **SSH** and **cURL** for access and downloading any missing tools:
+
+```bash
+sudo apt install openssh-server
+sudo apt install curl
+```
+
+**Windows**:
 
 1. Open Visual Studio (VS) > Tools > Options > **Linux Debugger**
-2. Input the remote host IP address
-3. Input the remote's user name and password
-4. VS > Extensions > **Linux Debugger** > **Build, Deploy, Debug**
+2. **Input:** Remote Host IP address
+3. **Input:** Remote's User Name and Password
+4. VS > Extensions > Linux Debugger > **Build, Deploy, Debug**
 
 ![Tools Options](docs/ScreenShot-ToolsOptions.png)
 
