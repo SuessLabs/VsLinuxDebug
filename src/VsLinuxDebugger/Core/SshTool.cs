@@ -200,8 +200,8 @@ namespace VsLinuxDebugger.Core
         Logger.Output($"BASH-RET: {curlInstall}");
       }
 
-      // TODO: Match VSDBG search path to Tools/Options
-      var ret = Bash("[ -d ~/.vsdbg ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/.vsdbg");
+      //// OLD: var ret = Bash("[ -d ~/.vsdbg ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/.vsdbg");
+      var ret = Bash($"[ -d {_opts.RemoteVsDbgBasePath} ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l {_opts.RemoteVsDbgBasePath}");
       Logger.Output($"Returned: {ret}");
     }
 
