@@ -30,7 +30,7 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     [DisplayName("Visual Studio Debugger Path")]
     [Description(
       "Root folder of Visual Studio Debugger. " +
-      "(Samples: `~/.vs-debugger`)")]
+      "(Samples: `~/.vsdbg`, `~/.vs-debugger/vs2022`)")]
     public string RemoteVsDbgRootPath { get; set; } = Constants.DefaultVsdbgBasePath;
 
     [Category(Experimental)]
