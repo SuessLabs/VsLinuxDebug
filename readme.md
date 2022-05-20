@@ -20,6 +20,7 @@ Now developers can build, deploy and debug projects on their remote Linux (Ubunt
 
 * Build and upload to remote devices
 * Remote debugging
+  * _NOTE: This is still in the experimental stages. Please use VS' Attatch to Process if you have issues_
 * VS Linux Debugger will automatically detect and install `vsdbg` for you!
 
 ### Getting Started
