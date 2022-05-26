@@ -74,20 +74,5 @@ namespace VsLinuxDebugger
       OLEMSGICON.OLEMSGICON_INFO,
       OLEMSGBUTTON.OLEMSGBUTTON_OK,
       OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-
-    /// <summary>VS Menu Command IDs. This must be insync with .vsct values.</summary>
-    private sealed class CommandIds
-    {
-      public const int CmdBuildDeployOnly = 0x1001;
-      public const int CmdBuildDeployDebug = 0x1002;
-      public const int CmdDebugOnly = 0x1003;
-      ////public const int CmdPublishOnly = 0x1006;
-      ////public const int CmdPublishDebug= 0x1007;
-      public const int CmdShowLog = 0x1004;
-      public const int CmdShowSettings = 0x1005;
-      public const int LinuxRemoteMainMenu = 0x1000;
-      public const int RemoteMainMenuGroupLevel1 = 0x1100;
-      public const int RemoteMainMenuGroupLevel2 = 0x1200;
-    }
   }
 }

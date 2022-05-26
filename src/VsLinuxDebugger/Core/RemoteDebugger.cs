@@ -75,17 +75,25 @@ namespace VsLinuxDebugger.Core
 
           if (buildOptions.HasFlag(BuildOptions.Deploy))
           {
-            if (_options.RemoteDebugDisplayGui)
-              ssh.Bash("export DISPLAY=:0");
-
             await ssh.UploadFilesAsync();
           }
-          else if (buildOptions.HasFlag(BuildOptions.Publish))
+          ////else if (buildOptions.HasFlag(BuildOptions.Publish))
+          ////{
+          ////  // This is PUBLISH not our 'deployer'
+          ////}
+
+          // The following replaces -->> if (_options.RemoteDebugDisplayGui)
+          if (buildOptions.HasFlag(BuildOptions.Launch))
           {
-            // This is PUBLISH not our 'deployer'
+            ssh.Bash("export DISPLAY=:0");
+            ssh.Bash($"dotnet \"{_launchBuilder.RemoteDeployAssemblyFilePath}\"");
           }
 
-          if (buildOptions.HasFlag(BuildOptions.Debug))
+          if (buildOptions.HasFlag(BuildOptions.Debug & BuildOptions.Launch))
+          {
+            // TODO: Find ProcId and set Launch.json to `Attach`
+          }
+          else if (buildOptions.HasFlag(BuildOptions.Debug))
           {
             BuildDebugAttacher();
           }
