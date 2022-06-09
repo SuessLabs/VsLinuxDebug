@@ -21,7 +21,6 @@ namespace VsLinuxDebugger.Core
     private LaunchBuilder _launchBuilder;
     private string _launchJsonPath = string.Empty;
     private UserOptions _options;
-    //// private SshTool _ssh;
 
     public RemoteDebugger(UserOptions options)
     {
