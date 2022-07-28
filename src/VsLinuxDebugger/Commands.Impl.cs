@@ -132,7 +132,7 @@ namespace VsLinuxDebugger
         RemoteDebugDisplayGui = Settings.RemoteDebugDisplayGui,
         RemoteDeployBasePath = Settings.RemoteDeployBasePath,
         RemoteDotNetPath = Settings.RemoteDotNetPath,
-        RemoteVsDbgPath = Settings.RemoteVsDbgPath,
+        RemoteVsDbgBasePath = Settings.RemoteVsDbgBasePath,
 
         UseCommandLineArgs = Settings.UseCommandLineArgs,
         //// UsePublish = Settings.UsePublish,

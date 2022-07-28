@@ -13,8 +13,8 @@ namespace ConsoleNet5
 
       Console.WriteLine("All done.");
 
-      //// Console.WriteLine("Press any key to exit.."); 
-      //// var x = Console.ReadLine();
+      Console.WriteLine("Press any key to exit.."); 
+      var x = Console.ReadLine();
     }
   }
 }

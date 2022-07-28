@@ -70,7 +70,8 @@ namespace VsLinuxDebugger.Core
 
     public string RemoteUserPass => _opts.UserPass;
 
-    public string RemoteVsDbgPath => _opts.RemoteVsDbgPath;
+    /// <summary>Full path to VSDBG (i.e. `~/.vsdbg/vsdbg`).</summary>
+    public string RemoteVsDbgFullPath => LinuxPath.Combine(_opts.RemoteVsDbgBasePath, Constants.AppVSDbg);
 
     /// <summary>Solution folder path. I.E. "C:\\path\Repos\"</summary>
     public string SolutionDirPath { get; set; }
@@ -159,7 +160,6 @@ namespace VsLinuxDebugger.Core
       //      $"-i \"{_opts.UserPrivateKeyPath}\" -o \"StrictHostKeyChecking no\" {RemoteUserName}@{RemoteHostIp} {_opts.RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}")
       //
       //// var strictKeyChecking = " -o \"StrictHostKeyChecking no\"";
-      //// strictKeyChecking = "";
       ////
       ////var sshPassword = !_opts.UserPrivateKeyEnabled
       ////  ? $"-pw {RemoteUserPass}"
@@ -172,8 +172,8 @@ namespace VsLinuxDebugger.Core
         Logger.Output("You must provide a User Password to debug.");
 
       var adapter = plinkPath;
-      var adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {RemoteVsDbgPath} {vsdbgLogPath}";
-      //// adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}";
+      var adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {RemoteVsDbgFullPath} {vsdbgLogPath}";
+      //// adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {RemoteVsDbgFullPath} --interpreter=vscode {vsdbgLogPath}";
 
       return (adapter, adapterArgs);
     }
