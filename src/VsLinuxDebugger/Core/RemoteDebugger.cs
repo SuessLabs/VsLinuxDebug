@@ -85,8 +85,10 @@ namespace VsLinuxDebugger.Core
           // The following replaces -->> if (_options.RemoteDebugDisplayGui)
           if (buildOptions.HasFlag(BuildOptions.Launch))
           {
-            ssh.Bash("export DISPLAY=:0");
-            ssh.Bash($"dotnet \"{_launchBuilder.RemoteDeployAssemblyFilePath}\"");
+            ssh.Bash($"DISPLAY=:0 dotnet \"{_launchBuilder.RemoteDeployAssemblyFilePath}\"");
+
+            //ssh.BashStream("export DISPLAY=:0");
+            //ssh.BashStream($"dotnet \"{_launchBuilder.RemoteDeployAssemblyFilePath}\"");
           }
 
           if (buildOptions.HasFlag(BuildOptions.Debug & BuildOptions.Launch))
