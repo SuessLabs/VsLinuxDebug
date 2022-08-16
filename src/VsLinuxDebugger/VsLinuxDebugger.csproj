@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Commands.Impl.cs" />
     <Compile Include="Core\BuildOptions.cs" />
+    <Compile Include="Core\Constants.cs" />
     <Compile Include="Core\LinuxPath.cs" />
     <Compile Include="Core\RemoteDebugger.cs" />
     <Compile Include="Core\LaunchBuilder.cs" />

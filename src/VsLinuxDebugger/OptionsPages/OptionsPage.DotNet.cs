@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using Microsoft.VisualStudio.Shell;
+using VsLinuxDebugger.Core;
 
 namespace Xeno.VsLinuxDebug.OptionsPages
 {
@@ -22,13 +23,15 @@ namespace Xeno.VsLinuxDebug.OptionsPages
 
     [Category(RemoteDebugger)]
     [DisplayName(".NET Path")]
-    [Description("Path to .NET on remote machine. (Samples: `dotnet`, `~/.dotnet/dotnet`")]
-    public string RemoteDotNetPath { get; set; } = "dotnet";
+    [Description("Path of .NET on remote machine. (Samples: `dotnet`, `~/.dotnet/dotnet`)")]
+    public string RemoteDotNetPath { get; set; } = Constants.DefaultDotNetPath;
 
     [Category(RemoteDebugger)]
     [DisplayName("Visual Studio Debugger Path")]
-    [Description("Remote Machine Visual Studio Debugger Path (Samples: `vsdbg`, `~/vsdbg/vsdbg`, `~/.vs-debugger/vs2022/vsdbg`")]
-    public string RemoteVsDbgPath { get; set; } = "~/vsdbg/vsdbg";
+    [Description(
+      "Root folder of Visual Studio Debugger. " +
+      "(Samples: `~/.vsdbg`, `~/.vs-debugger/vs2022`)")]
+    public string RemoteVsDbgRootPath { get; set; } = Constants.DefaultVsdbgBasePath;
 
     [Category(Experimental)]
     [DisplayName("Use Command Line Arguments")]

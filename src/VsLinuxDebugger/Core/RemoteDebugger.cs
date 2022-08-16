@@ -125,7 +125,7 @@ namespace VsLinuxDebugger.Core
 
       BuildEvents.OnBuildProjConfigDone += (string project, string projectConfig, string platform, string solutionConfig, bool success) =>
       {
-        Logger.Output($"Project: {project} --- Success: {success}\n");
+        Logger.Output($"Project [success={success}]: {project}");
 
         if (!success)
           BuildCleanup();

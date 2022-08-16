@@ -11,9 +11,11 @@
     public string LocalPLinkPath { get; set; }
 
     public bool RemoteDebugDisplayGui { get; set; }
-    public string RemoteDeployBasePath { get; set; }  // TODO: Scrub trailing '/\' chars
+    public string RemoteDeployBasePath { get; set; }
+    /// <summary>Full path to `dotnet` executable.</summary>
     public string RemoteDotNetPath { get; set; }
-    public string RemoteVsDbgPath { get; set; }
+    /// <summary>Base path to VSDBG (i.e. `~/.vsdbg`).</summary>
+    public string RemoteVsDbgBasePath { get; set; }
 
     public bool UseCommandLineArgs { get; set; }
     public bool UsePublish { get; set; }

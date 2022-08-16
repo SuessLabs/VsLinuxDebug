@@ -2,9 +2,11 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Renci.SshNet;
+using Renci.SshNet.Common;
 using SharpCompress.Common;
 using SharpCompress.Writers;
 
@@ -47,6 +49,35 @@ namespace VsLinuxDebugger.Core
       {
         throw;
       }
+    }
+
+    /// <summary>SUDO Bash Commands.</summary>
+    /// <param name="command">Command to send.</param>
+    /// <returns>Results.</returns>
+    public string BashSudo(string command)
+    {
+      var result = string.Empty;
+
+      // RegEx for pattern matching terminal prompt
+      //  "[$>]"       BASIC
+      //  @"\][#$>]"   FAILS - Usecase: "[user@mach]$
+      //  "([$#>:])"
+      var prompt = new Regex("([$#>:])");
+      var modes = new Dictionary<TerminalModes, uint>();
+      // modes.Add(Renci.SshNet.Common.TerminalModes.ECHO, 53);
+
+      using (var stream = _ssh.CreateShellStream("xterm", 255, 50, 800, 600, 1024, modes))
+      {
+        stream.Write(command + "\n");
+        result = stream.Expect("password");
+        Logger.Output($"BASH-RET: {result}");
+
+        stream.Write(_opts.UserPass + "\n");
+        result = stream.Expect(prompt);
+        Logger.Output($"BASH-RET: {result}");
+      }
+
+      return result;
     }
 
     /// <summary>Cleans the contents of the deployment path.</summary>
@@ -161,7 +192,17 @@ namespace VsLinuxDebugger.Core
     {
       string arch = Bash("uname -m").Trim('\n');
 
-      Bash("[ -d ~/.vsdbg ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/.vsdbg");
+      var curlExists = Bash("which curl ; echo $?");
+      if (curlExists.Equals("1\n"))
+      {
+        // TODO: Need to pass in password.
+        var curlInstall = BashSudo("sudo apt install curl");
+        Logger.Output($"BASH-RET: {curlInstall}");
+      }
+
+      //// OLD: var ret = Bash("[ -d ~/.vsdbg ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/.vsdbg");
+      var ret = Bash($"[ -d {_opts.RemoteVsDbgBasePath} ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l {_opts.RemoteVsDbgBasePath}");
+      Logger.Output($"Returned: {ret}");
     }
 
     public void UploadFile(Stream input, string path)
@@ -380,6 +421,7 @@ namespace VsLinuxDebugger.Core
             {
               tarGzStream.Seek(0, SeekOrigin.Begin);
 
+              //TODO: Use this --> UploadFile(tarGzStream, pathBuildTarGz);
               sftp.UploadFile(tarGzStream, pathBuildTarGz);
             });
 
