@@ -5,7 +5,7 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Learn.PrismAvalonia.Views.SidebarView">
+             x:Class="GuiApp.PrismAvalonia.Views.SidebarView">
   <DockPanel>
 
     <TextBlock DockPanel.Dock="Top"
@@ -15,13 +15,13 @@
 
     <Button DockPanel.Dock="Bottom"
             Content="Settings"
-            Command="{Binding CommandSettings}"
+            Command="{Binding CmdSettings}"
             HorizontalAlignment="Stretch" />
     <ScrollViewer>
       <StackPanel>
-        <Button Content="Dashboard" Command="{Binding CommandLogin}" HorizontalAlignment="Stretch" />
-        <Button Content="News" Command="{Binding CommandPatientList}" HorizontalAlignment="Stretch" />
-        <Button Content="Events" Command="{Binding CommandDispense}"  HorizontalAlignment="Stretch" />
+        <Button Content="Dashboard" Command="{Binding CmdDashboard}" HorizontalAlignment="Stretch" />
+        <Button Content="News" Command="{Binding CmdNews}" HorizontalAlignment="Stretch" />
+        <Button Content="Events" Command="{Binding CmdEvents}"  HorizontalAlignment="Stretch" />
       </StackPanel>
     </ScrollViewer>
   </DockPanel>

@@ -1,13 +1,13 @@
 <prism:PrismApplication xmlns="https://github.com/avaloniaui"
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:prism="http://prismlibrary.com/"
-                        xmlns:local="using:Learn.PrismAvalonia"
-                        x:Class="Learn.PrismAvalonia.App">
+                        xmlns:local="using:GuiApp.PrismAvalonia"
+                        x:Class="GuiApp.PrismAvalonia.App">
   <prism:PrismApplication.DataTemplates>
   </prism:PrismApplication.DataTemplates>
 
   <prism:PrismApplication.Styles>
     <FluentTheme Mode="Light" />
-    <!--<StyleInclude Source="avares://Learn.PrismAvalonia/Styles/Icons.axaml" />-->
+    <!--<StyleInclude Source="avares://GuiApp.PrismAvalonia/Styles/Icons.axaml" />-->
   </prism:PrismApplication.Styles>
 </prism:PrismApplication>

@@ -1,8 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.ReactiveUI;
 
-namespace Learn.PrismAvalonia
+namespace GuiApp.PrismAvalonia
 {
   internal class Program
   {

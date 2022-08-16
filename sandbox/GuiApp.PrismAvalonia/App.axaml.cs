@@ -1,13 +1,13 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Markup.Xaml;
-using Learn.PrismAvalonia.ViewModels;
-using Learn.PrismAvalonia.Views;
+using GuiApp.PrismAvalonia.ViewModels;
+using GuiApp.PrismAvalonia.Views;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 
-namespace Learn.PrismAvalonia
+namespace GuiApp.PrismAvalonia
 {
   public class App : PrismApplication
   {
@@ -46,16 +46,12 @@ namespace Learn.PrismAvalonia
       regionManager.RegisterViewWithRegion(RegionNames.SidebarRegion, typeof(SidebarView));
     }
 
-    /// <summary>
-    ///   Register views and Services.
-    /// </summary>
+    /// <summary>Register views and Services.</summary>
     /// <param name="containerRegistry">IOC Container.</param>
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
       // Services
-      ////containerRegistry.RegisterSingleton<ILogService, LogService>();
-      ////containerRegistry.RegisterSingleton<IJsonService, JsonService>();
-      ////containerRegistry.RegisterSingleton<IPreferenceService, PreferenceService>();
+      // ...
 
       // Views - Generic views
       containerRegistry.Register<ShellWindow>();
@@ -63,9 +59,7 @@ namespace Learn.PrismAvalonia
 
       // Views - Region Navigation
       containerRegistry.RegisterForNavigation<DashboardView, DashboardViewModel>();
-      ////containerRegistry.RegisterForNavigation<NewsView, NewsViewModel>();
-      ////containerRegistry.RegisterForNavigation<NewsArticleView, NewsArticleViewModel>();
-      ////containerRegistry.RegisterForNavigation<EventsView, EventsViewModel>();
+      containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>();
     }
   }
 }

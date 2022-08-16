@@ -1,4 +1,4 @@
-namespace Learn.PrismAvalonia.ViewModels
+﻿namespace GuiApp.PrismAvalonia.ViewModels
 {
   public class ShellWindowViewModel : ViewModelBase
   {

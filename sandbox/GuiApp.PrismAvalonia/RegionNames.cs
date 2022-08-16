@@ -1,4 +1,4 @@
-﻿namespace Learn.PrismAvalonia
+﻿namespace GuiApp.PrismAvalonia
 {
   public static class RegionNames
   {

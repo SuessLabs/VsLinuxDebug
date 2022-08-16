@@ -2,11 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace Learn.PrismAvalonia.Views
+namespace GuiApp.PrismAvalonia.Views
 {
-  public partial class SettingsView : UserControl
+  public partial class SidebarView : UserControl
   {
-    public SettingsView()
+    public SidebarView()
     {
       InitializeComponent();
     }

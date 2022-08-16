@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Learn.PrismAvalonia": {
+    "GuiApp.PrismAvalonia": {
       "commandName": "Project"
     },
     "WSL": {

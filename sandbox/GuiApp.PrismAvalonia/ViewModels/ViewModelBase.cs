@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using Prism.Mvvm;
 using Prism.Regions;
 
-namespace Learn.PrismAvalonia.ViewModels
+namespace GuiApp.PrismAvalonia.ViewModels
 {
   public class ViewModelBase : BindableBase, INavigationAware
   {

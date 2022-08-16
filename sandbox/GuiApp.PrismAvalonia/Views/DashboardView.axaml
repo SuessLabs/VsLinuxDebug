@@ -5,12 +5,11 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Learn.PrismAvalonia.Views.DashboardView">
+             x:Class="GuiApp.PrismAvalonia.Views.DashboardView">
   <DockPanel>
     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
       <TextBlock Text="Welcome to Prism.Avalonia!" />
       <TextBlock Text="{Binding Title}" />
-      <!--<local:ProgressRing IsActive="True" Width="20" />-->
     </StackPanel>
   </DockPanel>
 </UserControl>
