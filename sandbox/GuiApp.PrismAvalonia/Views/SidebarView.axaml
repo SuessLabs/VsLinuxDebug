@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="GuiApp.PrismAvalonia.Views.SidebarView">
+  <DockPanel>
+
+    <TextBlock DockPanel.Dock="Top"
+               Text="{Binding Title}"
+               HorizontalAlignment="Stretch"
+               FontWeight="Bold" />
+
+    <Button DockPanel.Dock="Bottom"
+            Content="Settings"
+            Command="{Binding CmdSettings}"
+            HorizontalAlignment="Stretch" />
+    <ScrollViewer>
+      <StackPanel>
+        <Button Content="Dashboard" Command="{Binding CmdDashboard}" HorizontalAlignment="Stretch" />
+        <Button Content="News" Command="{Binding CmdNews}" HorizontalAlignment="Stretch" />
+        <Button Content="Events" Command="{Binding CmdEvents}"  HorizontalAlignment="Stretch" />
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</UserControl>

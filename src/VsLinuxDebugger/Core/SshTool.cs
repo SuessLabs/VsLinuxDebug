@@ -29,7 +29,9 @@ namespace VsLinuxDebugger.Core
       _launch = launch;
     }
 
-    public string Bash(string command)
+    public SshClient Ssh => _ssh;
+
+    public string Bash(string command, bool createCommand = false)
     {
       try
       {
@@ -41,7 +43,17 @@ namespace VsLinuxDebugger.Core
         }
 
         Logger.Output($"BASH> {command}");
-        var cmd = _ssh.RunCommand(command);
+
+        SshCommand cmd;
+        if (!createCommand)
+        {
+          cmd = _ssh.RunCommand(command);
+        }
+        else
+        {
+          cmd = _ssh.CreateCommand(command);
+          cmd.Execute();
+        }
 
         return cmd.Result;
       }
@@ -51,10 +63,11 @@ namespace VsLinuxDebugger.Core
       }
     }
 
-    /// <summary>SUDO Bash Commands.</summary>
+    /// <summary>Send Bash Commands via Shell Stream.</summary>
     /// <param name="command">Command to send.</param>
+    /// <param name="isSudo">Send command with SUDO.</param>
     /// <returns>Results.</returns>
-    public string BashSudo(string command)
+    public string BashStream(string command, bool isSudo = false)
     {
       var result = string.Empty;
 
@@ -69,12 +82,51 @@ namespace VsLinuxDebugger.Core
       using (var stream = _ssh.CreateShellStream("xterm", 255, 50, 800, 600, 1024, modes))
       {
         stream.Write(command + "\n");
-        result = stream.Expect("password");
-        Logger.Output($"BASH-RET: {result}");
 
-        stream.Write(_opts.UserPass + "\n");
-        result = stream.Expect(prompt);
-        Logger.Output($"BASH-RET: {result}");
+        if (!isSudo)
+        {
+          result = stream.ReadLine();
+        }
+        else
+        {
+          Logger.Output($"BASH-SUDO: TRUE");
+          result = stream.Expect("password");
+          Logger.Output($"BASH-SUDO: {result}");
+
+          stream.Write(_opts.UserPass + "\n");
+          result = stream.Expect(prompt);
+          Logger.Output($"BASH-SUDO: {result}");
+        }
+      }
+
+      return result;
+    }
+
+    /// <summary>Send Bash Commands via Shell Stream.</summary>
+    /// <param name="command">Command to send.</param>
+    /// <param name="searchText">Custom search text to wait for.</param>
+    /// <returns>Results.</returns>
+    public string BashStream(string command, string searchText)
+    {
+      var result = string.Empty;
+
+      // RegEx for pattern matching terminal prompt
+      //  "[$>]"       BASIC
+      //  @"\][#$>]"   FAILS - Usecase: "[user@mach]$
+      //  "([$#>:])"
+      var prompt = new Regex("([$#>:])");
+      var modes = new Dictionary<TerminalModes, uint>();
+      // modes.Add(Renci.SshNet.Common.TerminalModes.ECHO, 53);
+
+      using (var stream = _ssh.CreateShellStream("xterm", 255, 50, 800, 600, 1024, modes))
+      {
+        stream.Write(command + "\n");
+
+        result = stream.ReadLine();
+
+        Logger.Output($"BashEx: Waiting for search text, '{searchText}'");
+        result = stream.Expect(searchText);
+        Logger.Output($"BashEx: {result}");
       }
 
       return result;
@@ -196,7 +248,7 @@ namespace VsLinuxDebugger.Core
       if (curlExists.Equals("1\n"))
       {
         // TODO: Need to pass in password.
-        var curlInstall = BashSudo("sudo apt install curl");
+        var curlInstall = BashStream("sudo apt install curl");
         Logger.Output($"BASH-RET: {curlInstall}");
       }
 

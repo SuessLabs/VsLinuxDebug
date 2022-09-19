@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "GuiApp.PrismAvalonia": {
+      "commandName": "Project"
+    },
+    "WSL": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DISPLAY": ":0"
+      },
+      "distributionName": ""
+    }
+  }
+}
