@@ -63,15 +63,16 @@ namespace VsLinuxDebugger.Core
 
         using (var ssh = new SshTool(_options, _launchBuilder))
         {
-          if (!ssh.Connect())
+          var success = await ssh.ConnectAsync();
+          if (!success)
           {
             Logger.Output("Could not connect to remote device.");
             return false;
           }
 
-          ssh.TryInstallVsDbg();
-          ssh.MakeDeploymentFolder();
-          ssh.CleanDeploymentFolder();
+          await ssh.TryInstallVsDbgAsync();
+          await ssh.MakeDeploymentFolderAsync();
+          await ssh.CleanDeploymentFolderAsync();
 
           if (buildOptions.HasFlag(BuildOptions.Deploy))
           {

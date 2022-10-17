@@ -31,29 +31,35 @@ namespace VsLinuxDebugger.Core
 
     public SshClient Ssh => _ssh;
 
-    public string Bash(string command, bool createCommand = false)
+    public async Task<string> BashAsync(string command, bool createCommand = false)
     {
       try
       {
         if (!_isConnected)
         {
           // attempt to reconnect
-          if (!Connect())
+          if (!await ConnectAsync())
             return "Cannot connect to remote host to execute Bash command.";
         }
 
         Logger.Output($"BASH> {command}");
 
         SshCommand cmd;
-        if (!createCommand)
+
+        cmd = await Task.Run(() =>
         {
-          cmd = _ssh.RunCommand(command);
-        }
-        else
-        {
-          cmd = _ssh.CreateCommand(command);
-          cmd.Execute();
-        }
+          if (!createCommand)
+          {
+            cmd = _ssh.RunCommand(command);
+          }
+          else
+          {
+            cmd = _ssh.CreateCommand(command);
+            cmd.Execute();
+          }
+
+          return cmd;
+        });
 
         return cmd.Result;
       }
@@ -79,6 +85,7 @@ namespace VsLinuxDebugger.Core
       var modes = new Dictionary<TerminalModes, uint>();
       // modes.Add(Renci.SshNet.Common.TerminalModes.ECHO, 53);
 
+      // TODO: Make async
       using (var stream = _ssh.CreateShellStream("xterm", 255, 50, 800, 600, 1024, modes))
       {
         stream.Write(command + "\n");
@@ -134,7 +141,7 @@ namespace VsLinuxDebugger.Core
 
     /// <summary>Cleans the contents of the deployment path.</summary>
     /// <param name="fullScrub">Clear entire base deployment folder (TRUE) or just our project.</param>
-    public void CleanDeploymentFolder(bool fullScrub = false)
+    public async Task CleanDeploymentFolderAsync(bool fullScrub = false)
     {
       // Whole deployment folder and hidden files
       // rm -rf xxx/*      == Contents of the folder but not the folder itself
@@ -142,16 +149,12 @@ namespace VsLinuxDebugger.Core
       var filesAndFolders = "{*,.*}";
 
       if (fullScrub)
-      {
-        Bash($"rm -rf \"{_opts.RemoteDeployBasePath}/{filesAndFolders}\"");
-      }
+        await BashAsync($"rm -rf \"{_opts.RemoteDeployBasePath}/{filesAndFolders}\"");
       else
-      {
-        Bash($"rm -rf {_launch.RemoteDeployProjectFolder}/{filesAndFolders}");
-      }
+        await BashAsync($"rm -rf {_launch.RemoteDeployProjectFolder}/{filesAndFolders}");
     }
 
-    public bool Connect()
+    public async Task<bool> ConnectAsync()
     {
       PrivateKeyFile keyFile = null;
 
@@ -178,7 +181,7 @@ namespace VsLinuxDebugger.Core
           ? new SshClient(_opts.HostIp, _opts.HostPort, _opts.UserName, keyFile)
           : new SshClient(_opts.HostIp, _opts.HostPort, _opts.UserName, _opts.UserPass);
 
-        _ssh.Connect();
+        await Task.Run(() => _ssh.Connect());
       }
       catch (Exception ex)
       {
@@ -222,10 +225,10 @@ namespace VsLinuxDebugger.Core
       _scp?.Dispose();
     }
 
-    public void MakeDeploymentFolder()
+    public async Task MakeDeploymentFolderAsync()
     {
       // do we need SUDO?
-      Bash($"mkdir -p {_opts.RemoteDeployBasePath}");
+      await BashAsync($"mkdir -p {_opts.RemoteDeployBasePath}");
       //// Bash($"mkdir -p {_opts.RemoteDeployDebugPath}");
       //// Bash($"mkdir -p {_opts.RemoteDeployReleasePath}");
 
@@ -234,17 +237,17 @@ namespace VsLinuxDebugger.Core
         : $":{_opts.UserGroupName}";
 
       // Update ownership so it's not "root"
-      Bash($"sudo chown -R {_opts.UserName}{group} {_opts.RemoteDeployBasePath}");
+      await BashAsync($"sudo chown -R {_opts.UserName}{group} {_opts.RemoteDeployBasePath}");
     }
 
     /// <summary>
-    /// Instals VS Debugger if it doesn't exist already
+    /// Install cURL and VS Debugger if it doesn't exist already.
     /// </summary>
-    public void TryInstallVsDbg()
+    public async Task TryInstallVsDbgAsync()
     {
-      string arch = Bash("uname -m").Trim('\n');
+      string arch = (await BashAsync("uname -m")).Trim('\n');
 
-      var curlExists = Bash("which curl ; echo $?");
+      var curlExists = await BashAsync("which curl ; echo $?");
       if (curlExists.Equals("1\n"))
       {
         // TODO: Need to pass in password.
@@ -253,7 +256,7 @@ namespace VsLinuxDebugger.Core
       }
 
       //// OLD: var ret = Bash("[ -d ~/.vsdbg ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/.vsdbg");
-      var ret = Bash($"[ -d {_opts.RemoteVsDbgBasePath} ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l {_opts.RemoteVsDbgBasePath}");
+      var ret = await BashAsync($"[ -d {_opts.RemoteVsDbgBasePath} ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l {_opts.RemoteVsDbgBasePath}");
       Logger.Output($"Returned: {ret}");
     }
 
@@ -282,7 +285,7 @@ namespace VsLinuxDebugger.Core
         // TODO: Rev3 - Allow for both SFTP and SCP as a backup. This separating connection to a new disposable class.
         //// Logger.Output($"Connected to {_connectionInfo.Username}@{_connectionInfo.Host}:{_connectionInfo.Port} via SSH and {(_sftpClient != null ? "SFTP" : "SCP")}");
 
-        Bash($@"mkdir -p {_launch.RemoteDeployProjectFolder}");
+        BashAsync($@"mkdir -p {_launch.RemoteDeployProjectFolder}");
 
         var srcDirInfo = new DirectoryInfo(_launch.OutputDirFullPath);
         if (!srcDirInfo.Exists)
@@ -497,9 +500,10 @@ namespace VsLinuxDebugger.Core
     /// <returns>Returns true on success.</returns>
     private async Task<bool> PayloadDecompressAsync(string pathBuildTarGz, bool removeTarGz = true)
     {
+      var decompressOutput = string.Empty;
+
       try
       {
-        var decompressOutput = string.Empty;
 
         var cmd = "set -e";
         cmd += $";cd \"{_launch.RemoteDeployProjectFolder}\"";
@@ -509,19 +513,16 @@ namespace VsLinuxDebugger.Core
         if (removeTarGz)
           cmd += $";rm \"{pathBuildTarGz}\"";
 
-        await Task.Run(() =>
-        {
-          decompressOutput = Bash(cmd);
-        });
+        decompressOutput = await BashAsync(cmd);
 
         Logger.Output($"Payload Decompress results: '{decompressOutput}' (blank=OK)");
-
-        return true;
       }
       catch (Exception)
       {
         return false;
       }
+
+      return true;
     }
   }
 }
