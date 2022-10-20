@@ -42,6 +42,13 @@ namespace VsLinuxDebugger
       _name = name;
     }
 
+    public static void Debug(string message)
+    {
+#if DEBUG
+      Output($"DEBUG: {message}");
+#endif
+    }
+
     public static void Output(string message)
     {
       var msg = $"{FormattedTime}: {message}{Environment.NewLine}";

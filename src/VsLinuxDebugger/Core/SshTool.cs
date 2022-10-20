@@ -96,13 +96,13 @@ namespace VsLinuxDebugger.Core
         }
         else
         {
-          Logger.Output($"BASH-SUDO: TRUE");
+          Logger.Debug($"BASH-SUDO: TRUE");
           result = stream.Expect("password");
-          Logger.Output($"BASH-SUDO: {result}");
+          Logger.Debug($"BASH-SUDO: {result}");
 
           stream.Write(_opts.UserPass + "\n");
           result = stream.Expect(prompt);
-          Logger.Output($"BASH-SUDO: {result}");
+          Logger.Debug($"BASH-SUDO: {result}");
         }
       }
 
@@ -131,9 +131,9 @@ namespace VsLinuxDebugger.Core
 
         result = stream.ReadLine();
 
-        Logger.Output($"BashEx: Waiting for search text, '{searchText}'");
+        Logger.Debug($"BashEx: Waiting for search text, '{searchText}'");
         result = stream.Expect(searchText);
-        Logger.Output($"BashEx: {result}");
+        Logger.Debug($"BashEx: {result}");
       }
 
       return result;

@@ -10,6 +10,7 @@
     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
       <TextBlock Text="Welcome to Prism.Avalonia!" />
       <TextBlock Text="{Binding Title}" />
+      <Button Content="Trigger Breakpoint" Command="{Binding CmdBreakPoint}" />
     </StackPanel>
   </DockPanel>
 </UserControl>
