@@ -89,7 +89,7 @@
         <CommandFlag>TextChanges</CommandFlag>
         <!--<CommandFlag>DefaultDisabled</CommandFlag>-->
         <Strings>
-          <ButtonText>Build, Deploy and Debug</ButtonText>
+          <ButtonText>Build, Deploy and Debug (experimental)</ButtonText>
         </Strings>
       </Button>
 
@@ -100,7 +100,7 @@
         <CommandFlag>TextChanges</CommandFlag>
         <!--<CommandFlag>DefaultDisabled</CommandFlag>-->
         <Strings>
-          <ButtonText>Build, Deploy and Launch</ButtonText>
+          <ButtonText>Build, Deploy and Launch (experimental)</ButtonText>
         </Strings>
       </Button>
 
@@ -121,6 +121,7 @@
       TODO: Publish & Publish and Debug
       -->
 
+      <!--
       <Button guid="GuidLinuxDebugerMenu" id="CmdOpenLogs" priority="0x0500" type="Button">
         <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel2" />
         <Icon guid="ShowLog_16x" id="imgShowLog" />
@@ -142,6 +143,7 @@
           <ButtonText>Settings</ButtonText>
         </Strings>
       </Button>
+      -->
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
