@@ -70,9 +70,6 @@ namespace VsLinuxDebugger.Core
 
     public string RemoteUserPass => _opts.UserPass;
 
-    /// <summary>Full path to VSDBG (i.e. `~/.vsdbg/vsdbg`).</summary>
-    public string RemoteVsDbgFullPath => LinuxPath.Combine(_opts.RemoteVsDbgBasePath, Constants.AppVSDbg);
-
     /// <summary>Solution folder path. I.E. "C:\\path\Repos\"</summary>
     public string SolutionDirPath { get; set; }
 
@@ -172,7 +169,7 @@ namespace VsLinuxDebugger.Core
         Logger.Output("You must provide a User Password to debug.");
 
       var adapter = plinkPath;
-      var adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {RemoteVsDbgFullPath} {vsdbgLogPath}";
+      var adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {_opts.RemoteVsDbgFullPath} {vsdbgLogPath}";
       //// adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {RemoteVsDbgFullPath} --interpreter=vscode {vsdbgLogPath}";
 
       return (adapter, adapterArgs);

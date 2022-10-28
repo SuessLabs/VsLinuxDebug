@@ -97,9 +97,9 @@ namespace VsLinuxDebugger.Core
             //ssh.BashStream($"dotnet \"{_launchBuilder.RemoteDeployAssemblyFilePath}\"");
           }
 
-          if (buildOptions.HasFlag(BuildOptions.Debug & BuildOptions.Launch))
+          if (buildOptions.HasFlag(BuildOptions.Debug) && buildOptions.HasFlag(BuildOptions.Launch))
           {
-            // TODO: Find ProcId and set Launch.json to `Attach`
+            ; // TODO: Find ProcId and set Launch.json to `Attach`
           }
           else if (buildOptions.HasFlag(BuildOptions.Debug))
           {
