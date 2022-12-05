@@ -37,6 +37,7 @@ namespace VsLinuxDebugger
     public int HostPort => _optionsPage.HostPort;
 
     public string LocalPLinkPath => _optionsPage.PLinkPath;
+    public bool LocalSwitchLinuxDbgOutput => _optionsPage.SwitchLinuxDbgOutput;
 
     public bool RemoteDebugDisplayGui => _optionsPage.RemoteDebugDisplayGui;
     public string RemoteDeployBasePath => _optionsPage.RemoteDeployBasePath;
@@ -71,7 +72,7 @@ namespace VsLinuxDebugger
       await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
       await Commands.InitializeAsync(this);
 
-      Logger.Init(this, OutputWindowType.Custom);
+      Logger.Init(this, OutputWindowType.Custom, LocalSwitchLinuxDbgOutput);
       Logger.Output("InitializeAsync");
     }
 

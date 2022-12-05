@@ -159,6 +159,7 @@ namespace VsLinuxDebugger
         HostPort = Settings.HostPort,
 
         LocalPLinkPath = Settings.LocalPLinkPath,
+        LocalSwitchLinuxDbgOutput = Settings.LocalSwitchLinuxDbgOutput,
 
         RemoteDebugDisplayGui = Settings.RemoteDebugDisplayGui,
         RemoteDeployBasePath = Settings.RemoteDeployBasePath,

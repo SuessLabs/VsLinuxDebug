@@ -17,6 +17,7 @@ namespace VsLinuxDebugger
     private static string _name;
     private static IVsOutputWindowPane _outputPane;
     private static OutputWindowType _outputType = OutputWindowType.Debug;
+    private static bool _autoSwitchToLinuxDbgOutput;
     private static IServiceProvider _provider;
 
     private static string FormattedTime
@@ -35,10 +36,12 @@ namespace VsLinuxDebugger
     public static void Init(
       IServiceProvider provider,
       OutputWindowType outputType = OutputWindowType.Debug,
+      bool autoSwitchToLinuxDbgOutput = true,
       string name = "Linux Debugger")
     {
       _provider = provider;
       _outputType = outputType;
+      _autoSwitchToLinuxDbgOutput = autoSwitchToLinuxDbgOutput;
       _name = name;
     }
 
@@ -60,7 +63,10 @@ namespace VsLinuxDebugger
         if (HasOutputWindow())
         {
           _outputPane.OutputStringThreadSafe(msg);
-          _outputPane.Activate(); // Brings pane into view
+
+          // Brings pane into view
+          if (_autoSwitchToLinuxDbgOutput)
+            _outputPane.Activate();
         }
       }
       catch (Exception)

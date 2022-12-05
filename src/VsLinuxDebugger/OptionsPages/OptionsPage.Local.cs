@@ -34,5 +34,10 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     [DisplayName("Delete 'launch.json' after build.")]
     [Description(@"The `launch.json` is generated in your build folder. You may keep this for debugging.")]
     public bool DeleteLaunchJsonAfterBuild { get; set; } = false;
+
+    [Category(Local)]
+    [DisplayName("Switch to LinuxDbg Output on Build")]
+    [Description("Automatically show output for Linux Debugger on build (default = true).")]
+    public bool SwitchLinuxDbgOutput { get; set; } = true;
   }
 }
