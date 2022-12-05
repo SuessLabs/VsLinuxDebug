@@ -5,7 +5,7 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="GuiApp.PrismAvalonia.Views.SidebarView">
+             x:Class="GuiNet5.Views.SidebarView">
   <DockPanel>
 
     <TextBlock DockPanel.Dock="Top"

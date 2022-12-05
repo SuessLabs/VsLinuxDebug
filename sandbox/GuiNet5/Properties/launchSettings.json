@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "GuiApp.PrismAvalonia": {
+    "GuiNet5": {
       "commandName": "Project"
     },
     "WSL": {

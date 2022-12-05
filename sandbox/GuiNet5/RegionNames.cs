@@ -1,4 +1,4 @@
-﻿namespace GuiApp.PrismAvalonia
+﻿namespace GuiNet5
 {
   public static class RegionNames
   {

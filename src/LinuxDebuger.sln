@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{42E0
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuiNet6", "..\sandbox\GuiNet6\GuiNet6.csproj", "{2F01BAAF-DF1E-406C-A46D-127896C203F1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuiNet5", "..\sandbox\GuiNet5\GuiNet5.csproj", "{B6927764-F8DE-492F-A756-1826E117E497}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,12 +41,21 @@ Global
 		{2F01BAAF-DF1E-406C-A46D-127896C203F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2F01BAAF-DF1E-406C-A46D-127896C203F1}.Release|x86.ActiveCfg = Release|Any CPU
 		{2F01BAAF-DF1E-406C-A46D-127896C203F1}.Release|x86.Build.0 = Release|Any CPU
+		{B6927764-F8DE-492F-A756-1826E117E497}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6927764-F8DE-492F-A756-1826E117E497}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6927764-F8DE-492F-A756-1826E117E497}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B6927764-F8DE-492F-A756-1826E117E497}.Debug|x86.Build.0 = Debug|Any CPU
+		{B6927764-F8DE-492F-A756-1826E117E497}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6927764-F8DE-492F-A756-1826E117E497}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6927764-F8DE-492F-A756-1826E117E497}.Release|x86.ActiveCfg = Release|Any CPU
+		{B6927764-F8DE-492F-A756-1826E117E497}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2F01BAAF-DF1E-406C-A46D-127896C203F1} = {42E06A3F-6EF1-49EC-910E-A89C15BC6E91}
+		{B6927764-F8DE-492F-A756-1826E117E497} = {42E06A3F-6EF1-49EC-910E-A89C15BC6E91}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5F242569-D0C3-4062-B813-48028E458962}

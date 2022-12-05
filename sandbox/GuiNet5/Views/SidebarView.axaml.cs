@@ -1,8 +1,8 @@
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace GuiApp.PrismAvalonia.Views
+namespace GuiNet5.Views
 {
   public partial class SidebarView : UserControl
   {

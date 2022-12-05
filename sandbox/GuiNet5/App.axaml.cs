@@ -1,13 +1,13 @@
 ﻿using Avalonia;
 using Avalonia.Markup.Xaml;
-using GuiApp.PrismAvalonia.ViewModels;
-using GuiApp.PrismAvalonia.Views;
+using GuiNet5.ViewModels;
+using GuiNet5.Views;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 
-namespace GuiApp.PrismAvalonia
+namespace GuiNet5
 {
   public class App : PrismApplication
   {

@@ -1,4 +1,4 @@
-﻿namespace GuiApp.PrismAvalonia.ViewModels
+﻿namespace GuiNet5.ViewModels
 {
   public class SettingsViewModel : ViewModelBase
   {

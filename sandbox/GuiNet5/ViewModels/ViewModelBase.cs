@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Linq.Expressions;
 using Prism.Mvvm;
 using Prism.Regions;
 
-namespace GuiApp.PrismAvalonia.ViewModels
+namespace GuiNet5.ViewModels
 {
   public class ViewModelBase : BindableBase, INavigationAware
   {
