@@ -17,7 +17,6 @@ namespace VsLinuxDebugger
     private static string _name;
     private static IVsOutputWindowPane _outputPane;
     private static OutputWindowType _outputType = OutputWindowType.Debug;
-    private static bool _autoSwitchToLinuxDbgOutput;
     private static IServiceProvider _provider;
 
     private static string FormattedTime
@@ -33,6 +32,11 @@ namespace VsLinuxDebugger
       }
     }
 
+    /// <summary>
+    /// Automatically switch Visual Studio Output Window to 'Linux Debugger'.
+    /// </summary>
+    public static bool AutoSwitchToLinuxDbgOutput { get; set; }
+
     public static void Init(
       IServiceProvider provider,
       OutputWindowType outputType = OutputWindowType.Debug,
@@ -41,7 +45,7 @@ namespace VsLinuxDebugger
     {
       _provider = provider;
       _outputType = outputType;
-      _autoSwitchToLinuxDbgOutput = autoSwitchToLinuxDbgOutput;
+      AutoSwitchToLinuxDbgOutput = autoSwitchToLinuxDbgOutput;
       _name = name;
     }
 
@@ -65,7 +69,7 @@ namespace VsLinuxDebugger
           _outputPane.OutputStringThreadSafe(msg);
 
           // Brings pane into view
-          if (_autoSwitchToLinuxDbgOutput)
+          if (AutoSwitchToLinuxDbgOutput)
             _outputPane.Activate();
         }
       }

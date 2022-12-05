@@ -37,7 +37,14 @@ namespace VsLinuxDebugger
     public int HostPort => _optionsPage.HostPort;
 
     public string LocalPLinkPath => _optionsPage.PLinkPath;
-    public bool LocalSwitchLinuxDbgOutput => _optionsPage.SwitchLinuxDbgOutput;
+    public bool LocalSwitchLinuxDbgOutput
+    {
+      get
+      {
+        Logger.AutoSwitchToLinuxDbgOutput = _optionsPage.SwitchLinuxDbgOutput;
+        return _optionsPage.SwitchLinuxDbgOutput;
+      }
+    }
 
     public bool RemoteDebugDisplayGui => _optionsPage.RemoteDebugDisplayGui;
     public string RemoteDeployBasePath => _optionsPage.RemoteDeployBasePath;
