@@ -302,10 +302,11 @@ namespace VsLinuxDebugger.Core
         Logger.Output($"Destination Tar.GZ: '{destTarGz}'");
 
         var success = await PayloadCompressAndUploadAsync(_sftp, srcDirInfo, destTarGz);
-        Logger.Output($"Upload completed {(success ? "successfully." : "with failure.")}.");
 
         // Decompress file
         await PayloadDecompressAsync(destTarGz, false);
+
+        Logger.Output($"Upload completed {(success ? "successfully." : "with failure.")}.");
 
         return string.Empty;
       }
