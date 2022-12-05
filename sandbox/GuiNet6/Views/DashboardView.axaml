@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="GuiNet6.Views.DashboardView">
+  <DockPanel>
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+      <TextBlock Text="Welcome to Prism.Avalonia!" />
+      <TextBlock Text="{Binding Title}" />
+      <Button Content="Trigger Breakpoint" Command="{Binding CmdBreakPoint}" />
+    </StackPanel>
+  </DockPanel>
+</UserControl>

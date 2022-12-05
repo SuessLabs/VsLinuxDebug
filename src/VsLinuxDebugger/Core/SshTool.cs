@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
@@ -255,8 +256,13 @@ namespace VsLinuxDebugger.Core
         Logger.Output($"BASH-RET: {curlInstall}");
       }
 
-      //// OLD: var ret = Bash("[ -d ~/.vsdbg ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/.vsdbg");
-      var ret = await BashAsync($"[ -d {_opts.RemoteVsDbgBasePath} ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l {_opts.RemoteVsDbgBasePath}");
+      //// OLD:  var ret = Bash("[ -d ~/.vsdbg ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/.vsdbg");
+      //// v1.9: var ret = await BashAsync($"[ -d {_opts.RemoteVsDbgBasePath} ] || curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l {_opts.RemoteVsDbgBasePath}");
+
+      // If output path does not exist, execute the following commands "curl .. | bash .."
+      // 2022-10-27: Added '-k' to allow for Microsoft's self-signed certificate.
+      var outputPath = LinuxPath.Combine(_opts.RemoteVsDbgBasePath, Constants.VS2022);
+      var ret = await BashAsync($"[ -d {outputPath} ] || curl -ksSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l {outputPath}");
       Logger.Output($"Returned: {ret}");
     }
 
@@ -285,7 +291,7 @@ namespace VsLinuxDebugger.Core
         // TODO: Rev3 - Allow for both SFTP and SCP as a backup. This separating connection to a new disposable class.
         //// Logger.Output($"Connected to {_connectionInfo.Username}@{_connectionInfo.Host}:{_connectionInfo.Port} via SSH and {(_sftpClient != null ? "SFTP" : "SCP")}");
 
-        BashAsync($@"mkdir -p {_launch.RemoteDeployProjectFolder}");
+        await BashAsync($@"mkdir -p {_launch.RemoteDeployProjectFolder}");
 
         var srcDirInfo = new DirectoryInfo(_launch.OutputDirFullPath);
         if (!srcDirInfo.Exists)

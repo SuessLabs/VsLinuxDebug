@@ -17,6 +17,8 @@
     public string RemoteDotNetPath { get; set; }
     /// <summary>Base path to VSDBG (i.e. `~/.vsdbg`).</summary>
     public string RemoteVsDbgBasePath { get; set; }
+    /// <summary>Full path to VS Debugger.</summary>
+    public string RemoteVsDbgFullPath => LinuxPath.Combine(RemoteVsDbgBasePath, Constants.VS2022);
 
     public bool UseCommandLineArgs { get; set; }
     public bool UsePublish { get; set; }

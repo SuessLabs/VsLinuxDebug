@@ -2,7 +2,19 @@
 
 ## 2.0.0-Alpha
 
-* Added: Option to set output window focus to Linux Debugger. Default, false.
+* Added: Option to set output window focus to Linux Debugger, defaul=`false`. (PR #46)
+  * `Tools > Options > Linux Debugger > "Switch to LinuxDbg Output on Build"`
+* Added: Async BASH and SFTP operations to not lock up Visual Studio (PR #40)
+* Added: "Experimental" tag to menu items for Alpha/Beta items. (PR# 41)
+  * `Build, Deploy, and Debug`
+  * `Build, Deploy, and Launch`
+* Added: Deploy and Launch (**ALPHA Feature**) (PR #36)
+* Added: BashSudo (PR #36)
+* Updated: Default VSDBG path to match Visual Studio 2022's deployed path. (PR #36)
+* Fixed: Typo, "Build was notsuccessful" (PR #43) `User Contribution` :rocket:
+* Fixed: Auto-install cURL (PR #36)
+* Fixed: Reduced duplicate output messages (PR #40)
+* Removed: Publish (PR #36)
 
 ## 1.9.0
 
