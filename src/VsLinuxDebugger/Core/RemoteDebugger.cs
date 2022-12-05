@@ -155,7 +155,7 @@ namespace VsLinuxDebugger.Core
         // Inform system that the task is complete
         _buildTask?.TrySetResult(true);
 
-        var not = !_buildSuccessful ? "not" : "";
+        var not = !_buildSuccessful ? "not " : "";
         Logger.Output($"Build was {not}successful");
       };
 

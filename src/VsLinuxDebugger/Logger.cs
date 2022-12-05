@@ -32,13 +32,20 @@ namespace VsLinuxDebugger
       }
     }
 
+    /// <summary>
+    /// Automatically switch Visual Studio Output Window to 'Linux Debugger'.
+    /// </summary>
+    public static bool AutoSwitchToLinuxDbgOutput { get; set; }
+
     public static void Init(
       IServiceProvider provider,
       OutputWindowType outputType = OutputWindowType.Debug,
+      bool autoSwitchToLinuxDbgOutput = true,
       string name = "Linux Debugger")
     {
       _provider = provider;
       _outputType = outputType;
+      AutoSwitchToLinuxDbgOutput = autoSwitchToLinuxDbgOutput;
       _name = name;
     }
 
@@ -60,7 +67,10 @@ namespace VsLinuxDebugger
         if (HasOutputWindow())
         {
           _outputPane.OutputStringThreadSafe(msg);
-          _outputPane.Activate(); // Brings pane into view
+
+          // Brings pane into view
+          if (AutoSwitchToLinuxDbgOutput)
+            _outputPane.Activate();
         }
       }
       catch (Exception)

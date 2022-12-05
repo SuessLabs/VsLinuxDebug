@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.0.0-Alpha
+
+* Added: Option to set output window focus to Linux Debugger. Default, false.
+
 ## 1.9.0
 
 * Added: Now comes with PLink embedded. You can still manually set this if you prefer.

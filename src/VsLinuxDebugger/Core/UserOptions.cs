@@ -9,6 +9,7 @@
 
     public bool LocalPlinkEnabled { get; set; }
     public string LocalPLinkPath { get; set; }
+    public bool LocalSwitchLinuxDbgOutput { get; set; }
 
     public bool RemoteDebugDisplayGui { get; set; }
     public string RemoteDeployBasePath { get; set; }

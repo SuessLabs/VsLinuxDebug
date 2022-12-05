@@ -283,7 +283,7 @@ namespace VsLinuxDebugger.Core
     {
       try
       {
-        // Clean output folder just incase
+        // Clean output folder just in case
         //// Bash($@"rm -rf {_launch.RemoteDeployFolder}");
 
         // TODO: Rev1 - Iterate through each file and upload it via SCP client or SFTP.
@@ -302,6 +302,7 @@ namespace VsLinuxDebugger.Core
         Logger.Output($"Destination Tar.GZ: '{destTarGz}'");
 
         var success = await PayloadCompressAndUploadAsync(_sftp, srcDirInfo, destTarGz);
+        Logger.Output($"Upload completed {(success ? "successfully." : "with failure.")}.");
 
         // Decompress file
         await PayloadDecompressAsync(destTarGz, false);
