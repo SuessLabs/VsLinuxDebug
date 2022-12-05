@@ -9,12 +9,12 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="0.10.8" />
-    <PackageReference Include="Avalonia.Desktop" Version="0.10.8" />
-    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.8" />
-    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.8" />
-    <PackageReference Include="Prism.Avalonia" Version="7.2.0.1430" />
-    <PackageReference Include="Prism.DryIoc.Avalonia" Version="7.2.0.1430" />
+    <PackageReference Include="Avalonia" Version="0.10.18" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="0.10.18" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
+    <PackageReference Include="Prism.Avalonia" Version="8.1.97" />
+    <PackageReference Include="Prism.DryIoc.Avalonia" Version="8.1.97" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Views\ShellWindow.axaml.cs">

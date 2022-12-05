@@ -5,12 +5,10 @@ Console.WriteLine("Hello .NET 6, VS Linux Debugger!");
 // Console.ReadLine();
 #endif
 
-
 Console.WriteLine("Apply breakpoint here!");
 System.Diagnostics.Debugger.Break();
 
 Console.WriteLine("All done!");
 
-////Console.WriteLine("Press anykey to exit..");
-////var x = Console.ReadLine();
-
+//Console.WriteLine("Press any key to exit..");
+//var x = Console.ReadLine();
