@@ -37,7 +37,7 @@ namespace Xeno.VsLinuxDebug.OptionsPages
 
     [Category(Local)]
     [DisplayName("Switch to LinuxDbg Output on Build")]
-    [Description("Automatically show output for Linux Debugger on build (default = true).")]
-    public bool SwitchLinuxDbgOutput { get; set; } = true;
+    [Description("Automatically show output for Linux Debugger on build (default = false).")]
+    public bool SwitchLinuxDbgOutput { get; set; } = false;
   }
 }

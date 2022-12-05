@@ -6,7 +6,7 @@ This document contains the release information for the project.
 
 ### 2.0.0-Alpha
 
-* Added: Option to set output window focus to Linux Debugger
+* Added: Option to set output window focus to Linux Debugger. Default, false.
 
 ### 1.9.0
 
