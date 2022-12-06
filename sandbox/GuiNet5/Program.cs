@@ -12,8 +12,8 @@ namespace GuiNet5
       .UsePlatformDetect()
       .With(new X11PlatformOptions
       {
-        EnableMultiTouch = true,
-        UseDBusMenu = true,
+        EnableMultiTouch = false,
+        UseDBusMenu = false,
       })
       .With(new Win32PlatformOptions
       {

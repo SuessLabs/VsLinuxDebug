@@ -13,7 +13,7 @@ namespace GuiNet6
       .With(new X11PlatformOptions
       {
         EnableMultiTouch = true,
-        UseDBusMenu = true,
+        UseDBusMenu = false,
       })
       .With(new Win32PlatformOptions
       {

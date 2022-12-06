@@ -2,10 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Shell;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 using SharpCompress.Common;
@@ -306,7 +304,7 @@ namespace VsLinuxDebugger.Core
         // Decompress file
         await PayloadDecompressAsync(destTarGz, false);
 
-        Logger.Output($"Upload completed {(success ? "successfully." : "with failure.")}.");
+        Logger.Output($"Upload completed {(success ? "successfully" : "with failure")}.");
 
         return string.Empty;
       }
@@ -512,7 +510,6 @@ namespace VsLinuxDebugger.Core
 
       try
       {
-
         var cmd = "set -e";
         cmd += $";cd \"{_launch.RemoteDeployProjectFolder}\"";
         cmd += $";tar -zxf \"{_tarGzFileName}\"";
