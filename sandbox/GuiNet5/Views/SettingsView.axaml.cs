@@ -2,7 +2,7 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace GuiApp.PrismAvalonia.Views
+namespace GuiNet5.Views
 {
   public partial class SettingsView : UserControl
   {

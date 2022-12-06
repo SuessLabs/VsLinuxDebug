@@ -1,9 +1,9 @@
-﻿using GuiApp.PrismAvalonia.Views;
+﻿using GuiNet5.Views;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 
-namespace GuiApp.PrismAvalonia.ViewModels
+namespace GuiNet5.ViewModels
 {
   public class SidebarViewModel : ViewModelBase
   {

@@ -2,7 +2,7 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 
-namespace GuiApp.PrismAvalonia
+namespace GuiNet5
 {
   internal class Program
   {

@@ -2,13 +2,16 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace GuiApp.PrismAvalonia.Views
+namespace GuiNet5.Views
 {
-  public partial class DashboardView : UserControl
+  public partial class ShellWindow : Window
   {
-    public DashboardView()
+    public ShellWindow()
     {
       InitializeComponent();
+#if DEBUG
+            this.AttachDevTools();
+#endif
     }
 
     private void InitializeComponent()
