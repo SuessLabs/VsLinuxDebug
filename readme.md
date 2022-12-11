@@ -97,7 +97,6 @@ To contribute, please pick off an item from the project or issue page. We'd love
 
 ## References
 
-* Inspired by [VS Mono Debugger](https://github.com/GordianDotNet/VSMonoDebugger) for their amazing Mono cross-platform efforts.
 * [PuTTY PLink](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)
 * [Extension Docs](https://docs.microsoft.com/en-us/visualstudio/extensibility/creating-a-settings-category?view=vs-2022)
 * [Extension Sample](https://github.com/microsoft/VSSDK-Extensibility-Samples/tree/master/Options)
