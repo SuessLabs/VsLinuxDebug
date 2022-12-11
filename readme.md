@@ -1,4 +1,4 @@
-# [VS .NET Linux Debugger](https://github.com/SuessLabs/RemoteDebug.git)
+# [VS .NET Linux Debugger](https://github.com/SuessLabs/VsLinuxDebug)
 
 <image align="right" width="200" height="200" src="https://github.com/SuessLabs/VsLinuxDebug/blob/master/docs/TuxDebug.png" />
 
@@ -43,34 +43,6 @@ sudo apt install curl
 
 ![Tools Options](docs/ScreenShot-ToolsOptions.png)
 
-### Generating Private Key (optional)
-
-The following steps are options if you wish to use an SSH Private Key. These steps were written for Windows 10, however, on Linux the steps are similar.
-
-1. Open PowerShell:
-2. **Generate key** (_with old PEM format_)
-   1. `ssh-keygen -m PEM -t rsa -b 4096`
-   2. In the future, we'll be able to use `ssh-keygen`.. just not yet.
-3. Set output name (_default is okay for basic setups_)
-4. Input a passphrase for the key _(OPTIONAL)_
-5. Windows will now generate your RSA public/private key pair.
-   1. Default location: `%UserProfile%\.ssh` (WINOWS)
-   2. The public key will be stored as `id_rsa.pub` in the directory
-6. **Upload the public key** to your remote machine
-   1. Navigate to folder, `~/.ssh/` on Linux device
-   2. If `~/.ssh/authorized_keys` exists, append the contents of `id_rsa.pub` to the next line.
-   3. If it does not exist, simply upload `id_rsa.pub` and rename it to, `authorized_keys`
-7. DONE!
-
-## Action Items
-
-### Work-in-Progress Items
-
-* [ ] **Debugging:** Launching of GUI apps for remote debugging
-* [ ] **Debugging:** PLink using PPK instead of manual password
-* [ ] **Options Window:** Multiple remote profile management
-* [ ] **Options Window:** SSH PPK generator assistant tool
-
 ### Manually Attaching (for GUI apps)
 
 For GUI projects, you can use **Build and Deploy** and then manually attach to the process via SSH by using Visual Studio's built-in tool
@@ -89,6 +61,32 @@ For GUI projects, you can use **Build and Deploy** and then manually attach to t
 
 This will save you 1.5 minutes on every build of manual uploading and updating rights via `chown -R`.
 
+## How To Generate Private Key (optional)
+
+The following steps are options if you wish to use an SSH Private Key. These steps were written for Windows 10, however, on Linux the steps are similar.
+
+1. Open PowerShell:
+2. **Generate key** (_with old PEM format_)
+   1. `ssh-keygen -m PEM -t rsa -b 4096`
+   2. In the future, we'll be able to use `ssh-keygen`.. just not yet.
+3. Set output name (_default is okay for basic setups_)
+4. Input a passphrase for the key _(OPTIONAL)_
+5. Windows will now generate your RSA public/private key pair.
+   1. Default location: `%UserProfile%\.ssh` (WINOWS)
+   2. The public key will be stored as `id_rsa.pub` in the directory
+6. **Upload the public key** to your remote machine
+   1. Navigate to folder, `~/.ssh/` on Linux device
+   2. If `~/.ssh/authorized_keys` exists, append the contents of `id_rsa.pub` to the next line.
+   3. If it does not exist, simply upload `id_rsa.pub` and rename it to, `authorized_keys`
+7. DONE!
+
+## Future Features
+
+* [ ] **Debugging:** Launching of GUI apps for remote debugging
+* [ ] **Debugging:** PLink using PPK instead of manual password
+* [ ] **Options Window:** Multiple remote profile management
+* [ ] **Options Window:** SSH PPK generator assistant tool
+
 ## Developers Wanted
 
 Contributors and Q/A are welcomed!
@@ -97,7 +95,6 @@ To contribute, please pick off an item from the project or issue page. We'd love
 
 ## References
 
-* Inspired by [VS Mono Debugger](https://github.com/GordianDotNet/VSMonoDebugger) for their amazing Mono cross-platform efforts.
 * [PuTTY PLink](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html)
 * [Extension Docs](https://docs.microsoft.com/en-us/visualstudio/extensibility/creating-a-settings-category?view=vs-2022)
 * [Extension Sample](https://github.com/microsoft/VSSDK-Extensibility-Samples/tree/master/Options)

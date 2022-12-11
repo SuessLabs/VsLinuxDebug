@@ -1,24 +1,26 @@
-# Revision History
+# Release Notes
+
+## Revision History
 
 This document contains the release information for the project.
 
-## Releases
+### 2.0.1 (Prev-1)
 
-### 2.0.0-Alpha
-
-* Added: Option to set output window focus to Linux Debugger, defaul=`false`. (PR #46)
+* Added: Option to set output window focus to Linux Debugger, default=`false`. (PR #46)
   * `Tools > Options > Linux Debugger > "Switch to LinuxDbg Output on Build"`
 * Added: Async BASH and SFTP operations to not lock up Visual Studio (PR #40)
 * Added: "Experimental" tag to menu items for Alpha/Beta items. (PR# 41)
   * `Build, Deploy, and Debug`
-  * `Build, Deploy, and Launch`
+  * `Build, Deploy, and Launch` - _Temp disabled in Preview-1_
 * Added: Deploy and Launch (**ALPHA Feature**) (PR #36)
 * Added: BashSudo (PR #36)
-* Updated: Default VSDBG path to match Visual Studio 2022's deployed path. (PR #36)
+* Update: Default VSDBG path to match Visual Studio 2022's deployed path (`~/.vs-debugger/vs2022/`). (PR #36, #47)
+* Update: Sample's NuGet package for Prism.Avalonia (#54)
 * Fixed: Typo, "Build was notsuccessful" (PR #43) `User Contribution` :rocket:
 * Fixed: Auto-install cURL (PR #36)
 * Fixed: Reduced duplicate output messages (PR #40)
 * Removed: Publish (PR #36)
+* Removed: Redundant sample project
 
 ### 1.9.0
 

@@ -138,7 +138,8 @@ namespace VsLinuxDebugger
 
         if (cmd.CommandID.ID == CommandIds.CmdShowLog
           || cmd.CommandID.ID == CommandIds.CmdDebugOnly
-          || cmd.CommandID.ID == CommandIds.CmdShowSettings)
+          || cmd.CommandID.ID == CommandIds.CmdShowSettings
+          || cmd.CommandID.ID == CommandIds.CmdBuildDeployLaunch)
         {
           cmd.Enabled = false;
         }
