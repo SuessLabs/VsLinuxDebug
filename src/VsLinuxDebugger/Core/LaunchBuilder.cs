@@ -15,11 +15,11 @@ namespace VsLinuxDebugger.Core
 
     private UserOptions _opts;
 
-    public LaunchBuilder(DTE2 dte, Project dteProject, UserOptions o)
+    public LaunchBuilder(DTE2 dte, Project dteProject, UserOptions userOptions)
     {
       ThreadHelper.ThrowIfNotOnUIThread();
 
-      _opts = o;
+      _opts = userOptions;
 
       AssemblyName = dteProject.Properties.Item("AssemblyName").Value.ToString();
       ProjectConfigName = dteProject.ConfigurationManager.ActiveConfiguration.ConfigurationName;

@@ -31,6 +31,8 @@ namespace VsLinuxDebugger
     /// <summary>Package GUID string.</summary>
     public const string PackageGuidString = "19f87f23-7a2c-4279-ac7c-c9267776bbf9";
 
+    private OptionsPage _optionsPage => (OptionsPage)GetDialogPage(typeof(OptionsPage));
+
     public bool DeleteLaunchJsonAfterBuild => _optionsPage.DeleteLaunchJsonAfterBuild;
 
     public string HostIp => _optionsPage.HostIp;
@@ -61,10 +63,6 @@ namespace VsLinuxDebugger
     public string UserPrivateKeyPath => _optionsPage.UserPrivateKeyPath;
     public string UserPrivateKeyPassword => _optionsPage.UserPrivateKeyPassword;
 
-    private OptionsPage _optionsPage => (OptionsPage)GetDialogPage(typeof(OptionsPage));
-
-    #region Package Members
-
     /// <summary>
     /// Initialization of the package; this method is called right after the package is sited, so this is the place
     /// where you can put all the initialization code that rely on services provided by VisualStudio.
@@ -82,7 +80,5 @@ namespace VsLinuxDebugger
       Logger.Init(this, OutputWindowType.Custom, LocalSwitchLinuxDbgOutput);
       Logger.Output("InitializeAsync");
     }
-
-    #endregion Package Members
   }
 }
