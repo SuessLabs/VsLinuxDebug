@@ -8,7 +8,7 @@ using VsLinuxDebugger.Core.Remote;
 
 namespace VsLinuxDebugger.Core
 {
-  // TODO: Combine with UserOptions to make life easier.
+  /// <summary>LaunchBuilder class for serialization.</summary>
   public class LaunchBuilder
   {
     public const string AdapterFileName = "launch.json";

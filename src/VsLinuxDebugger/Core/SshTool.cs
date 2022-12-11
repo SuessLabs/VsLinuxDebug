@@ -148,9 +148,9 @@ namespace VsLinuxDebugger.Core
       var filesAndFolders = "{*,.*}";
 
       if (fullScrub)
-        await BashAsync($"rm -rf \"{_opts.RemoteDeployBasePath}/{filesAndFolders}\"");
+        await BashAsync($"rm -rf \"{_opts.RemoteDeployBasePath}/{filesAndFolders}\"");    // "~/LinuxDbg/{*,.*}"
       else
-        await BashAsync($"rm -rf {_launch.RemoteDeployProjectFolder}/{filesAndFolders}");
+        await BashAsync($"rm -rf {_launch.RemoteDeployProjectFolder}/{filesAndFolders}"); // "~/LinuxDbg/MyProg/{*,.*}"
     }
 
     public async Task<bool> ConnectAsync()
