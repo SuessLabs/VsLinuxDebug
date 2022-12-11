@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+<PackageManifest Version="2.0.0"
+                 xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011"
+                 xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="VsLinuxDebugger.4d7bf4de-5015-4e24-92c0-7f9f3397b2da" Version="2.0.0" Language="en-US" Publisher="Suess Labs" />
+        <Identity Id="VsLinuxDebugger.4d7bf4de-5015-4e24-92c0-7f9f3397b2da"
+                  Version="2.0.1"
+                  Language="en-US"
+                  Publisher="Suess Labs" />
         <DisplayName>VS Linux Debugger</DisplayName>
         <Description xml:space="preserve">Remotely deploy and debug your .NET apps visa SSH on your Linux device using Visual Studio 2022. Works with popular Linux distrobutions such as Ubuntu, Raspberry Pi, and more!</Description>
         <MoreInfo>https://github.com/SuessLabs/VsLinuxDebug</MoreInfo>
         <License>LICENSE.txt</License>
-        <ReleaseNotes>release-notes.md</ReleaseNotes>
+        <ReleaseNotes>..\..\release-notes.md</ReleaseNotes>
         <Icon>Resources\TuxDebug.png</Icon>
         <Tags>debug; build; remote debug; vsdbg; linux; xamarin; rpi4; remotedebug; linux debug; net6; dotnet; raspberry pi;</Tags>
+        <Preview>true</Preview>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
@@ -19,7 +25,9 @@
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
     </Dependencies>
     <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor"
+                      Version="[17.0,18.0)"
+                      DisplayName="Visual Studio core editor" />
     </Prerequisites>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />

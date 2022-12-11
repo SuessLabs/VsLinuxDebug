@@ -98,6 +98,7 @@
         <Icon guid="DebugOnly_16x" id="imgDebugOnly" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
         <!--<CommandFlag>DefaultDisabled</CommandFlag>-->
         <Strings>
           <ButtonText>Build, Deploy and Launch (experimental)</ButtonText>
