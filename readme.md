@@ -1,4 +1,4 @@
-# [VS .NET Linux Debugger](https://github.com/SuessLabs/RemoteDebug.git)
+# [VS .NET Linux Debugger](https://github.com/SuessLabs/VsLinuxDebug)
 
 <image align="right" width="200" height="200" src="https://github.com/SuessLabs/VsLinuxDebug/blob/master/docs/TuxDebug.png" />
 
@@ -43,7 +43,25 @@ sudo apt install curl
 
 ![Tools Options](docs/ScreenShot-ToolsOptions.png)
 
-### Generating Private Key (optional)
+### Manually Attaching (for GUI apps)
+
+For GUI projects, you can use **Build and Deploy** and then manually attach to the process via SSH by using Visual Studio's built-in tool
+
+1. Deploy to remote machine via
+   1. Extensions > Linux Debugger > **"Build and Deploy"**
+2. Run GUI app on remote machine
+   1. `dotnet MyGuiApp.dll`
+3. Debug > **"Attach to Process.."**
+4. Connection Type: **SSH**
+5. Connection Target: **(Remote machine's IP)**
+6. (Select process)
+7. Click, **Attach**
+8. Check, **"Managed (.NET Core for Unix)"**
+9. Click, **OK**
+
+This will save you 1.5 minutes on every build of manual uploading and updating rights via `chown -R`.
+
+## How To Generate Private Key (optional)
 
 The following steps are options if you wish to use an SSH Private Key. These steps were written for Windows 10, however, on Linux the steps are similar.
 
@@ -62,32 +80,12 @@ The following steps are options if you wish to use an SSH Private Key. These ste
    3. If it does not exist, simply upload `id_rsa.pub` and rename it to, `authorized_keys`
 7. DONE!
 
-## Action Items
-
-### Work-in-Progress Items
+## Future Features
 
 * [ ] **Debugging:** Launching of GUI apps for remote debugging
 * [ ] **Debugging:** PLink using PPK instead of manual password
 * [ ] **Options Window:** Multiple remote profile management
 * [ ] **Options Window:** SSH PPK generator assistant tool
-
-### Manually Attaching (for GUI apps)
-
-For GUI projects, you can use **Build and Deploy** and then manually attach to the process via SSH by using Visual Studio's built-in tool
-
-1. Deploy to remote machine via
-   1. Extensions > Linux Debugger > **"Build and Deploy"**
-2. Run GUI app on remote machine
-   1. `dotnet MyGuiApp.dll`
-3. Debug > **"Attach to Process.."**
-4. Connection Type: **SSH**
-5. Connection Target: **(Remote machine's IP)**
-6. (Select process)
-7. Click, **Attach**
-8. Check, **"Managed (.NET Core for Unix)"**
-9. Click, **OK**
-
-This will save you 1.5 minutes on every build of manual uploading and updating rights via `chown -R`.
 
 ## Developers Wanted
 

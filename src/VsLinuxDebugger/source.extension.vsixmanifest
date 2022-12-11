@@ -11,9 +11,10 @@
         <Description xml:space="preserve">Remotely deploy and debug your .NET apps visa SSH on your Linux device using Visual Studio 2022. Works with popular Linux distrobutions such as Ubuntu, Raspberry Pi, and more!</Description>
         <MoreInfo>https://github.com/SuessLabs/VsLinuxDebug</MoreInfo>
         <License>LICENSE.txt</License>
-        <ReleaseNotes>release-notes.md</ReleaseNotes>
+        <ReleaseNotes>..\..\release-notes.md</ReleaseNotes>
         <Icon>Resources\TuxDebug.png</Icon>
         <Tags>debug; build; remote debug; vsdbg; linux; xamarin; rpi4; remotedebug; linux debug; net6; dotnet; raspberry pi;</Tags>
+        <Preview>true</Preview>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">

@@ -74,7 +74,7 @@
     <Compile Include="DebuggerPackage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="release-notes.md">
+    <Content Include="..\..\release-notes.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
