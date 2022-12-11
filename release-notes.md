@@ -4,6 +4,10 @@
 
 This document contains the release information for the project.
 
+### 2.0.2 (Prev-2)
+
+* Update: Refactored option mechanism in prep for custom profiles.
+
 ### 2.0.1 (Prev-1)
 
 * Added: Option to set output window focus to Linux Debugger, default=`false`. (PR #46)

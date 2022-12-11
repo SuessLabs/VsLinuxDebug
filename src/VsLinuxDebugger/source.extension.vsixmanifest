@@ -4,16 +4,17 @@
                  xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
         <Identity Id="VsLinuxDebugger.4d7bf4de-5015-4e24-92c0-7f9f3397b2da"
-                  Version="2.0.1"
+                  Version="2.0.2"
                   Language="en-US"
                   Publisher="Suess Labs" />
         <DisplayName>VS Linux Debugger</DisplayName>
         <Description xml:space="preserve">Remotely deploy and debug your .NET apps visa SSH on your Linux device using Visual Studio 2022. Works with popular Linux distrobutions such as Ubuntu, Raspberry Pi, and more!</Description>
         <MoreInfo>https://github.com/SuessLabs/VsLinuxDebug</MoreInfo>
         <License>LICENSE.txt</License>
+        <GettingStartedGuide>..\..\readme.md</GettingStartedGuide>
         <ReleaseNotes>..\..\release-notes.md</ReleaseNotes>
         <Icon>Resources\TuxDebug.png</Icon>
-        <Tags>debug; build; remote debug; vsdbg; linux; xamarin; rpi4; remotedebug; linux debug; net6; dotnet; raspberry pi;</Tags>
+        <Tags>debug; build; remote debug; vsdbg; linux; xamarin; rpi; rpi4; remotedebug; remote; debugger; linux debug; net6; dotnet; raspberry pi; ubuntu;</Tags>
         <Preview>true</Preview>
     </Metadata>
     <Installation>
