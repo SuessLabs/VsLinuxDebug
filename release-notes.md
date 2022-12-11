@@ -15,7 +15,7 @@ This document contains the release information for the project.
 * Added: Deploy and Launch (**ALPHA Feature**) (PR #36)
 * Added: BashSudo (PR #36)
 * Update: Default VSDBG path to match Visual Studio 2022's deployed path (`~/.vs-debugger/vs2022/`). (PR #36, #47)
-* Update: Sample's NuGet package for Prism.Avalonia
+* Update: Sample's NuGet package for Prism.Avalonia (#54)
 * Fixed: Typo, "Build was notsuccessful" (PR #43) `User Contribution` :rocket:
 * Fixed: Auto-install cURL (PR #36)
 * Fixed: Reduced duplicate output messages (PR #40)
