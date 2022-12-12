@@ -31,37 +31,7 @@ namespace VsLinuxDebugger
     /// <summary>Package GUID string.</summary>
     public const string PackageGuidString = "19f87f23-7a2c-4279-ac7c-c9267776bbf9";
 
-    private OptionsPage _optionsPage => (OptionsPage)GetDialogPage(typeof(OptionsPage));
-
-    public bool DeleteLaunchJsonAfterBuild => _optionsPage.DeleteLaunchJsonAfterBuild;
-
-    public string HostIp => _optionsPage.HostIp;
-    public int HostPort => _optionsPage.HostPort;
-
-    public string LocalPLinkPath => _optionsPage.PLinkPath;
-    public bool LocalSwitchLinuxDbgOutput
-    {
-      get
-      {
-        Logger.AutoSwitchToLinuxDbgOutput = _optionsPage.SwitchLinuxDbgOutput;
-        return _optionsPage.SwitchLinuxDbgOutput;
-      }
-    }
-
-    public bool RemoteDebugDisplayGui => _optionsPage.RemoteDebugDisplayGui;
-    public string RemoteDeployBasePath => _optionsPage.RemoteDeployBasePath;
-    public string RemoteDotNetPath => _optionsPage.RemoteDotNetPath;
-    public string RemoteVsDbgBasePath => _optionsPage.RemoteVsDbgRootPath;
-
-    public bool UseCommandLineArgs => _optionsPage.UseCommandLineArgs;
-    //// public bool UsePublish => _optionsPage.Publish;
-
-    public string UserGroupName => _optionsPage.UserGroupName;
-    public string UserName => _optionsPage.UserName;
-    public string UserPass => _optionsPage.UserPass;
-    public bool UserPrivateKeyEnabled => _optionsPage.UserPrivateKeyEnabled;
-    public string UserPrivateKeyPath => _optionsPage.UserPrivateKeyPath;
-    public string UserPrivateKeyPassword => _optionsPage.UserPrivateKeyPassword;
+    public OptionsPage VsixOptions => (OptionsPage)GetDialogPage(typeof(OptionsPage));
 
     /// <summary>
     /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -77,7 +47,7 @@ namespace VsLinuxDebugger
       await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
       await Commands.InitializeAsync(this);
 
-      Logger.Init(this, OutputWindowType.Custom, LocalSwitchLinuxDbgOutput);
+      Logger.Init(this, OutputWindowType.Custom, VsixOptions.SwitchLinuxDbgOutput);
       Logger.Output("InitializeAsync");
     }
   }

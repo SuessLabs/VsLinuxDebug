@@ -152,30 +152,32 @@ namespace VsLinuxDebugger
 
     private UserOptions ToUserOptions()
     {
+      DebuggerPackage VsixPackage = _package as DebuggerPackage;
+
       return new UserOptions
       {
-        DeleteLaunchJsonAfterBuild = Settings.DeleteLaunchJsonAfterBuild,
+        DeleteLaunchJsonAfterBuild = VsixPackage.VsixOptions.DeleteLaunchJsonAfterBuild,
 
-        HostIp = Settings.HostIp,
-        HostPort = Settings.HostPort,
+        HostIp = VsixPackage.VsixOptions.HostIp,
+        HostPort = VsixPackage.VsixOptions.HostPort,
 
-        LocalPLinkPath = Settings.LocalPLinkPath,
-        LocalSwitchLinuxDbgOutput = Settings.LocalSwitchLinuxDbgOutput,
+        LocalPLinkPath = VsixPackage.VsixOptions.PLinkPath,
+        LocalSwitchLinuxDbgOutput = VsixPackage.VsixOptions.SwitchLinuxDbgOutput,
 
-        RemoteDebugDisplayGui = Settings.RemoteDebugDisplayGui,
-        RemoteDeployBasePath = Settings.RemoteDeployBasePath,
-        RemoteDotNetPath = Settings.RemoteDotNetPath,
-        RemoteVsDbgBasePath = Settings.RemoteVsDbgBasePath,
+        RemoteDebugDisplayGui = VsixPackage.VsixOptions.RemoteDebugDisplayGui,
+        RemoteDeployBasePath = VsixPackage.VsixOptions.RemoteDeployBasePath,
+        RemoteDotNetPath = VsixPackage.VsixOptions.RemoteDotNetPath,
+        RemoteVsDbgBasePath = VsixPackage.VsixOptions.RemoteVsDbgRootPath,
 
-        UseCommandLineArgs = Settings.UseCommandLineArgs,
+        UseCommandLineArgs = VsixPackage.VsixOptions.UseCommandLineArgs,
         //// UsePublish = Settings.UsePublish,
 
-        UserPrivateKeyEnabled = Settings.UserPrivateKeyEnabled,
-        UserPrivateKeyPath = Settings.UserPrivateKeyPath,
-        UserPrivateKeyPassword = Settings.UserPrivateKeyPassword,
-        UserName = Settings.UserName,
-        UserPass = Settings.UserPass,
-        UserGroupName = Settings.UserGroupName,
+        UserPrivateKeyEnabled = VsixPackage.VsixOptions.UserPrivateKeyEnabled,
+        UserPrivateKeyPath = VsixPackage.VsixOptions.UserPrivateKeyPath,
+        UserPrivateKeyPassword = VsixPackage.VsixOptions.UserPrivateKeyPassword,
+        UserName = VsixPackage.VsixOptions.UserName,
+        UserPass = VsixPackage.VsixOptions.UserPass,
+        UserGroupName = VsixPackage.VsixOptions.UserGroupName,
       };
     }
   }
