@@ -395,7 +395,6 @@ namespace VsLinuxDebugger.Core
         localFileCache[cleanedRelativeFilePath] = new FileInfo(file);
       });
 
-      Logger.Output($"Local file cache created");
       return localFileCache;
     }
 
@@ -407,7 +406,10 @@ namespace VsLinuxDebugger.Core
     private async Task<bool> PayloadCompressAndUploadAsync(SftpClient sftp, DirectoryInfo srcDirInfo, string pathBuildTarGz)
     {
       var success = false;
+      Logger.Output($"Getting bin files for transfer...");
       var localFiles = GetLocalFiles(srcDirInfo);
+
+      Logger.Output($"Compressing files for transfer...");
 
       // TODO: Delta remote files against local files for changes.
       using (Stream tarGzStream = new MemoryStream())
@@ -478,6 +480,7 @@ namespace VsLinuxDebugger.Core
           {
             var tarGzSize = tarGzStream.Length;
 
+            Logger.Output("Uploading...");
             await Task.Run(() =>
             {
               tarGzStream.Seek(0, SeekOrigin.Begin);

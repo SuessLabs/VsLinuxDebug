@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel;
 using Microsoft.VisualStudio.Shell;
+using VsLinuxDebugger;
 
 namespace Xeno.VsLinuxDebug.OptionsPages
 {
   public partial class OptionsPage : DialogPage
   {
     private const string Local = "Local Settings";
+    private bool _autoSwitchLinuxDbgOutput = false;
 
     //// [Category("Build Options")]
     //// [DisplayName("Use Command Line Arguments")]
@@ -38,6 +40,14 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     [Category(Local)]
     [DisplayName("Switch to LinuxDbg Output on Build")]
     [Description("Automatically show output for Linux Debugger on build (default = false).")]
-    public bool SwitchLinuxDbgOutput { get; set; } = false;
+    public bool SwitchLinuxDbgOutput
+    {
+      get => _autoSwitchLinuxDbgOutput;
+      set
+      {
+        Logger.AutoSwitchToLinuxDbgOutput = value;
+        _autoSwitchLinuxDbgOutput = value;
+      }
+    }
   }
 }
