@@ -10,7 +10,7 @@ using VsLinuxDebugger.Extensions;
 
 namespace VsLinuxDebugger.Core
 {
-  public class RemoteDebugger
+  public class RemoteDebugger : IDisposable
   {
     private const string DebugAdapterHost = "DebugAdapterHost.Launch";
     private const string DebugAdapterLaunchJson = "/LaunchJson:";
@@ -29,12 +29,14 @@ namespace VsLinuxDebugger.Core
 
       _options = options;
       _dte = (DTE)Package.GetGlobalService(typeof(DTE));
+      _dte.Events.BuildEvents.OnBuildProjConfigDone += BuildEvents_OnBuildProjConfigDone;
+      _dte.Events.BuildEvents.OnBuildDone += BuildEvents_OnBuildDone;
     }
 
     public static BuildEvents BuildEvents { get; set; }
 
     /// <summary>Perform operation.</summary>
-    /// <param name="buildOptions">Build uptions</param>
+    /// <param name="buildOptions">Build options.</param>
     /// <returns>True on success.</returns>
     public async Task<bool> BeginAsync(BuildOptions buildOptions)
     {
@@ -118,6 +120,17 @@ namespace VsLinuxDebugger.Core
       return true;
     }
 
+    public void Dispose()
+    {
+      try
+      {
+        ThreadHelper.ThrowIfNotOnUIThread();
+        _dte.Events.BuildEvents.OnBuildProjConfigDone -= BuildEvents_OnBuildProjConfigDone;
+        _dte.Events.BuildEvents.OnBuildDone -= BuildEvents_OnBuildDone;
+      }
+      catch { }
+    }
+
     /// <summary>Validate if we have a startup project and that it's for C#.</summary>
     /// <returns>True if valid.</returns>
     public bool IsProjectValid()
@@ -133,31 +146,9 @@ namespace VsLinuxDebugger.Core
     {
       // TODO: Disable the menu buttons.
       ThreadHelper.ThrowIfNotOnUIThread();
-
-      var dte = (DTE)Package.GetGlobalService(typeof(DTE));
-      BuildEvents = dte.Events.BuildEvents;
+      BuildEvents = _dte.Events.BuildEvents;
 
       _buildTask = new TaskCompletionSource<bool>();
-
-      BuildEvents.OnBuildProjConfigDone += (string project, string projectConfig, string platform, string solutionConfig, bool success) =>
-      {
-        Logger.Output($"Project [success={success}]: {project}");
-
-        if (!success)
-          BuildCleanup();
-
-        _buildSuccessful = Path.GetFileName(project) == $"{_launchBuilder.ProjectName}.csproj" && success;
-      };
-
-      BuildEvents.OnBuildDone += (vsBuildScope scope, vsBuildAction action) =>
-      {
-        // TODO: Re-endable the menu buttons.
-        // Inform system that the task is complete
-        _buildTask?.TrySetResult(true);
-
-        var not = !_buildSuccessful ? "not " : "";
-        Logger.Output($"Build was {not}successful");
-      };
 
       // For some reason, cleanup isn't actually always ran when there has been an error.
       // This removes the fact that if you run a debug attempt, get a file error, that you don't get 2 message boxes, 3 message boxes, etc for each attempt.
@@ -166,8 +157,8 @@ namespace VsLinuxDebugger.Core
       ////BuildEvents.OnBuildProjConfigDone -= BuildEvents_OnBuildProjConfigDone;
       ////BuildEvents.OnBuildProjConfigDone += BuildEvents_OnBuildProjConfigDone;
 
-      dte.SuppressUI = false;
-      dte.Solution.SolutionBuild.BuildProject(_launchBuilder.ProjectConfigName, _launchBuilder.ProjectFileFullPath);
+      _dte.SuppressUI = false;
+      _dte.Solution.SolutionBuild.BuildProject(_launchBuilder.ProjectConfigName, _launchBuilder.ProjectFileFullPath);
     }
 
     private void BuildCleanup()
@@ -204,6 +195,26 @@ namespace VsLinuxDebugger.Core
       // DebugAdapterHost.Launch /LaunchJson:LaunchTester\Properties\launch.json /ConfigurationName:"{launchConfigName}"
 
       Logger.Output("Debug session complete.");
+    }
+
+    private void BuildEvents_OnBuildDone(vsBuildScope Scope, vsBuildAction Action)
+    {
+      // TODO: Re-enable the menu buttons.
+      // Inform system that the task is complete
+      _buildTask?.TrySetResult(true);
+
+      var not = !_buildSuccessful ? "not " : "";
+      Logger.Output($"Build was {not}successful");
+    }
+
+    private void BuildEvents_OnBuildProjConfigDone(string project, string projectConfig, string platform, string solutionConfig, bool success)
+    {
+      Logger.Output($"Project [success={success}]: {project}");
+
+      if (!success)
+        BuildCleanup();
+
+      _buildSuccessful = Path.GetFileName(project) == $"{_launchBuilder.ProjectName}.csproj" && success;
     }
 
     private bool Initialize()

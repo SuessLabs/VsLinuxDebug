@@ -133,18 +133,17 @@
           <ButtonText>Show Log</ButtonText>
         </Strings>
       </Button>
+      -->
 
       <Button guid="GuidLinuxDebugerMenu" id="CmdOpenSettings" priority="0x0501" type="Button">
         <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel2" />
         <Icon guid="Settings_16x" id="imgSettings" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
-        <CommandFlag>DefaultDisabled</CommandFlag>
         <Strings>
           <ButtonText>Settings</ButtonText>
         </Strings>
       </Button>
-      -->
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
