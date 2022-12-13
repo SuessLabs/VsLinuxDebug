@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using VsLinuxDebugger.Core;
+using Xeno.VsLinuxDebug.OptionsPages;
 
 namespace VsLinuxDebugger
 {
@@ -68,22 +70,25 @@ namespace VsLinuxDebugger
     {
       await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
+      var success = true;
+
       var options = ToUserOptions();
-      var dbg = new RemoteDebugger(options);
-
-      if (!dbg.IsProjectValid())
+      using (var dbg = new RemoteDebugger(options))
       {
-        Logger.Output("No C# startup project/solution loaded.");
-        return false;
+        if (!dbg.IsProjectValid())
+        {
+          Logger.Output("No C# startup project/solution loaded.");
+          success = false;
+        }
+
+        if (success && !await dbg.BeginAsync(buildOptions))
+        {
+          Logger.Output("Failed to perform actions.");
+          success = false;
+        }
       }
 
-      if (!await dbg.BeginAsync(buildOptions))
-      {
-        Logger.Output("Failed to perform actions.");
-        return false;
-      }
-
-      return true;
+      return success;
     }
 
     private async void OnBuildDeployAsync(object sender, EventArgs e)
@@ -122,7 +127,8 @@ namespace VsLinuxDebugger
         cmd.Enabled = false;
 
       await Task.Yield();
-      MessageBox("Not implemented");
+
+      Instance._package.ShowOptionPage(typeof(OptionsPage));
     }
 
     private void SetMenuTextAndVisibility(object sender, EventArgs e)
@@ -138,7 +144,7 @@ namespace VsLinuxDebugger
 
         if (cmd.CommandID.ID == CommandIds.CmdShowLog
           || cmd.CommandID.ID == CommandIds.CmdDebugOnly
-          || cmd.CommandID.ID == CommandIds.CmdShowSettings
+          ////|| cmd.CommandID.ID == CommandIds.CmdShowSettings
           || cmd.CommandID.ID == CommandIds.CmdBuildDeployLaunch)
         {
           cmd.Enabled = false;
