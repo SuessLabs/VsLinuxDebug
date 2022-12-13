@@ -16,14 +16,14 @@ namespace VsLinuxDebugger.Core
     private readonly string _tarGzFileName = "vsldBuildContents.tar.gz";
 
     private bool _isConnected = false;
-    private UserOptions _opts;
+    private SshConnectionInfo _info;
     private ScpClient _scp;
     private SftpClient _sftp;
     private SshClient _ssh;
 
-    public SshTool(UserOptions opts)
+    public SshTool(SshConnectionInfo info)
     {
-      _opts = opts;
+      _info = info;
     }
 
     public SshClient Ssh => _ssh;
@@ -97,7 +97,7 @@ namespace VsLinuxDebugger.Core
           result = stream.Expect("password");
           Logger.Debug($"BASH-SUDO: {result}");
 
-          stream.Write(_opts.UserPass + "\n");
+          stream.Write(_info.UserPass + "\n");
           result = stream.Expect(prompt);
           Logger.Debug($"BASH-SUDO: {result}");
         }
@@ -138,7 +138,7 @@ namespace VsLinuxDebugger.Core
 
     /// <summary>Cleans the contents of the deployment path.</summary>
     /// <param name="fullScrub">Clear entire base deployment folder (TRUE) or just our project.</param>
-    public async Task CleanDeploymentFolderAsync(string path)
+    public async Task CleanFolderAsync(string path)
     {
       // Whole deployment folder and hidden files
       // rm -rf xxx/*      == Contents of the folder but not the folder itself
@@ -159,12 +159,12 @@ namespace VsLinuxDebugger.Core
 
       try
       {
-        if (_opts.UserPrivateKeyEnabled)
+        if (_info.PrivateKeyEnabled)
         {
-          if (string.IsNullOrEmpty(_opts.UserPrivateKeyPassword))
-            keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath);
+          if (string.IsNullOrEmpty(_info.PrivateKeyPassword))
+            keyFile = new PrivateKeyFile(_info.PrivateKeyPath);
           else
-            keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath, _opts.UserPrivateKeyPassword);
+            keyFile = new PrivateKeyFile(_info.PrivateKeyPath, _info.PrivateKeyPassword);
         }
       }
       catch (Exception ex)
@@ -176,9 +176,9 @@ namespace VsLinuxDebugger.Core
 
       try
       {
-        _ssh = (_opts.UserPrivateKeyEnabled && File.Exists(_opts.UserPrivateKeyPath))
-          ? new SshClient(_opts.HostIp, _opts.HostPort, _opts.UserName, keyFile)
-          : new SshClient(_opts.HostIp, _opts.HostPort, _opts.UserName, _opts.UserPass);
+        _ssh = (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
+          ? new SshClient(_info.Host, _info.Port, _info.UserName, keyFile)
+          : new SshClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
 
         await Task.Run(() => _ssh.Connect());
       }
@@ -191,8 +191,8 @@ namespace VsLinuxDebugger.Core
       try
       {
         var sftpClient = (keyFile == null)
-            ? new SftpClient(_opts.HostIp, _opts.HostPort, _opts.UserName, _opts.UserPass)
-            : new SftpClient(_opts.HostIp, _opts.HostPort, _opts.UserName, keyFile);
+            ? new SftpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass)
+            : new SftpClient(_info.Host, _info.Port, _info.UserName, keyFile);
 
         sftpClient.Connect();
         _sftp = sftpClient;
@@ -200,8 +200,8 @@ namespace VsLinuxDebugger.Core
       catch (Exception)
       {
         _scp = (keyFile == null)
-          ? new ScpClient(_opts.HostIp, _opts.HostPort, _opts.UserName, _opts.UserPass)
-          : new ScpClient(_opts.HostIp, _opts.HostPort, _opts.UserName, keyFile);
+          ? new ScpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass)
+          : new ScpClient(_info.Host, _info.Port, _info.UserName, keyFile);
 
         _scp.Connect();
       }
@@ -224,25 +224,25 @@ namespace VsLinuxDebugger.Core
       _scp?.Dispose();
     }
 
-    public async Task MakeDeploymentFolderAsync()
+    public async Task MakeDeploymentFolderAsync(string remoteBaseFolder)
     {
-      // do we need SUDO?
-      await BashAsync($"mkdir -p {_opts.RemoteDeployBasePath}");
+      // do we need SUDO? Not yet
+      await BashAsync($"mkdir -p {remoteBaseFolder}");
       //// Bash($"mkdir -p {_opts.RemoteDeployDebugPath}");
       //// Bash($"mkdir -p {_opts.RemoteDeployReleasePath}");
 
-      var group = string.IsNullOrEmpty(_opts.UserGroupName)
+      var group = string.IsNullOrEmpty(_info.UserGroup)
         ? string.Empty
-        : $":{_opts.UserGroupName}";
+        : $":{_info.UserGroup}";
 
       // Update ownership so it's not "root"
-      await BashAsync($"sudo chown -R {_opts.UserName}{group} {_opts.RemoteDeployBasePath}");
+      await BashAsync($"sudo chown -R {_info.UserName}{group} {remoteBaseFolder}");
     }
 
     /// <summary>
     /// Install cURL and VS Debugger if it doesn't exist already.
     /// </summary>
-    public async Task TryInstallVsDbgAsync()
+    public async Task TryInstallVsDbgAsync(string vsDbgFolder)
     {
       string arch = (await BashAsync("uname -m")).Trim('\n');
 
@@ -259,8 +259,7 @@ namespace VsLinuxDebugger.Core
 
       // If output path does not exist, execute the following commands "curl .. | bash .."
       // 2022-10-27: Added '-k' to allow for Microsoft's self-signed certificate.
-      var outputPath = LinuxPath.Combine(_opts.RemoteVsDbgBasePath, Constants.VS2022);
-      var ret = await BashAsync($"[ -d {outputPath} ] || curl -ksSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l {outputPath}");
+      var ret = await BashAsync($"[ -d {vsDbgFolder} ] || curl -ksSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l {vsDbgFolder}");
       Logger.Output($"Returned: {ret}");
     }
 

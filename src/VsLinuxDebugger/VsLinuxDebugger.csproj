@@ -51,6 +51,7 @@
     <Compile Include="Core\LinuxPath.cs" />
     <Compile Include="Core\RemoteDebugger.cs" />
     <Compile Include="Core\LaunchBuilder.cs" />
+    <Compile Include="Core\SshConnectionInfo.cs" />
     <Compile Include="Core\Remote\Configuration.cs" />
     <Compile Include="Core\Remote\Launch.cs" />
     <Compile Include="Core\Remote\PipeTransport.cs" />

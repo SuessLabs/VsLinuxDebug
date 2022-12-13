@@ -63,7 +63,9 @@ namespace VsLinuxDebugger.Core
           }
         }
 
-        using (var ssh = new SshTool(_options))
+        var remoteInfo = GetRemoteConnectionInfo();
+
+        using (var ssh = new SshTool(remoteInfo))
         {
           var success = await ssh.ConnectAsync();
           if (!success)
@@ -72,9 +74,11 @@ namespace VsLinuxDebugger.Core
             return false;
           }
 
-          await ssh.TryInstallVsDbgAsync();
-          await ssh.MakeDeploymentFolderAsync();
-          await ssh.CleanDeploymentFolderAsync(_launchBuilder.RemoteDeployProjectFolder);
+          var vsDbgFolder = LinuxPath.Combine(_options.RemoteVsDbgBasePath, Constants.VS2022);
+
+          await ssh.TryInstallVsDbgAsync(vsDbgFolder);
+          await ssh.MakeDeploymentFolderAsync(_options.RemoteDeployBasePath);
+          await ssh.CleanFolderAsync(_launchBuilder.RemoteDeployProjectFolder);
 
           if (buildOptions.HasFlag(BuildOptions.Deploy))
           {
@@ -233,6 +237,21 @@ namespace VsLinuxDebugger.Core
       ////   _launchBuilder.CommandLineArgs = ... extract from localSettings.json
 
       return true;
+    }
+
+    private SshConnectionInfo GetRemoteConnectionInfo()
+    {
+      return new SshConnectionInfo
+      {
+        Host = _options.HostIp,
+        Port = _options.HostPort,
+        UserGroup = _options.UserGroupName,
+        UserName = _options.UserName,
+        UserPass = _options.UserPass,
+        PrivateKeyEnabled = _options.UserPrivateKeyEnabled,
+        PrivateKeyPath = _options.UserPrivateKeyPath,
+        PrivateKeyPassword = _options.UserPrivateKeyPassword,
+      };
     }
 
     private bool IsCSharpProject(Project vsProject)
