@@ -63,7 +63,7 @@ namespace VsLinuxDebugger.Core
           }
         }
 
-        using (var ssh = new SshTool(_options, _launchBuilder))
+        using (var ssh = new SshTool(_options))
         {
           var success = await ssh.ConnectAsync();
           if (!success)
@@ -74,11 +74,11 @@ namespace VsLinuxDebugger.Core
 
           await ssh.TryInstallVsDbgAsync();
           await ssh.MakeDeploymentFolderAsync();
-          await ssh.CleanDeploymentFolderAsync();
+          await ssh.CleanDeploymentFolderAsync(_launchBuilder.RemoteDeployProjectFolder);
 
           if (buildOptions.HasFlag(BuildOptions.Deploy))
           {
-            await ssh.UploadFilesAsync();
+            await ssh.UploadFilesAsync(_launchBuilder.OutputDirFullPath, _launchBuilder.RemoteDeployProjectFolder);
           }
           ////else if (buildOptions.HasFlag(BuildOptions.Publish))
           ////{

@@ -16,16 +16,14 @@ namespace VsLinuxDebugger.Core
     private readonly string _tarGzFileName = "vsldBuildContents.tar.gz";
 
     private bool _isConnected = false;
-    private LaunchBuilder _launch;
     private UserOptions _opts;
     private ScpClient _scp;
     private SftpClient _sftp;
     private SshClient _ssh;
 
-    public SshTool(UserOptions opts, LaunchBuilder launch)
+    public SshTool(UserOptions opts)
     {
       _opts = opts;
-      _launch = launch;
     }
 
     public SshClient Ssh => _ssh;
@@ -140,17 +138,19 @@ namespace VsLinuxDebugger.Core
 
     /// <summary>Cleans the contents of the deployment path.</summary>
     /// <param name="fullScrub">Clear entire base deployment folder (TRUE) or just our project.</param>
-    public async Task CleanDeploymentFolderAsync(bool fullScrub = false)
+    public async Task CleanDeploymentFolderAsync(string path)
     {
       // Whole deployment folder and hidden files
       // rm -rf xxx/*      == Contents of the folder but not the folder itself
       // rm -rf xxx/{*,.*} == All hidden files and folders
-      var filesAndFolders = "{*,.*}";
+      var allFilesAndFolders = "{*,.*}";
+      await BashAsync($"rm -rf {path}/{allFilesAndFolders}"); // "~/LinuxDbg/MyProg/{*,.*}"
 
-      if (fullScrub)
-        await BashAsync($"rm -rf \"{_opts.RemoteDeployBasePath}/{filesAndFolders}\"");    // "~/LinuxDbg/{*,.*}"
-      else
-        await BashAsync($"rm -rf {_launch.RemoteDeployProjectFolder}/{filesAndFolders}"); // "~/LinuxDbg/MyProg/{*,.*}"
+      // Not used
+      ////if (fullScrub)
+      ////  await BashAsync($"rm -rf \"{_opts.RemoteDeployBasePath}/{allFilesAndFolders}\"");    // "~/LinuxDbg/{*,.*}"
+      ////else
+      ////  await BashAsync($"rm -rf {_launch.RemoteDeployProjectFolder}/{allFilesAndFolders}"); // "~/LinuxDbg/MyProg/{*,.*}"
     }
 
     public async Task<bool> ConnectAsync()
@@ -277,7 +277,11 @@ namespace VsLinuxDebugger.Core
       }
     }
 
-    public async Task<string> UploadFilesAsync()
+    /// <summary>Upload files to remote machine.</summary>
+    /// <param name="sourceFolder">Local folder to upload from.</param>
+    /// <param name="targetFolder">Remote target folder to upload to.</param>
+    /// <returns></returns>
+    public async Task<string> UploadFilesAsync(string sourceFolder, string targetFolder)
     {
       try
       {
@@ -289,20 +293,20 @@ namespace VsLinuxDebugger.Core
         // TODO: Rev3 - Allow for both SFTP and SCP as a backup. This separating connection to a new disposable class.
         //// Logger.Output($"Connected to {_connectionInfo.Username}@{_connectionInfo.Host}:{_connectionInfo.Port} via SSH and {(_sftpClient != null ? "SFTP" : "SCP")}");
 
-        await BashAsync($@"mkdir -p {_launch.RemoteDeployProjectFolder}");
-
-        var srcDirInfo = new DirectoryInfo(_launch.OutputDirFullPath);
+        var srcDirInfo = new DirectoryInfo(sourceFolder);
         if (!srcDirInfo.Exists)
-          throw new DirectoryNotFoundException($"Directory '{_launch.OutputDirFullPath}' not found!");
+          throw new DirectoryNotFoundException($"Directory '{sourceFolder}' not found!");
+
+        await BashAsync($@"mkdir -p {targetFolder}");
 
         // Compress files to upload as single `tar.gz`.
-        var destTarGz = LinuxPath.Combine(_launch.RemoteDeployProjectFolder, _tarGzFileName);
+        var destTarGz = LinuxPath.Combine(targetFolder, _tarGzFileName);
         Logger.Output($"Destination Tar.GZ: '{destTarGz}'");
 
         var success = await PayloadCompressAndUploadAsync(_sftp, srcDirInfo, destTarGz);
 
         // Decompress file
-        await PayloadDecompressAsync(destTarGz, false);
+        await PayloadDecompressAsync(targetFolder, destTarGz, false);
 
         Logger.Output($"Upload completed {(success ? "successfully" : "with failure")}.");
 
@@ -504,25 +508,23 @@ namespace VsLinuxDebugger.Core
     }
 
     /// <summary>Unpack build contents.</summary>
+    /// <param name="targetFolder">Remote target folder to upload to.</param>
     /// <param name="pathBuildTarGz">Path to upload to.</param>
     /// <param name="removeTarGz">Remove our build's tar.gz file. Set to FALSE for debugging. (default=true)</param>
     /// <returns>Returns true on success.</returns>
-    private async Task<bool> PayloadDecompressAsync(string pathBuildTarGz, bool removeTarGz = true)
+    private async Task<bool> PayloadDecompressAsync(string targetFolder, string pathBuildTarGz, bool removeTarGz = true)
     {
-      var decompressOutput = string.Empty;
-
       try
       {
         var cmd = "set -e";
-        cmd += $";cd \"{_launch.RemoteDeployProjectFolder}\"";
+        cmd += $";cd \"{targetFolder}\"";
         cmd += $";tar -zxf \"{_tarGzFileName}\"";
         ////cmd += $";tar -zxf \"{pathBuildTarGz}\"";
 
         if (removeTarGz)
           cmd += $";rm \"{pathBuildTarGz}\"";
 
-        decompressOutput = await BashAsync(cmd);
-
+        string decompressOutput = await BashAsync(cmd);
         Logger.Output($"Payload Decompress results: '{decompressOutput}' (blank=OK)");
       }
       catch (Exception)
