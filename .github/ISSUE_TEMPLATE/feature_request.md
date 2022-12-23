@@ -2,16 +2,13 @@
 name: Feature request
 about: Suggest an idea for this project
 title: "[Enhancement] "
-labels: enhancement
+labels: enhancement, not-reviewed
 assignees: ''
 
 ---
 
-**Describe the solution you'd like**
+## Description
 A clear and concise description of what you want to happen.
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
-
-**Additional context**
+## Context
 Add any other context or screenshots about the feature request here.
