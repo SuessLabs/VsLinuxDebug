@@ -2,10 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Shell;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 using SharpCompress.Common;
@@ -18,16 +16,14 @@ namespace VsLinuxDebugger.Core
     private readonly string _tarGzFileName = "vsldBuildContents.tar.gz";
 
     private bool _isConnected = false;
-    private LaunchBuilder _launch;
-    private UserOptions _opts;
+    private SshConnectionInfo _info;
     private ScpClient _scp;
     private SftpClient _sftp;
     private SshClient _ssh;
 
-    public SshTool(UserOptions opts, LaunchBuilder launch)
+    public SshTool(SshConnectionInfo info)
     {
-      _opts = opts;
-      _launch = launch;
+      _info = info;
     }
 
     public SshClient Ssh => _ssh;
@@ -101,7 +97,7 @@ namespace VsLinuxDebugger.Core
           result = stream.Expect("password");
           Logger.Debug($"BASH-SUDO: {result}");
 
-          stream.Write(_opts.UserPass + "\n");
+          stream.Write(_info.UserPass + "\n");
           result = stream.Expect(prompt);
           Logger.Debug($"BASH-SUDO: {result}");
         }
@@ -142,17 +138,19 @@ namespace VsLinuxDebugger.Core
 
     /// <summary>Cleans the contents of the deployment path.</summary>
     /// <param name="fullScrub">Clear entire base deployment folder (TRUE) or just our project.</param>
-    public async Task CleanDeploymentFolderAsync(bool fullScrub = false)
+    public async Task CleanFolderAsync(string path)
     {
       // Whole deployment folder and hidden files
       // rm -rf xxx/*      == Contents of the folder but not the folder itself
       // rm -rf xxx/{*,.*} == All hidden files and folders
-      var filesAndFolders = "{*,.*}";
+      var allFilesAndFolders = "{*,.*}";
+      await BashAsync($"rm -rf {path}/{allFilesAndFolders}"); // "~/LinuxDbg/MyProg/{*,.*}"
 
-      if (fullScrub)
-        await BashAsync($"rm -rf \"{_opts.RemoteDeployBasePath}/{filesAndFolders}\"");
-      else
-        await BashAsync($"rm -rf {_launch.RemoteDeployProjectFolder}/{filesAndFolders}");
+      // Not used
+      ////if (fullScrub)
+      ////  await BashAsync($"rm -rf \"{_opts.RemoteDeployBasePath}/{allFilesAndFolders}\"");    // "~/LinuxDbg/{*,.*}"
+      ////else
+      ////  await BashAsync($"rm -rf {_launch.RemoteDeployProjectFolder}/{allFilesAndFolders}"); // "~/LinuxDbg/MyProg/{*,.*}"
     }
 
     public async Task<bool> ConnectAsync()
@@ -161,12 +159,12 @@ namespace VsLinuxDebugger.Core
 
       try
       {
-        if (_opts.UserPrivateKeyEnabled)
+        if (_info.PrivateKeyEnabled)
         {
-          if (string.IsNullOrEmpty(_opts.UserPrivateKeyPassword))
-            keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath);
+          if (string.IsNullOrEmpty(_info.PrivateKeyPassword))
+            keyFile = new PrivateKeyFile(_info.PrivateKeyPath);
           else
-            keyFile = new PrivateKeyFile(_opts.UserPrivateKeyPath, _opts.UserPrivateKeyPassword);
+            keyFile = new PrivateKeyFile(_info.PrivateKeyPath, _info.PrivateKeyPassword);
         }
       }
       catch (Exception ex)
@@ -178,9 +176,9 @@ namespace VsLinuxDebugger.Core
 
       try
       {
-        _ssh = (_opts.UserPrivateKeyEnabled && File.Exists(_opts.UserPrivateKeyPath))
-          ? new SshClient(_opts.HostIp, _opts.HostPort, _opts.UserName, keyFile)
-          : new SshClient(_opts.HostIp, _opts.HostPort, _opts.UserName, _opts.UserPass);
+        _ssh = (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
+          ? new SshClient(_info.Host, _info.Port, _info.UserName, keyFile)
+          : new SshClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
 
         await Task.Run(() => _ssh.Connect());
       }
@@ -193,8 +191,8 @@ namespace VsLinuxDebugger.Core
       try
       {
         var sftpClient = (keyFile == null)
-            ? new SftpClient(_opts.HostIp, _opts.HostPort, _opts.UserName, _opts.UserPass)
-            : new SftpClient(_opts.HostIp, _opts.HostPort, _opts.UserName, keyFile);
+            ? new SftpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass)
+            : new SftpClient(_info.Host, _info.Port, _info.UserName, keyFile);
 
         sftpClient.Connect();
         _sftp = sftpClient;
@@ -202,8 +200,8 @@ namespace VsLinuxDebugger.Core
       catch (Exception)
       {
         _scp = (keyFile == null)
-          ? new ScpClient(_opts.HostIp, _opts.HostPort, _opts.UserName, _opts.UserPass)
-          : new ScpClient(_opts.HostIp, _opts.HostPort, _opts.UserName, keyFile);
+          ? new ScpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass)
+          : new ScpClient(_info.Host, _info.Port, _info.UserName, keyFile);
 
         _scp.Connect();
       }
@@ -226,25 +224,25 @@ namespace VsLinuxDebugger.Core
       _scp?.Dispose();
     }
 
-    public async Task MakeDeploymentFolderAsync()
+    public async Task MakeDeploymentFolderAsync(string remoteBaseFolder)
     {
-      // do we need SUDO?
-      await BashAsync($"mkdir -p {_opts.RemoteDeployBasePath}");
+      // do we need SUDO? Not yet
+      await BashAsync($"mkdir -p {remoteBaseFolder}");
       //// Bash($"mkdir -p {_opts.RemoteDeployDebugPath}");
       //// Bash($"mkdir -p {_opts.RemoteDeployReleasePath}");
 
-      var group = string.IsNullOrEmpty(_opts.UserGroupName)
+      var group = string.IsNullOrEmpty(_info.UserGroup)
         ? string.Empty
-        : $":{_opts.UserGroupName}";
+        : $":{_info.UserGroup}";
 
       // Update ownership so it's not "root"
-      await BashAsync($"sudo chown -R {_opts.UserName}{group} {_opts.RemoteDeployBasePath}");
+      await BashAsync($"sudo chown -R {_info.UserName}{group} {remoteBaseFolder}");
     }
 
     /// <summary>
     /// Install cURL and VS Debugger if it doesn't exist already.
     /// </summary>
-    public async Task TryInstallVsDbgAsync()
+    public async Task TryInstallVsDbgAsync(string vsDbgFolder)
     {
       string arch = (await BashAsync("uname -m")).Trim('\n');
 
@@ -261,8 +259,7 @@ namespace VsLinuxDebugger.Core
 
       // If output path does not exist, execute the following commands "curl .. | bash .."
       // 2022-10-27: Added '-k' to allow for Microsoft's self-signed certificate.
-      var outputPath = LinuxPath.Combine(_opts.RemoteVsDbgBasePath, Constants.VS2022);
-      var ret = await BashAsync($"[ -d {outputPath} ] || curl -ksSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l {outputPath}");
+      var ret = await BashAsync($"[ -d {vsDbgFolder} ] || curl -ksSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l {vsDbgFolder}");
       Logger.Output($"Returned: {ret}");
     }
 
@@ -279,7 +276,11 @@ namespace VsLinuxDebugger.Core
       }
     }
 
-    public async Task<string> UploadFilesAsync()
+    /// <summary>Upload files to remote machine.</summary>
+    /// <param name="sourceFolder">Local folder to upload from.</param>
+    /// <param name="targetFolder">Remote target folder to upload to.</param>
+    /// <returns></returns>
+    public async Task<string> UploadFilesAsync(string sourceFolder, string targetFolder)
     {
       try
       {
@@ -291,22 +292,22 @@ namespace VsLinuxDebugger.Core
         // TODO: Rev3 - Allow for both SFTP and SCP as a backup. This separating connection to a new disposable class.
         //// Logger.Output($"Connected to {_connectionInfo.Username}@{_connectionInfo.Host}:{_connectionInfo.Port} via SSH and {(_sftpClient != null ? "SFTP" : "SCP")}");
 
-        await BashAsync($@"mkdir -p {_launch.RemoteDeployProjectFolder}");
-
-        var srcDirInfo = new DirectoryInfo(_launch.OutputDirFullPath);
+        var srcDirInfo = new DirectoryInfo(sourceFolder);
         if (!srcDirInfo.Exists)
-          throw new DirectoryNotFoundException($"Directory '{_launch.OutputDirFullPath}' not found!");
+          throw new DirectoryNotFoundException($"Directory '{sourceFolder}' not found!");
+
+        await BashAsync($@"mkdir -p {targetFolder}");
 
         // Compress files to upload as single `tar.gz`.
-        var destTarGz = LinuxPath.Combine(_launch.RemoteDeployProjectFolder, _tarGzFileName);
+        var destTarGz = LinuxPath.Combine(targetFolder, _tarGzFileName);
         Logger.Output($"Destination Tar.GZ: '{destTarGz}'");
 
         var success = await PayloadCompressAndUploadAsync(_sftp, srcDirInfo, destTarGz);
 
         // Decompress file
-        await PayloadDecompressAsync(destTarGz, false);
+        await PayloadDecompressAsync(targetFolder, destTarGz, false);
 
-        Logger.Output($"Upload completed {(success ? "successfully." : "with failure.")}.");
+        Logger.Output($"Upload completed {(success ? "successfully" : "with failure")}.");
 
         return string.Empty;
       }
@@ -397,7 +398,6 @@ namespace VsLinuxDebugger.Core
         localFileCache[cleanedRelativeFilePath] = new FileInfo(file);
       });
 
-      Logger.Output($"Local file cache created");
       return localFileCache;
     }
 
@@ -409,7 +409,10 @@ namespace VsLinuxDebugger.Core
     private async Task<bool> PayloadCompressAndUploadAsync(SftpClient sftp, DirectoryInfo srcDirInfo, string pathBuildTarGz)
     {
       var success = false;
+      Logger.Output($"Getting bin files for transfer...");
       var localFiles = GetLocalFiles(srcDirInfo);
+
+      Logger.Output($"Compressing files for transfer...");
 
       // TODO: Delta remote files against local files for changes.
       using (Stream tarGzStream = new MemoryStream())
@@ -480,6 +483,7 @@ namespace VsLinuxDebugger.Core
           {
             var tarGzSize = tarGzStream.Length;
 
+            Logger.Output("Uploading...");
             await Task.Run(() =>
             {
               tarGzStream.Seek(0, SeekOrigin.Begin);
@@ -503,26 +507,23 @@ namespace VsLinuxDebugger.Core
     }
 
     /// <summary>Unpack build contents.</summary>
+    /// <param name="targetFolder">Remote target folder to upload to.</param>
     /// <param name="pathBuildTarGz">Path to upload to.</param>
     /// <param name="removeTarGz">Remove our build's tar.gz file. Set to FALSE for debugging. (default=true)</param>
     /// <returns>Returns true on success.</returns>
-    private async Task<bool> PayloadDecompressAsync(string pathBuildTarGz, bool removeTarGz = true)
+    private async Task<bool> PayloadDecompressAsync(string targetFolder, string pathBuildTarGz, bool removeTarGz = true)
     {
-      var decompressOutput = string.Empty;
-
       try
       {
-
         var cmd = "set -e";
-        cmd += $";cd \"{_launch.RemoteDeployProjectFolder}\"";
+        cmd += $";cd \"{targetFolder}\"";
         cmd += $";tar -zxf \"{_tarGzFileName}\"";
         ////cmd += $";tar -zxf \"{pathBuildTarGz}\"";
 
         if (removeTarGz)
           cmd += $";rm \"{pathBuildTarGz}\"";
 
-        decompressOutput = await BashAsync(cmd);
-
+        string decompressOutput = await BashAsync(cmd);
         Logger.Output($"Payload Decompress results: '{decompressOutput}' (blank=OK)");
       }
       catch (Exception)

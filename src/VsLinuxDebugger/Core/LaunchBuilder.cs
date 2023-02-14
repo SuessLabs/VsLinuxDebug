@@ -8,18 +8,18 @@ using VsLinuxDebugger.Core.Remote;
 
 namespace VsLinuxDebugger.Core
 {
-  // TODO: Combine with UserOptions to make life easier.
+  /// <summary>LaunchBuilder class for serialization.</summary>
   public class LaunchBuilder
   {
     public const string AdapterFileName = "launch.json";
 
     private UserOptions _opts;
 
-    public LaunchBuilder(DTE2 dte, Project dteProject, UserOptions o)
+    public LaunchBuilder(DTE2 dte, Project dteProject, UserOptions userOptions)
     {
       ThreadHelper.ThrowIfNotOnUIThread();
 
-      _opts = o;
+      _opts = userOptions;
 
       AssemblyName = dteProject.Properties.Item("AssemblyName").Value.ToString();
       ProjectConfigName = dteProject.ConfigurationManager.ActiveConfiguration.ConfigurationName;
