@@ -4,10 +4,10 @@
 
 This document contains the release information for the project.
 
-### 2.0.2 (Prev-2)
+### 2.0.2
 
 * Fixed: As per #53, cleaned up exponential Build status messages.
-* Added: Enabled quick access to Linux Debugger's Options dialog
+* Added: Submenu item to "Options" to quickly access to Linux Debugger's Options dialog
 * Update: Refactored options mechanism in prep for custom profiles.
 
 ### 2.0.1 (Prev-1)
