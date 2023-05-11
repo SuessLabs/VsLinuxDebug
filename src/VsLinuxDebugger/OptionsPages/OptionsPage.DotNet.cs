@@ -22,8 +22,8 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     public string RemoteDeployBasePath { get; set; } = $"./VSLinuxDbg"; // "LinuxDbg"
 
     [Category(RemoteDebugger)]
-    [DisplayName(".NET Path")]
-    [Description("Path of .NET on remote machine. (Samples: `dotnet`, `~/.dotnet/dotnet`)")]
+    [DisplayName(".NET executable")]
+    [Description("Path of the .NET executable on remote machine. (Samples: `dotnet`, `~/.dotnet/dotnet`)")]
     public string RemoteDotNetPath { get; set; } = Constants.DefaultDotNetPath;
 
     [Category(RemoteDebugger)]
