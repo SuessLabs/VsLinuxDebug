@@ -50,5 +50,23 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     [DisplayName("SSH Private Key Password (optional)")]
     [Description("Private key password (only if it was set).")]
     public string UserPrivateKeyPassword { get; set; } = "";
+
+    [Category(Credientials)]
+    [DisplayName("Use SSH.exe with integrated user/[..]/.ssh/id_rsa instead of PLINK")]
+    [Description("Use SSH.exe with integrated user/[..]/.ssh/id_rsa instead of PLINK")]
+    public bool UseSSHExeEnabled { get; set; } = false;
+
+    /*[Category(Credientials)]
+    [DisplayName("PLINK PPK Key File Enabled")]
+    [Description("Use SSH Key for connecting to remote machine.")]
+    public bool UserPlinkPrivateKeyEnabled { get; set; } = false;
+
+    [Category(Credientials)]
+    [DisplayName("SSH Private Key File (optional)")]
+    [Description("Private key file.")]
+    public string UserPlinkPrivateKeyPath { get; set; } = Path.Combine(
+      Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+      ".ssh\\id_rsa");
+    */
   }
 }

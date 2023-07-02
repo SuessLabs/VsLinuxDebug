@@ -137,17 +137,23 @@ namespace VsLinuxDebugger.Core
 
       string plinkPath = string.Empty;
 
-      // Adapter Path:
-      // PLink.exe - Use manual path or embedded
-      if (!string.IsNullOrEmpty(_opts.LocalPLinkPath) && File.Exists(_opts.LocalPLinkPath))
+      if (_opts.UseSSHExeEnabled)
       {
-        plinkPath = _opts.LocalPLinkPath;
+        plinkPath = "ssh.exe";
       }
       else
       {
-        plinkPath = Path.Combine(GetExtensionDirectory(), "plink.exe").Trim('"');
+        // Adapter Path:
+        // PLink.exe - Use manual path or embedded
+        if (!string.IsNullOrEmpty(_opts.LocalPLinkPath) && File.Exists(_opts.LocalPLinkPath))
+        {
+          plinkPath = _opts.LocalPLinkPath;
+        }
+        else
+        {
+          plinkPath = Path.Combine(GetExtensionDirectory(), "plink.exe").Trim('"');
+        }
       }
-
       // Adapter Arguments:
       // NOTE:
       //  1. SSH Private Key ("-i PPK") fails with PLINK. Must use manual password until this is resolved.
@@ -161,16 +167,33 @@ namespace VsLinuxDebugger.Core
       ////var sshPassword = !_opts.UserPrivateKeyEnabled
       ////  ? $"-pw {RemoteUserPass}"
       ////  : $"-i \"{_opts.UserPrivateKeyPath}{strictKeyChecking}\"";
-      //
-      var sshPassword = $"-pw {RemoteUserPass}";
+      string sshPassword = "";
+
+      if(_opts.UseSSHExeEnabled)
+      {
+        sshPassword = ""; //nothing to do, we assume that c:\users\[user]\.ssh\id_rsa exists
+      }
+      else
+      {
+        sshPassword = $"-pw {RemoteUserPass}";
+      }
 
       // TODO: Figure out why "-i <keyfile>" isn't working.
       if (string.IsNullOrEmpty(RemoteUserPass))
         Logger.Output("You must provide a User Password to debug.");
 
-      var adapter = plinkPath;
-      var adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {_opts.RemoteVsDbgFullPath} {vsdbgLogPath}";
-      //// adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {RemoteVsDbgFullPath} --interpreter=vscode {vsdbgLogPath}";
+      string adapter = plinkPath;
+      string adapterArgs = "";
+
+      if (_opts.UseSSHExeEnabled)
+      {
+        adapterArgs = $"{sshPassword} {sshEndpoint} -T {_opts.RemoteVsDbgFullPath} {vsdbgLogPath}";
+        //// adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {RemoteVsDbgFullPath} --interpreter=vscode {vsdbgLogPath}";
+      }
+      else
+      {
+        adapterArgs= $"-ssh {sshPassword} {sshEndpoint} -T {_opts.RemoteVsDbgFullPath} {vsdbgLogPath}";
+      }
 
       return (adapter, adapterArgs);
     }

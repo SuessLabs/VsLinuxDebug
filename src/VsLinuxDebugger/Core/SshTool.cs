@@ -156,7 +156,7 @@ namespace VsLinuxDebugger.Core
     public async Task<bool> ConnectAsync()
     {
       PrivateKeyFile keyFile = null;
-
+      ConnectionInfo conn = null;
       try
       {
         if (_info.PrivateKeyEnabled)
@@ -165,6 +165,13 @@ namespace VsLinuxDebugger.Core
             keyFile = new PrivateKeyFile(_info.PrivateKeyPath);
           else
             keyFile = new PrivateKeyFile(_info.PrivateKeyPath, _info.PrivateKeyPassword);
+
+          // adds rsa-sha2-256
+          RsaSha256Util.ConvertToKeyWithSha256Signature(keyFile);
+          var authenticationMethodRsa = new PrivateKeyAuthenticationMethod(_info.UserName, keyFile);
+          conn = new ConnectionInfo(_info.Host, _info.Port, _info.UserName, authenticationMethodRsa);
+          RsaSha256Util.SetupConnection(conn);
+
         }
       }
       catch (Exception ex)
@@ -176,9 +183,14 @@ namespace VsLinuxDebugger.Core
 
       try
       {
-        _ssh = (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
-          ? new SshClient(_info.Host, _info.Port, _info.UserName, keyFile)
-          : new SshClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
+        if (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
+        {
+          _ssh = new SshClient(conn);
+        }
+        else
+        {
+          _ssh = new SshClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
+        }
 
         await Task.Run(() => _ssh.Connect());
       }
@@ -190,18 +202,28 @@ namespace VsLinuxDebugger.Core
 
       try
       {
-        var sftpClient = (keyFile == null)
-            ? new SftpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass)
-            : new SftpClient(_info.Host, _info.Port, _info.UserName, keyFile);
+        if (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
+        {
+          _sftp = new SftpClient(conn);
+        }
+        else
+        {
+          _sftp = new SftpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
+        }
 
-        sftpClient.Connect();
-        _sftp = sftpClient;
+        _sftp.Connect();
+        
       }
       catch (Exception)
       {
-        _scp = (keyFile == null)
-          ? new ScpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass)
-          : new ScpClient(_info.Host, _info.Port, _info.UserName, keyFile);
+        if (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
+        {
+          _scp = new ScpClient(conn);
+        }
+        else
+        {
+          _scp = new ScpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
+        }
 
         _scp.Connect();
       }

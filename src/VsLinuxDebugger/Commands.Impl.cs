@@ -184,6 +184,7 @@ namespace VsLinuxDebugger
         UserName = VsixPackage.VsixOptions.UserName,
         UserPass = VsixPackage.VsixOptions.UserPass,
         UserGroupName = VsixPackage.VsixOptions.UserGroupName,
+        UseSSHExeEnabled = VsixPackage.VsixOptions.UseSSHExeEnabled
       };
     }
   }

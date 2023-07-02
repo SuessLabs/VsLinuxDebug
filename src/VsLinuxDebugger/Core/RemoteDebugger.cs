@@ -13,6 +13,8 @@ namespace VsLinuxDebugger.Core
   public class RemoteDebugger : IDisposable
   {
     private const string DebugAdapterHost = "DebugAdapterHost.Launch";
+    private const string DebugAdapterHostLogging = "DebugAdapterHost.Logging";
+    private const string DebugAdapterHostLoggingOnOutputWindow = "/On /OutputWindow"; 
     private const string DebugAdapterLaunchJson = "/LaunchJson:";
 
     private bool _buildSuccessful;
@@ -193,6 +195,9 @@ namespace VsLinuxDebugger.Core
       Logger.Output($"- DebugAdapterHost.Launch /LaunchJson:\"{_launchJsonPath}\"");
 
       DTE2 dte2 = (DTE2)Package.GetGlobalService(typeof(SDTE));
+      //Enable Logging for the Debugger output
+      dte2.ExecuteCommand(DebugAdapterHostLogging, $"{DebugAdapterHostLoggingOnOutputWindow}");
+
       dte2.ExecuteCommand(DebugAdapterHost, $"{DebugAdapterLaunchJson}\"{_launchJsonPath}\"");
 
       // launchConfigName = "Debug on Linux";
