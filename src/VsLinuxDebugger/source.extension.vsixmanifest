@@ -4,7 +4,7 @@
                  xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
         <Identity Id="VsLinuxDebugger.4d7bf4de-5015-4e24-92c0-7f9f3397b2da"
-                  Version="2.0.3.1"
+                  Version="2.0.3.2"
                   Language="en-US"
                   Publisher="Suess Labs" />
         <DisplayName>VS Linux Debugger</DisplayName>

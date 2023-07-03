@@ -184,15 +184,19 @@ namespace VsLinuxDebugger.Core
 
       string adapter = plinkPath;
       string adapterArgs = "";
-
+      string displayAdapter = "";
+      if(_opts.RemoteDebugDisplayGui)
+      {
+        displayAdapter = "DISPLAY=:0";
+      }
       if (_opts.UseSSHExeEnabled)
       {
-        adapterArgs = $"{sshPassword} {sshEndpoint} -T {_opts.RemoteVsDbgFullPath} {vsdbgLogPath}";
+        adapterArgs = $"{sshPassword} {sshEndpoint} -T {displayAdapter} {_opts.RemoteVsDbgFullPath} {vsdbgLogPath}";
         //// adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {RemoteVsDbgFullPath} --interpreter=vscode {vsdbgLogPath}";
       }
       else
       {
-        adapterArgs= $"-ssh {sshPassword} {sshEndpoint} -T {_opts.RemoteVsDbgFullPath} {vsdbgLogPath}";
+        adapterArgs= $"-ssh {sshPassword} {sshEndpoint} -T {displayAdapter} {_opts.RemoteVsDbgFullPath} {vsdbgLogPath}";
       }
 
       return (adapter, adapterArgs);
