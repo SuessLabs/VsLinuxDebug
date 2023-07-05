@@ -7,7 +7,9 @@ This document contains the release information for the project.
 ### 2.1
 
 * Update: Code cleanup
-* Update: Bumping version
+* Update: Moved RSA SHA256 classes into their own files for separation of responsibility
+* Update: Enabled `SSH` for remote debugging by default instead of using `PLink` (_still experimental_)
+* Removed: Out of date files (.NET 5 sample applications, UpgradeLog.htm, LinuxDebugger-2019.sln)
 
 ### 2.0.3.2 (Preview)
 
