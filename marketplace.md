@@ -14,6 +14,8 @@ Suess Labs consulting is sponsored by _Xeno Innovations, Inc._
 
 Now developers can build, deploy and debug projects on their remote Linux (Ubuntu, Raspberry PI, etc) devices! Customize your SSH connection to use either a _password_ or a _private key_.
 
+If you enjoy using the extension, please give it a ★★★★★ rating on the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=SuessLabs.VSLinuxDebugger).
+
 ### Usage
 
 ![Menu Screenshot](https://raw.githubusercontent.com/SuessLabs/VsLinuxDebug/develop/docs/ScreenShot-MenuItems.png)

@@ -6,11 +6,11 @@
         xmlns:local="using:GuiNet6.Views"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="350"
         x:Class="GuiNet6.Views.ShellWindow"
         Background="Transparent"
         Icon="/Assets/avalonia-logo.ico"
-        Width="900" Height="700"
+        Width="600" Height="300"
         TransparencyLevelHint="AcrylicBlur"
         Title="{Binding Title}">
 
@@ -24,7 +24,7 @@
       </ExperimentalAcrylicBorder.Material>
     </ExperimentalAcrylicBorder>
 
-    <Grid ColumnDefinitions="200,*" RowDefinitions="*,150">
+    <Grid ColumnDefinitions="200,*" RowDefinitions="*,100">
       <!-- Sidebar -->
       <Panel Grid.Row="0" Grid.Column="0" Background="LightGray">
         <!--<ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.SidebarRegion}" />-->

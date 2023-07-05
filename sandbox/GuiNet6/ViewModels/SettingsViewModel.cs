@@ -1,10 +1,9 @@
-﻿namespace GuiNet6.ViewModels
+﻿namespace GuiNet6.ViewModels;
+
+public class SettingsViewModel : ViewModelBase
 {
-  public class SettingsViewModel : ViewModelBase
+  public SettingsViewModel()
   {
-    public SettingsViewModel()
-    {
-      Title = "Settings View!";
-    }
+    Title = "Settings View!";
   }
 }
