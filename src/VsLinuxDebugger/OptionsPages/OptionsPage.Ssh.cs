@@ -54,7 +54,7 @@ namespace Xeno.VsLinuxDebug.OptionsPages
     [Category(Credientials)]
     [DisplayName("Use SSH.exe with integrated user/[..]/.ssh/id_rsa instead of PLINK")]
     [Description("Use SSH.exe with integrated user/[..]/.ssh/id_rsa instead of PLINK")]
-    public bool UseSSHExeEnabled { get; set; } = false;
+    public bool UseSSHExeEnabled { get; set; } = true;
 
     /*[Category(Credientials)]
     [DisplayName("PLINK PPK Key File Enabled")]

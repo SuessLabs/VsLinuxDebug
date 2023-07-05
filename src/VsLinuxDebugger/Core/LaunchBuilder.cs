@@ -154,6 +154,7 @@ namespace VsLinuxDebugger.Core
           plinkPath = Path.Combine(GetExtensionDirectory(), "plink.exe").Trim('"');
         }
       }
+
       // Adapter Arguments:
       // NOTE:
       //  1. SSH Private Key ("-i PPK") fails with PLINK. Must use manual password until this is resolved.
@@ -185,10 +186,10 @@ namespace VsLinuxDebugger.Core
       string adapter = plinkPath;
       string adapterArgs = "";
       string displayAdapter = "";
+
       if(_opts.RemoteDebugDisplayGui)
-      {
         displayAdapter = "DISPLAY=:0";
-      }
+
       if (_opts.UseSSHExeEnabled)
       {
         adapterArgs = $"{sshPassword} {sshEndpoint} -T {displayAdapter} {_opts.RemoteVsDbgFullPath} {vsdbgLogPath}";

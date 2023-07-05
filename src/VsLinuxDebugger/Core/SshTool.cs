@@ -8,6 +8,7 @@ using Renci.SshNet;
 using Renci.SshNet.Common;
 using SharpCompress.Common;
 using SharpCompress.Writers;
+using VsLinuxDebugger.Core.Security;
 
 namespace VsLinuxDebugger.Core
 {
@@ -76,7 +77,7 @@ namespace VsLinuxDebugger.Core
 
       // RegEx for pattern matching terminal prompt
       //  "[$>]"       BASIC
-      //  @"\][#$>]"   FAILS - Usecase: "[user@mach]$
+      //  @"\][#$>]"   FAILS - Use case: "[user@mach]$
       //  "([$#>:])"
       var prompt = new Regex("([$#>:])");
       var modes = new Dictionary<TerminalModes, uint>();
@@ -184,13 +185,9 @@ namespace VsLinuxDebugger.Core
       try
       {
         if (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
-        {
           _ssh = new SshClient(conn);
-        }
         else
-        {
           _ssh = new SshClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
-        }
 
         await Task.Run(() => _ssh.Connect());
       }
@@ -203,13 +200,9 @@ namespace VsLinuxDebugger.Core
       try
       {
         if (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
-        {
           _sftp = new SftpClient(conn);
-        }
         else
-        {
           _sftp = new SftpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
-        }
 
         _sftp.Connect();
         
@@ -217,13 +210,9 @@ namespace VsLinuxDebugger.Core
       catch (Exception)
       {
         if (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
-        {
           _scp = new ScpClient(conn);
-        }
         else
-        {
           _scp = new ScpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
-        }
 
         _scp.Connect();
       }
@@ -343,9 +332,7 @@ namespace VsLinuxDebugger.Core
     {
       var cmd = _ssh.RunCommand($"mkdir -p \"{destinationDirectory}\"");
       if (cmd.ExitStatus != 0)
-      {
         throw new Exception(cmd.Error);
-      }
 
       if (_sftp != null)
       {
