@@ -8,6 +8,7 @@ using Renci.SshNet;
 using Renci.SshNet.Common;
 using SharpCompress.Common;
 using SharpCompress.Writers;
+using VsLinuxDebugger.Core.Security;
 
 namespace VsLinuxDebugger.Core
 {
