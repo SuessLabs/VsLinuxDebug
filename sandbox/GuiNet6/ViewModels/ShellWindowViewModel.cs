@@ -1,10 +1,9 @@
-﻿namespace GuiNet6.ViewModels
+﻿namespace GuiNet6.ViewModels;
+
+public class ShellWindowViewModel : ViewModelBase
 {
-  public class ShellWindowViewModel : ViewModelBase
+  public ShellWindowViewModel()
   {
-    public ShellWindowViewModel()
-    {
-      Title = "Sample Prism.Avalonia - Navigation";
-    }
+    Title = "Sample Prism.Avalonia - Navigation";
   }
 }

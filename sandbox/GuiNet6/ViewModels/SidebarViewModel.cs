@@ -3,29 +3,28 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 
-namespace GuiNet6.ViewModels
+namespace GuiNet6.ViewModels;
+
+public class SidebarViewModel : ViewModelBase
 {
-  public class SidebarViewModel : ViewModelBase
+  private IEventAggregator _eventAggregator;
+  private IRegionManager _regionManager;
+
+  public SidebarViewModel(IRegionManager regionManager, IEventAggregator ea)
   {
-    private IEventAggregator _eventAggregator;
-    private IRegionManager _regionManager;
+    _regionManager = regionManager;
+    _eventAggregator = ea;
 
-    public SidebarViewModel(IRegionManager regionManager, IEventAggregator ea)
-    {
-      _regionManager = regionManager;
-      _eventAggregator = ea;
-
-      Title = "Navigation";
-    }
-
-    public DelegateCommand CmdDashboard => new DelegateCommand(() =>
-    {
-      _regionManager.RequestNavigate(RegionNames.ContentRegion, nameof(DashboardView));
-    });
-
-    public DelegateCommand CmdSettings => new DelegateCommand(() =>
-    {
-      _regionManager.RequestNavigate(RegionNames.ContentRegion, nameof(SettingsView));
-    });
+    Title = "Navigation";
   }
+
+  public DelegateCommand CmdDashboard => new(() =>
+  {
+    _regionManager.RequestNavigate(RegionNames.ContentRegion, nameof(DashboardView));
+  });
+
+  public DelegateCommand CmdSettings => new(() =>
+  {
+    _regionManager.RequestNavigate(RegionNames.ContentRegion, nameof(SettingsView));
+  });
 }
