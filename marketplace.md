@@ -71,6 +71,32 @@ To contribute, please pick off an item from the project or issue page. We'd love
 
 This document contains the release information for the project.
 
+### 2.1
+
+* Update: Code cleanup
+* Update: Bumping version
+
+### 2.0.3.2 (Preview)
+
+Contributor: [ZeuSWarE GmbH](https://github.com/zeusware) - PR: #62
+
+* Added: The RSA-SHA2-256 for SSH.Net for interpreting private keys made by `ssh-keygen -m PEM -t rsa -b 4096` allowing connecting directly.
+  * Ubuntu 22.04 LTS OpenSSH package does not support the ssh algo: `ssh-rsa` you intended being generating via `ssh-keygen -m PEM -t rsa -b 4096` by default anymore
+* Added: Using a ppk via plink is obsolete if u gen the key via PowerShell `ssh-keygen`, so u have now the option to use the system integrated ssh.exe (PS 6 integrate that by default)
+
+### 2.0.3
+
+Contributor: [Claas Hilbrecht](https://github.com/clahil-linum) - PR: #59
+
+* Fixed: As per #32 add `vsdbg` constant to debugger full path.
+* Update: Options descriptions are now more clear about the .NET executable. It's not a path but the dotnet executable.
+
+### 2.0.2
+
+* Fixed: As per #53, cleaned up exponential Build status messages.
+* Added: Submenu item to "Options" to quickly access to Linux Debugger's Options dialog
+* Update: Refactored options mechanism in prep for custom profiles.
+
 ### 2.0.1 (Prev-1)
 
 * Added: Option to set output window focus to Linux Debugger, default=`false`. (PR #46)
