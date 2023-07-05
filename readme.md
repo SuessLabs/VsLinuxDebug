@@ -14,6 +14,13 @@ Suess Labs consulting is sponsored by _Xeno Innovations, Inc._
 
 Now developers can build, deploy and debug projects on their remote Linux (Ubuntu, Raspberry PI, etc) devices! Customize your SSH connection to use either a _password_ or a _private key_.
 
+### Supported Remote OS
+
+The following Linux distrobutions have been validated and are supported.
+
+* Ubuntu (20.04 LTS, 22.04 LTS)
+* Raspberry PI OS
+
 ### Usage
 
 ![VS Menu](docs/ScreenShot-MenuItems.png)
