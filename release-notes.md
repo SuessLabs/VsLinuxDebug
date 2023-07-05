@@ -4,6 +4,11 @@
 
 This document contains the release information for the project.
 
+### 2.0.3
+
+* Fixed: As per #32 add vsdbg constant to debugger full path.
+* Added: Try to be more clear about the .NET executable in user options. It's not a path but the dotnet executable.
+
 ### 2.0.2
 
 * Fixed: As per #53, cleaned up exponential Build status messages.
