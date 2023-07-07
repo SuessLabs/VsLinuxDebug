@@ -1,3 +1,4 @@
+# Linux Debugger
 # Build script for generating release package
 
 if (Test-Path -Path "bin")
@@ -5,15 +6,19 @@ if (Test-Path -Path "bin")
   Remove-Item bin\* -Recurse -Force
 }
 
-# Clean both debug and release
-##dotnet clean src/LinuxDebugger.sln
-##dotnet clean src/LinuxDebugger.sln --configuration Release
-dotnet msbuild src/LinuxDebugger.sln -t:Clean
-dotnet msbuild src/LinuxDebugger.sln -t:Clean -p:Configuration=Release;TargetFrameworkVersion=v472
+$VCToolsInstallDir = . "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -Latest -requires Microsoft.Component.MSBuild -property InstallationPath
+Write-Host "VCToolsInstallDir: $VCToolsInstallDir"
 
-# build package for release
-dotnet msbuild src/LinuxDebugger.sln -t:Rebuild -p:Configuration=Release
-## dotnet build src/LinuxDebugger.sln --configuration release
+$msBuildPath = "$VCToolsInstallDir\MSBuild\Current\Bin\msbuild.exe"
+Write-Host "msBuildPath: $msBuildPath"
+
+Write-Host "Cleaning..."
+& $msBuildPath -t:Clean src/LinuxDebugger.sln
+
+Write-Host "Building..."
+& $msBuildPath /restore `
+               src/LinuxDebugger.sln `
+               /p:Configuration=Release
 
 # TODO:
 ### https://github.com/madskristensen/VsctIntellisense/blob/master/appveyor.yml
