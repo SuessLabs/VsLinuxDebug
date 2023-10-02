@@ -16,12 +16,12 @@ jobs:
     steps:
       - uses: actions/stale@v5
         with:
-          days-before-issue-stale: 12
+          days-before-issue-stale: 11
           days-before-issue-close: 5
           stale-issue-label: "stale"
 #         stale-issue-message: "This issue is stale because it has been open for 12 days with no activity."
 #         close-issue-message: "This issue was closed because it has been inactive for 5 days since being marked as stale."
-          markComment: >
+          stale-issue-message: >
             This issue has been automatically marked as stale because it has not had
             recent activity. It will be closed if no further activity occurs. Thank you
             for your contributions.
