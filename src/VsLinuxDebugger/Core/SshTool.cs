@@ -162,6 +162,8 @@ namespace VsLinuxDebugger.Core
       {
         if (_info.PrivateKeyEnabled)
         {
+          Logger.Output($"SSH configuring private key connection...");
+
           if (string.IsNullOrEmpty(_info.PrivateKeyPassword))
             keyFile = new PrivateKeyFile(_info.PrivateKeyPath);
           else
@@ -184,6 +186,7 @@ namespace VsLinuxDebugger.Core
 
       try
       {
+        Logger.Output($"SSH connecting...");
         if (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
           _ssh = new SshClient(conn);
         else
