@@ -4,6 +4,20 @@
 
 This document contains the release information for the project.
 
+### 2.2.0
+
+* Fixed: Support VS v17.9 (#79)
+* Update: SSH.NET to v2023.0.1
+
+### 2.1.1
+
+* Update: Version 2.1 and Code Housekeeping by @DamianSuess in #65
+* Update: GUI .NET 6 Sample NuGet packages by @DamianSuess in #68
+* Update: PR Template by @DamianSuess in #69
+* Update: Release build generator script by @DamianSuess in #70
+* Update: Quality control by @DamianSuess in #74
+* Update: Upgrade github actions by @DamianSuess in #75
+
 ### 2.1
 
 * Update: Code cleanup
