@@ -4,6 +4,7 @@ using Renci.SshNet.Security.Cryptography;
 
 namespace VsLinuxDebugger.Core.Security
 {
+  /*
   /// <summary>RSA With SHA256 Signature Key.</summary>
   public class RsaWithSha256SignatureKey : RsaKey
   {
@@ -28,4 +29,5 @@ namespace VsLinuxDebugger.Core.Security
       return RsaSha256Util.RSA_SHA2_256;
     }
   }
+  */
 }

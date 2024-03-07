@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using Renci.SshNet;
@@ -14,6 +15,7 @@ namespace VsLinuxDebugger.Core.Security
   /// </summary>
   public static class RsaSha256Util
   {
+    /*
     /// <summary>RSA SHA2 256.</summary>
     public const string RSA_SHA2_256 = "rsa-sha2-256";
 
@@ -26,12 +28,14 @@ namespace VsLinuxDebugger.Core.Security
     /// <exception cref="ArgumentNullException">Argument Null Exception.</exception>
     public static void ConvertToKeyWithSha256Signature(PrivateKeyFile keyFile)
     {
-      var oldKeyHostAlgorithm = keyFile.HostKey as KeyHostAlgorithm;
+      //// var oldKeyHostAlgorithm = keyFile.HostKey as KeyHostAlgorithm;
+      var oldKeyHostAlgorithm = keyFile.HostKeyAlgorithms.First();
       if (oldKeyHostAlgorithm == null)
       {
         throw new ArgumentNullException(nameof(oldKeyHostAlgorithm));
       }
 
+      //// var x = new KeyHostAlgorithm("name", key: null, digitalSignature: new RsaDigitalSignature(null));
       var oldRsaKey = oldKeyHostAlgorithm.Key as RsaKey;
       if (oldRsaKey == null)
       {
@@ -59,5 +63,6 @@ namespace VsLinuxDebugger.Core.Security
       var keyField = typeof(PrivateKeyFile).GetField("_key", BindingFlags.NonPublic | BindingFlags.Instance);
       keyField.SetValue(keyFile, key);
     }
+    */
   }
 }

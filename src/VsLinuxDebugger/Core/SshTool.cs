@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using Renci.SshNet;
 using Renci.SshNet.Common;
+using Renci.SshNet.Security;
 using SharpCompress.Common;
 using SharpCompress.Writers;
 using VsLinuxDebugger.Core.Security;
@@ -157,7 +159,7 @@ namespace VsLinuxDebugger.Core
     public async Task<bool> ConnectAsync()
     {
       PrivateKeyFile keyFile = null;
-      ConnectionInfo conn = null;
+      ConnectionInfo connInfo = null;
       try
       {
         if (_info.PrivateKeyEnabled)
@@ -169,12 +171,13 @@ namespace VsLinuxDebugger.Core
           else
             keyFile = new PrivateKeyFile(_info.PrivateKeyPath, _info.PrivateKeyPassword);
 
+          /**
           // adds rsa-sha2-256
           RsaSha256Util.ConvertToKeyWithSha256Signature(keyFile);
           var authenticationMethodRsa = new PrivateKeyAuthenticationMethod(_info.UserName, keyFile);
-          conn = new ConnectionInfo(_info.Host, _info.Port, _info.UserName, authenticationMethodRsa);
-          RsaSha256Util.SetupConnection(conn);
-
+          connInfo = new ConnectionInfo(_info.Host, _info.Port, _info.UserName, authenticationMethodRsa);
+          RsaSha256Util.SetupConnection(connInfo);
+          */
         }
       }
       catch (Exception ex)
@@ -187,10 +190,9 @@ namespace VsLinuxDebugger.Core
       try
       {
         Logger.Output($"SSH connecting...");
-        if (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
-          _ssh = new SshClient(conn);
-        else
-          _ssh = new SshClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
+        _ssh = (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
+          ? new SshClient(_info.Host, _info.Port, _info.UserName, keyFile)
+          : new SshClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
 
         await Task.Run(() => _ssh.Connect());
       }
@@ -202,20 +204,18 @@ namespace VsLinuxDebugger.Core
 
       try
       {
-        if (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
-          _sftp = new SftpClient(conn);
-        else
-          _sftp = new SftpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
+        _sftp = (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
+          ? new SftpClient(connInfo)
+          : new SftpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
 
         _sftp.Connect();
         
       }
       catch (Exception)
       {
-        if (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
-          _scp = new ScpClient(conn);
-        else
-          _scp = new ScpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
+        _scp = (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
+          ? new ScpClient(connInfo)
+          : new ScpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
 
         _scp.Connect();
       }

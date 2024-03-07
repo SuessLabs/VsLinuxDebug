@@ -6,6 +6,7 @@ using Renci.SshNet.Security.Cryptography.Ciphers;
 
 namespace VsLinuxDebugger.Core.Security
 {
+  /*
   /// <summary>
   /// Based on https://github.com/sshnet/SSH.NET/blob/1d5d58e17c68a2f319c51e7f938ce6e964498bcc/src/Renci.SshNet/Security/Cryptography/RsaDigitalSignature.cs#L12
   ///
@@ -62,4 +63,5 @@ namespace VsLinuxDebugger.Core.Security
       return _hash.ComputeHash(input);
     }
   }
+  */
 }
