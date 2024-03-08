@@ -4,13 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using Renci.SshNet;
 using Renci.SshNet.Common;
-using Renci.SshNet.Security;
 using SharpCompress.Common;
 using SharpCompress.Writers;
-using VsLinuxDebugger.Core.Security;
 
 namespace VsLinuxDebugger.Core
 {
@@ -18,8 +15,8 @@ namespace VsLinuxDebugger.Core
   {
     private readonly string _tarGzFileName = "vsldBuildContents.tar.gz";
 
-    private bool _isConnected = false;
     private SshConnectionInfo _info;
+    private bool _isConnected = false;
     private ScpClient _scp;
     private SftpClient _sftp;
     private SshClient _ssh;
@@ -209,7 +206,6 @@ namespace VsLinuxDebugger.Core
           : new SftpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
 
         _sftp.Connect();
-        
       }
       catch (Exception)
       {

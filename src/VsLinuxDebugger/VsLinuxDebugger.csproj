@@ -53,9 +53,6 @@
     <Compile Include="Core\LinuxPath.cs" />
     <Compile Include="Core\RemoteDebugger.cs" />
     <Compile Include="Core\LaunchBuilder.cs" />
-    <Compile Include="Core\Security\RsaSha256DigitalSignature.cs" />
-    <Compile Include="Core\Security\RsaSha256Util.cs" />
-    <Compile Include="Core\Security\RsaWithSha256SignatureKey.cs" />
     <Compile Include="Core\SshConnectionInfo.cs" />
     <Compile Include="Core\Remote\Configuration.cs" />
     <Compile Include="Core\Remote\Launch.cs" />
