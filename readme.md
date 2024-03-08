@@ -108,3 +108,6 @@ To contribute, please pick off an item from the project or issue page. We'd love
 * [Extension Docs](https://docs.microsoft.com/en-us/visualstudio/extensibility/creating-a-settings-category?view=vs-2022)
 * [Extension Sample](https://github.com/microsoft/VSSDK-Extensibility-Samples/tree/master/Options)
 * [Offroad Debugging](https://github.com/Microsoft/MIEngine/wiki/Offroad-Debugging-of-.NET-Core-on-Linux---OSX-from-Visual-Studio)
+
+
+_Copyright 2024 Xeno Innovations, Inc._

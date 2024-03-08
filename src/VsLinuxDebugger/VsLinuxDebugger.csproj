@@ -53,9 +53,6 @@
     <Compile Include="Core\LinuxPath.cs" />
     <Compile Include="Core\RemoteDebugger.cs" />
     <Compile Include="Core\LaunchBuilder.cs" />
-    <Compile Include="Core\Security\RsaSha256DigitalSignature.cs" />
-    <Compile Include="Core\Security\RsaSha256Util.cs" />
-    <Compile Include="Core\Security\RsaWithSha256SignatureKey.cs" />
     <Compile Include="Core\SshConnectionInfo.cs" />
     <Compile Include="Core\Remote\Configuration.cs" />
     <Compile Include="Core\Remote\Launch.cs" />
@@ -104,7 +101,7 @@
       <Version>0.30.1</Version>
     </PackageReference>
     <PackageReference Include="SSH.NET">
-      <Version>2020.0.2</Version>
+      <Version>2023.0.1</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
       <Version>6.0.2</Version>
