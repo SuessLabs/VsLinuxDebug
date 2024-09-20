@@ -70,6 +70,27 @@ For GUI projects, you can use **Build and Deploy** and then manually attach to t
 
 This will save you 1.5 minutes on every build of manual uploading and updating rights via `chown -R`.
 
+### Manually Attaching (for Command line apps)
+
+For CLI projects, you can use **Build and Deploy** and then manually attach to the process via SSH by using Visual Studio's built-in tool (similar to above).
+
+You may have to manually interrupt your app via `Console.ReadLine();` high-up in your entry-point (i.e. `main()`).
+
+1. Deploy to remote machine via
+   1. Extensions > Linux Debugger > **"Build and Deploy"**
+2. Run your CLI app on remote machine
+   1. `dotnet MyCliApp.dll`
+3. Debug > **"Attach to Process.."**
+   1. Connection Type: **SSH**
+   2. Connection Target: **(Remote machine's IP)**
+   3. (Select process)
+   4. Click, **Attach**
+   5. Check, **"Managed (.NET Core for Unix)"**
+   6. Click, **OK**
+4. Continue your application, if using a manual interrupt (i.e. `Console.ReadLine();`)
+
+This will save you 1.5 minutes on every build of manual uploading and updating rights via `chown -R`.
+
 ## How To Generate Private Key (optional)
 
 The following steps are options if you wish to use an SSH Private Key. These steps were written for Windows 10, however, on Linux the steps are similar.
