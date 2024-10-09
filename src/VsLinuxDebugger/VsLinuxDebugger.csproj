@@ -104,7 +104,7 @@
       <Version>2023.0.1</Version>
     </PackageReference>
     <PackageReference Include="System.Text.Json">
-      <Version>6.0.2</Version>
+      <Version>6.0.10</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
