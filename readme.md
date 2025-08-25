@@ -20,7 +20,7 @@ If you enjoy using the extension, please give it a ★★★★★ rating on the
 
 The following Linux distrobutions have been validated and are supported.
 
-* Ubuntu (20.04 LTS, 22.04 LTS)
+* Ubuntu (20.04 LTS, 22.04 LTS, 24.x LTS)
 * Raspberry PI OS
 
 ### Usage
