@@ -2,13 +2,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:vm="using:Gui.ViewModels"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
-             x:Class="Gui.Views.DashboardView">
+             x:Class="Gui.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel">
   <DockPanel>
     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-      <TextBlock Text="Welcome to Prism.Avalonia!" />
+      <TextBlock Text="Welcome to Avalonia!" />
       <TextBlock Text="{Binding Title}" />
       <Button Content="Trigger Breakpoint" Command="{Binding CmdBreakPoint}" />
     </StackPanel>

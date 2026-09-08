@@ -1,14 +1,21 @@
-<prism:PrismApplication xmlns="https://github.com/avaloniaui"
-                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                        xmlns:prism="http://prismlibrary.com/"
-                        xmlns:local="using:Gui"
-                        x:Class="Gui.App"
-                        RequestedThemeVariant="Light">
-  <prism:PrismApplication.DataTemplates>
-  </prism:PrismApplication.DataTemplates>
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Gui"
+             xmlns:vm="using:Gui.ViewModels"
+             xmlns:views="using:Gui.Views"
+             x:Class="Gui.App"
+             RequestedThemeVariant="Light">
+  <Application.DataTemplates>
+    <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+      <views:DashboardView />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+      <views:SettingsView />
+    </DataTemplate>
+  </Application.DataTemplates>
 
-  <prism:PrismApplication.Styles>
+  <Application.Styles>
     <FluentTheme />
     <!--<StyleInclude Source="avares://Gui/Styles/Icons.axaml" />-->
-  </prism:PrismApplication.Styles>
-</prism:PrismApplication>
+  </Application.Styles>
+</Application>

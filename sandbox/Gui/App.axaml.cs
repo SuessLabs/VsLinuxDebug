@@ -1,63 +1,37 @@
-﻿using Avalonia;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Gui.ViewModels;
 using Gui.Views;
-using Prism.DryIoc;
-using Prism.Ioc;
-using Prism.Modularity;
-using Prism.Navigation.Regions;
 
 namespace Gui;
 
-public class App : PrismApplication
+public class App : Application
 {
   /// <summary>App entry point.</summary>
   public override void Initialize()
   {
     AvaloniaXamlLoader.Load(this);
-    base.Initialize();
+#if DEBUG
+    this.AttachDeveloperTools();
+#endif
   }
 
-  /// <summary>Prism Module Registration.</summary>
-  /// <remarks><![CDATA[https://prismlibrary.com/docs/modules.html]]></remarks>
-  /// <param name="moduleCatalog">Module Catalog.</param>
-  protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
+  /// <summary>Called once the Avalonia framework has finished initializing.</summary>
+  public override void OnFrameworkInitializationCompleted()
   {
-    base.ConfigureModuleCatalog(moduleCatalog);
+    if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+    {
+      // Compose views/view-models directly - no DI container, no region manager.
+      var shellViewModel = new ShellWindowViewModel();
+      var shellWindow = new ShellWindow
+      {
+        DataContext = shellViewModel,
+      };
 
-    // Wire-up modules for Region Manager
-    //// moduleCatalog.AddModule<UserLoginModule>();
-  }
+      desktop.MainWindow = shellWindow;
+    }
 
-  /// <summary>User interface entry point, called after Register and ConfigureModules.</summary>
-  /// <returns>Startup View.</returns>
-  protected override AvaloniaObject CreateShell()
-  {
-    return this.Container.Resolve<ShellWindow>();
-  }
-
-  /// <summary>Called after Initialize.</summary>
-  protected override void OnInitialized()
-  {
-    // Register Views to Region it will appear in. Don't register them in the ViewModel.
-    var regionManager = Container.Resolve<IRegionManager>();
-    regionManager.RegisterViewWithRegion(RegionNames.ContentRegion, typeof(DashboardView));
-    regionManager.RegisterViewWithRegion(RegionNames.SidebarRegion, typeof(SidebarView));
-  }
-
-  /// <summary>Register views and Services.</summary>
-  /// <param name="containerRegistry">IOC Container.</param>
-  protected override void RegisterTypes(IContainerRegistry containerRegistry)
-  {
-    // Services
-    // ...
-
-    // Views - Generic views
-    containerRegistry.Register<ShellWindow>();
-    containerRegistry.Register<SidebarView>();
-
-    // Views - Region Navigation
-    containerRegistry.RegisterForNavigation<DashboardView, DashboardViewModel>();
-    containerRegistry.RegisterForNavigation<SettingsView, SettingsViewModel>();
+    base.OnFrameworkInitializationCompleted();
   }
 }

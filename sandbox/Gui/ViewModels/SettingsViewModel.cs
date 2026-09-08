@@ -1,4 +1,4 @@
-﻿namespace Gui.ViewModels;
+namespace Gui.ViewModels;
 
 public class SettingsViewModel : ViewModelBase
 {

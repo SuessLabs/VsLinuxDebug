@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Avalonia;
-using Avalonia.ReactiveUI;
+using ReactiveUI.Avalonia;
 
 namespace Gui;
 
@@ -20,7 +20,7 @@ internal class Program
       RenderingMode = [Win32RenderingMode.AngleEgl, Win32RenderingMode.Software],
     })
     .UseSkia()
-    .UseReactiveUI()
+    .UseReactiveUI(rxui => { })
     .LogToTrace();
 
   // Initialization code. Don't use any Avalonia, third-party APIs or any

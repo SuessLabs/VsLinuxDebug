@@ -2,12 +2,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:core="clr-namespace:Gui;assembly=Gui"
         xmlns:local="using:Gui.Views"
-        xmlns:prism="http://prismlibrary.com/"
-        prism:ViewModelLocator.AutoWireViewModel="True"
+        xmlns:vm="using:Gui.ViewModels"
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="350"
         x:Class="Gui.Views.ShellWindow"
+        x:DataType="vm:ShellWindowViewModel"
         Background="Transparent"
         Icon="/Assets/avalonia-logo.ico"
         Width="600" Height="300"
@@ -27,20 +26,13 @@
     <Grid ColumnDefinitions="200,*" RowDefinitions="*,100">
       <!-- Sidebar -->
       <Panel Grid.Row="0" Grid.Column="0" Background="LightGray">
-        <!--<ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.SidebarRegion}" />-->
-        <local:SidebarView />
+        <local:SidebarView DataContext="{Binding Sidebar}" />
       </Panel>
 
       <!-- Main Content -->
       <ContentControl Grid.Row="0"
                       Grid.Column="1"
-                      prism:RegionManager.RegionName="{x:Static core:RegionNames.ContentRegion}" />
-
-      <!-- Footer -->
-      <ContentControl Grid.Column="0"
-                      Grid.ColumnSpan="2"
-                      Grid.Row="1"
-                      prism:RegionManager.RegionName="{x:Static core:RegionNames.FooterRegion}" />
+                      Content="{Binding CurrentPage}" />
     </Grid>
   </Panel>
 </Window>

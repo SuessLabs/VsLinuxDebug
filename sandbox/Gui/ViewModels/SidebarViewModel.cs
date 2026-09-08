@@ -1,30 +1,24 @@
-﻿using Gui.Views;
-using Prism.Commands;
-using Prism.Events;
-using Prism.Navigation.Regions;
+using System;
+using System.Windows.Input;
+using ReactiveUI;
 
 namespace Gui.ViewModels;
 
 public class SidebarViewModel : ViewModelBase
 {
-  private IEventAggregator _eventAggregator;
-  private IRegionManager _regionManager;
+  private readonly Action<ViewModelBase> _navigate;
 
-  public SidebarViewModel(IRegionManager regionManager, IEventAggregator ea)
+  public SidebarViewModel(Action<ViewModelBase> navigate)
   {
-    _regionManager = regionManager;
-    _eventAggregator = ea;
+    _navigate = navigate;
 
     Title = "Navigation";
+
+    CmdDashboard = ReactiveCommand.Create(() => _navigate(new DashboardViewModel()));
+    CmdSettings = ReactiveCommand.Create(() => _navigate(new SettingsViewModel()));
   }
 
-  public DelegateCommand CmdDashboard => new(() =>
-  {
-    _regionManager.RequestNavigate(RegionNames.ContentRegion, nameof(DashboardView));
-  });
+  public ICommand CmdDashboard { get; }
 
-  public DelegateCommand CmdSettings => new(() =>
-  {
-    _regionManager.RequestNavigate(RegionNames.ContentRegion, nameof(SettingsView));
-  });
+  public ICommand CmdSettings { get; }
 }
