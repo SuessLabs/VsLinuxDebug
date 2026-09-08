@@ -1,4 +1,4 @@
-﻿namespace GuiNet6;
+﻿namespace Gui;
 
 public static class RegionNames
 {

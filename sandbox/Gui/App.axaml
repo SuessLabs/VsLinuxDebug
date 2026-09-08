@@ -1,13 +1,14 @@
 <prism:PrismApplication xmlns="https://github.com/avaloniaui"
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:prism="http://prismlibrary.com/"
-                        xmlns:local="using:GuiNet6"
-                        x:Class="GuiNet6.App">
+                        xmlns:local="using:Gui"
+                        x:Class="Gui.App"
+                        RequestedThemeVariant="Light">
   <prism:PrismApplication.DataTemplates>
   </prism:PrismApplication.DataTemplates>
 
   <prism:PrismApplication.Styles>
-    <FluentTheme Mode="Light" />
-    <!--<StyleInclude Source="avares://GuiNet6/Styles/Icons.axaml" />-->
+    <FluentTheme />
+    <!--<StyleInclude Source="avares://Gui/Styles/Icons.axaml" />-->
   </prism:PrismApplication.Styles>
 </prism:PrismApplication>

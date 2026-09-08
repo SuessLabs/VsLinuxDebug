@@ -433,7 +433,7 @@ namespace VsLinuxDebugger.Core
         {
           try
           {
-            using (var tarGzWriter = WriterFactory.Open(tarGzStream, ArchiveType.Tar, CompressionType.GZip))
+            using (var tarGzWriter = WriterFactory.OpenWriter(tarGzStream, ArchiveType.Tar, WriterOptions.ForTar(CompressionType.GZip)))
             {
               using (MemoryStream fileStream = new MemoryStream())
               {

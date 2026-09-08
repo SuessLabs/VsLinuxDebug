@@ -5,7 +5,7 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="GuiNet6.Views.SettingsView">
+             x:Class="Gui.Views.SettingsView">
   <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">>
     <Label>Welcome to Prism.Avalonia!</Label>
     <TextBlock Text="{Binding Title}" />

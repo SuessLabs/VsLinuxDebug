@@ -43,6 +43,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 .vs/
+.vscode/
 
 # NuGet Packages
 *.nupkg

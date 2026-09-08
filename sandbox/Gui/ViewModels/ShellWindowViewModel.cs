@@ -1,4 +1,4 @@
-﻿namespace GuiNet6.ViewModels;
+﻿namespace Gui.ViewModels;
 
 public class ShellWindowViewModel : ViewModelBase
 {

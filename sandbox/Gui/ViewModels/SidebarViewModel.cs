@@ -1,9 +1,9 @@
-﻿using GuiNet6.Views;
+﻿using Gui.Views;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Regions;
+using Prism.Navigation.Regions;
 
-namespace GuiNet6.ViewModels;
+namespace Gui.ViewModels;
 
 public class SidebarViewModel : ViewModelBase
 {

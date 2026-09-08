@@ -2,7 +2,7 @@
 using Avalonia;
 using Avalonia.ReactiveUI;
 
-namespace GuiNet6;
+namespace Gui;
 
 internal class Program
 {
@@ -17,8 +17,7 @@ internal class Program
     })
     .With(new Win32PlatformOptions
     {
-      EnableMultitouch = true,
-      AllowEglInitialization = true,
+      RenderingMode = [Win32RenderingMode.AngleEgl, Win32RenderingMode.Software],
     })
     .UseSkia()
     .UseReactiveUI()

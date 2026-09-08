@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Prism.Commands;
 
-namespace GuiNet6.ViewModels;
+namespace Gui.ViewModels;
 
 public class DashboardViewModel : ViewModelBase
 {

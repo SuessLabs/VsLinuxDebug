@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq.Expressions;
 using Prism.Mvvm;
-using Prism.Regions;
+using Prism.Navigation.Regions;
 
-namespace GuiNet6.ViewModels;
+namespace Gui.ViewModels;
 
-public class ViewModelBase : BindableBase, INavigationAware
+public class ViewModelBase : BindableBase, IRegionAware
 {
   private string _title = string.Empty;
 

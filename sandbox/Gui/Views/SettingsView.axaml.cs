@@ -2,11 +2,11 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace GuiNet6.Views;
+namespace Gui.Views;
 
-public partial class DashboardView : UserControl
+public partial class SettingsView : UserControl
 {
-  public DashboardView()
+  public SettingsView()
   {
     InitializeComponent();
   }

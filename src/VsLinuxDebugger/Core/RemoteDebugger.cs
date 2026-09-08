@@ -55,7 +55,11 @@ namespace VsLinuxDebugger.Core
         {
           BuildBegin();
 
+#pragma warning disable VSTHRD003 // _buildTask is a TaskCompletionSource completed by a
+          // DTE build-event callback (BuildEvents_OnBuildDone), not a cold task started
+          // elsewhere; awaiting it here cannot deadlock.
           await _buildTask.Task;
+#pragma warning restore VSTHRD003
 
           // Work completed
           if (!_buildSuccessful)

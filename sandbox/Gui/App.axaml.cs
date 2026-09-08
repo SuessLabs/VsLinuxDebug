@@ -1,13 +1,13 @@
 ﻿using Avalonia;
 using Avalonia.Markup.Xaml;
-using GuiNet6.ViewModels;
-using GuiNet6.Views;
+using Gui.ViewModels;
+using Gui.Views;
 using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Regions;
+using Prism.Navigation.Regions;
 
-namespace GuiNet6;
+namespace Gui;
 
 public class App : PrismApplication
 {
@@ -31,7 +31,7 @@ public class App : PrismApplication
 
   /// <summary>User interface entry point, called after Register and ConfigureModules.</summary>
   /// <returns>Startup View.</returns>
-  protected override IAvaloniaObject CreateShell()
+  protected override AvaloniaObject CreateShell()
   {
     return this.Container.Resolve<ShellWindow>();
   }
