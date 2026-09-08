@@ -333,6 +333,14 @@ dotnet_diagnostic.CS0618.severity = error
 # CS1591: Missing XML comment for publicly visible type or member
 dotnet_diagnostic.CS1591.severity = silent
 
+## VS Threading Analyzers
+# VSTHRD010: Accessing X should only be done on the main thread. Suppressed project-wide:
+# Logger.Output/Debug write via IVsOutputWindowPane.OutputStringThreadSafe, which is
+# documented safe to call off the UI thread, but the analyzer taints every method in the
+# call graph (SshTool/RemoteDebugger/LaunchBuilder's async SSH/deploy code) as if it were
+# UI-thread-only, with no way to mark the actual call as verified safe.
+dotnet_diagnostic.VSTHRD010.severity = none
+
 ## StyleCop.Analyzers
 # SA1000: Keywords should be spaced correctly
 dotnet_diagnostic.SA1000.severity = error
