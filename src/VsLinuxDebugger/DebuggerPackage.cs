@@ -25,13 +25,25 @@ namespace VsLinuxDebugger
   [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
   [Guid(DebuggerPackage.PackageGuidString)]
   [ProvideMenuResource("Menus.ctmenu", 1)]
-  [ProvideOptionPage(typeof(OptionsPage), "Linux Debugger", "General", 0, 0, true)]
+  [ProvideOptionPage(typeof(RemoteHostOptionsPage), "Linux Debugger", "Remote Host", 0, 0, true, Sort = 1)]
+  [ProvideOptionPage(typeof(RemoteCredentialsOptionsPage), "Linux Debugger", "Remote Credentials", 0, 0, true, Sort = 2)]
+  [ProvideOptionPage(typeof(RemoteDebuggerOptionsPage), "Linux Debugger", "Remote Debugger", 0, 0, true, Sort = 3)]
+  [ProvideOptionPage(typeof(RemoteLaunchOptionsPage), "Linux Debugger", "Remote Launch", 0, 0, true, Sort = 4)]
+  [ProvideOptionPage(typeof(LocalOptionsPage), "Linux Debugger", "Local", 0, 0, true, Sort = 5)]
   public sealed partial class DebuggerPackage : AsyncPackage
   {
     /// <summary>Package GUID string.</summary>
     public const string PackageGuidString = "19f87f23-7a2c-4279-ac7c-c9267776bbf9";
 
-    public OptionsPage VsixOptions => (OptionsPage)GetDialogPage(typeof(OptionsPage));
+    public RemoteHostOptionsPage RemoteHostOptions => (RemoteHostOptionsPage)GetDialogPage(typeof(RemoteHostOptionsPage));
+
+    public RemoteCredentialsOptionsPage RemoteCredentialsOptions => (RemoteCredentialsOptionsPage)GetDialogPage(typeof(RemoteCredentialsOptionsPage));
+
+    public RemoteDebuggerOptionsPage RemoteDebuggerOptions => (RemoteDebuggerOptionsPage)GetDialogPage(typeof(RemoteDebuggerOptionsPage));
+
+    public RemoteLaunchOptionsPage RemoteLaunchOptions => (RemoteLaunchOptionsPage)GetDialogPage(typeof(RemoteLaunchOptionsPage));
+
+    public LocalOptionsPage LocalOptions => (LocalOptionsPage)GetDialogPage(typeof(LocalOptionsPage));
 
     /// <summary>
     /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -47,7 +59,7 @@ namespace VsLinuxDebugger
       await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
       await Commands.InitializeAsync(this);
 
-      Logger.Init(this, OutputWindowType.Custom, VsixOptions.SwitchLinuxDbgOutput);
+      Logger.Init(this, OutputWindowType.Custom, LocalOptions.SwitchLinuxDbgOutput);
       Logger.Output("InitializeAsync");
     }
   }

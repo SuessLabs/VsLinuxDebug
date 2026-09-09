@@ -1,0 +1,44 @@
+<UserControl x:Class="Xeno.VsLinuxDebug.OptionsPages.RemoteHostOptionsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d">
+
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="OptionsPageStyles.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+
+  <StackPanel Style="{StaticResource PageRootStyle}">
+    <GroupBox Header="Remote Host" Style="{StaticResource OptionsGroupBoxStyle}">
+      <StackPanel>
+
+        <StackPanel Style="{StaticResource FieldRowStyle}">
+          <Label Content="Host IP Address" Style="{StaticResource FieldLabelStyle}" />
+          <TextBox Text="{Binding HostIp, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBoxStyle}" />
+          <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                     Text="Host IP Address. On VMs using 'NAT', set IP to '127.0.0.1' and forward Port 22. PCs and VMs 'Bridged', have their own IP." />
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource FieldRowStyle}">
+          <Label Content="Host Port Number" Style="{StaticResource FieldLabelStyle}" />
+          <TextBox Text="{Binding HostPort, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBoxStyle}" />
+          <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                     Text="Remote Host Port Number (SSH Default is 22)" />
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource FieldRowStyle}">
+          <Label Content="User Group Name (optional)" Style="{StaticResource FieldLabelStyle}" />
+          <TextBox Text="{Binding UserGroupName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBoxStyle}" />
+          <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                     Text="Remote Machine Group Name. For basic setups (i.e. RaspberryPI) it's the same as UserName." />
+        </StackPanel>
+
+      </StackPanel>
+    </GroupBox>
+  </StackPanel>
+</UserControl>
