@@ -18,5 +18,10 @@
     public string PrivateKeyPath { get; set; }
 
     public string PrivateKeyPassword { get; set; }
+
+    /// <summary>Explicit path to an OpenSSH certificate file (i.e. a CA-signed
+    /// '&lt;key&gt;-cert.pub'). When blank, the certificate is looked up next to
+    /// <see cref="PrivateKeyPath"/> using the OpenSSH naming convention.</summary>
+    public string CertificatePath { get; set; }
   }
 }
