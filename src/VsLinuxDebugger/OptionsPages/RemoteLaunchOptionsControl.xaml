@@ -1,0 +1,134 @@
+<UserControl x:Class="Xeno.VsLinuxDebug.OptionsPages.RemoteLaunchOptionsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d">
+
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="OptionsPageStyles.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+      <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    </ResourceDictionary>
+  </UserControl.Resources>
+
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Style="{StaticResource PageRootStyle}">
+      <GroupBox Header="Remote Launch" Style="{StaticResource OptionsGroupBoxStyle}">
+        <StackPanel>
+
+          <StackPanel Style="{StaticResource FieldRowStyle}">
+            <Label Content="Environment Variables" Style="{StaticResource FieldLabelStyle}" />
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <TextBox Grid.Column="0"
+                       Text="{Binding RemoteEnvironmentVariables, UpdateSourceTrigger=PropertyChanged}"
+                       Style="{StaticResource FieldMultilineTextBoxStyle}"
+                       IsReadOnly="True"
+                       Focusable="False" />
+              <Button Grid.Column="1" Content="Edit..." Margin="6,0,0,0" Padding="8,0" VerticalAlignment="Top"
+                      Tag="RemoteEnvironmentVariables" Click="EditMultilineField_Click" />
+            </Grid>
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text="'KEY=VALUE' pairs passed to the debuggee, one per line. Click 'Edit...' to change." />
+          </StackPanel>
+
+          <StackPanel Style="{StaticResource FieldRowStyle}">
+            <Label Content="Pre-Deploy Commands" Style="{StaticResource FieldLabelStyle}" />
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <TextBox Grid.Column="0"
+                       Text="{Binding RemotePreDeployCommands, UpdateSourceTrigger=PropertyChanged}"
+                       Style="{StaticResource FieldMultilineTextBoxStyle}"
+                       IsReadOnly="True"
+                       Focusable="False" />
+              <Button Grid.Column="1" Content="Edit..." Margin="6,0,0,0" Padding="8,0" VerticalAlignment="Top"
+                      Tag="RemotePreDeployCommands" Click="EditMultilineField_Click" />
+            </Grid>
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text="Shell commands run before upload, one per line, i.e. 'sudo systemctl stop myapp.service'. Click 'Edit...' to change." />
+          </StackPanel>
+
+          <StackPanel Style="{StaticResource FieldRowStyle}">
+            <Label Content="Post-Deploy Commands" Style="{StaticResource FieldLabelStyle}" />
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <TextBox Grid.Column="0"
+                       Text="{Binding RemotePostDeployCommands, UpdateSourceTrigger=PropertyChanged}"
+                       Style="{StaticResource FieldMultilineTextBoxStyle}"
+                       IsReadOnly="True"
+                       Focusable="False" />
+              <Button Grid.Column="1" Content="Edit..." Margin="6,0,0,0" Padding="8,0" VerticalAlignment="Top"
+                      Tag="RemotePostDeployCommands" Click="EditMultilineField_Click" />
+            </Grid>
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text="Shell commands run after upload, one per line, i.e. 'sudo systemctl start myapp.service'. Click 'Edit...' to change." />
+          </StackPanel>
+
+          <StackPanel Style="{StaticResource FieldRowStyle}">
+            <CheckBox Content="Attach to Already-Running Process"
+                       IsChecked="{Binding AttachToRunningProcess}"
+                       Style="{StaticResource FieldCheckBoxStyle}" />
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text="Attach to the process started by the commands above instead of vsdbg launching a new one." />
+          </StackPanel>
+
+          <!-- Only meaningful when attaching to an already-running process. -->
+          <StackPanel Style="{StaticResource FieldRowStyle}"
+                      Visibility="{Binding AttachToRunningProcess, Converter={StaticResource BoolToVisibility}}">
+            <Label Content="PID Command" Style="{StaticResource FieldLabelStyle}" />
+            <TextBox Text="{Binding RemotePidCommand, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBoxStyle}" />
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text="Shell command whose output is the PID to attach to, i.e. 'pgrep -f myapp'." />
+          </StackPanel>
+
+          <StackPanel Style="{StaticResource FieldRowStyle}">
+            <CheckBox Content="Use Sudo for Debugger"
+                       IsChecked="{Binding UseSudoForDebugger}"
+                       Style="{StaticResource FieldCheckBoxStyle}" />
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text="Launch vsdbg elevated. Needed when the debuggee has ambient capabilities vsdbg must match to attach." />
+          </StackPanel>
+
+          <!-- Only meaningful when 'Use Sudo for Debugger' is enabled. -->
+          <StackPanel Style="{StaticResource FieldRowStyle}"
+                      Visibility="{Binding UseSudoForDebugger, Converter={StaticResource BoolToVisibility}}">
+            <Label Content="Sudo Command" Style="{StaticResource FieldLabelStyle}" />
+            <TextBox Text="{Binding SudoCommand, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBoxStyle}" />
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text="Elevation command used when 'Use Sudo for Debugger' is enabled. (Default: `sudo -n`)" />
+          </StackPanel>
+
+          <StackPanel Style="{StaticResource FieldRowStyle}">
+            <CheckBox Content="Debug Display GUI"
+                       IsChecked="{Binding RemoteDebugDisplayGui}"
+                       Style="{StaticResource FieldCheckBoxStyle}" />
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text="Show the app's window on the remote machine's X11 display." />
+          </StackPanel>
+
+          <!-- Only meaningful when 'Debug Display GUI' is enabled. -->
+          <StackPanel Style="{StaticResource FieldRowStyle}"
+                      Visibility="{Binding RemoteDebugDisplayGui, Converter={StaticResource BoolToVisibility}}">
+            <Label Content="X11 Display Number (optional)" Style="{StaticResource FieldLabelStyle}" />
+            <TextBox Text="{Binding RemoteDebugDisplayNumber, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBoxStyle}" />
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text="Defaults to ':0'." />
+          </StackPanel>
+
+        </StackPanel>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

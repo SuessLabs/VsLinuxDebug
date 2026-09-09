@@ -87,40 +87,36 @@
         <Icon guid="DeployAndDebug_16x" id="imgDeployAndDebug" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
-        <!--<CommandFlag>DefaultDisabled</CommandFlag>-->
         <Strings>
-          <ButtonText>Build, Deploy and Debug (experimental)</ButtonText>
+          <ButtonText>Build, Deploy and Debug</ButtonText>
         </Strings>
       </Button>
 
-      <Button guid="GuidLinuxDebugerMenu" id="CmdBuildDeployLaunch" priority="0x0402" type="Button">
-        <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" />
-        <Icon guid="DebugOnly_16x" id="imgDebugOnly" />
-        <CommandFlag>DynamicVisibility</CommandFlag>
-        <CommandFlag>TextChanges</CommandFlag>
-        <CommandFlag>DefaultDisabled</CommandFlag>
-        <!--<CommandFlag>DefaultDisabled</CommandFlag>-->
-        <Strings>
-          <ButtonText>Build, Deploy and Launch (experimental)</ButtonText>
-        </Strings>
-      </Button>
-
-      <!--
-      Allows user to debug again without having to redeploy.
+      <!-- Attach to the debuggee without rebuilding/redeploying it. -->
       <Button guid="GuidLinuxDebugerMenu" id="CmdDebugOnly" priority="0x0403" type="Button">
         <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" />
         <Icon guid="DebugOnly_16x" id="imgDebugOnly" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>TextChanges</CommandFlag>
         <Strings>
-          <ButtonText>Debug only</ButtonText>
+          <ButtonText>Attach Only (no build/deploy)</ButtonText>
         </Strings>
       </Button>
-      -->
 
       <!--
       TODO: Publish & Publish and Debug
       -->
+
+      <Button guid="GuidLinuxDebugerMenu" id="CmdStop" priority="0x0404" type="Button">
+        <Parent guid="GuidLinuxDebugerMenu" id="RemoteMainMenuGroupLevel1" />
+        <Icon guid="Stop_16x" id="imgStop" />
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>Stop</ButtonText>
+        </Strings>
+      </Button>
 
       <!--
       <Button guid="GuidLinuxDebugerMenu" id="CmdOpenLogs" priority="0x0500" type="Button">
@@ -158,6 +154,7 @@
       <Bitmap guid="DeployAndDebug_16x" href="Resources\DeployAndDebug_16x.png" usedList="imgDeployAndDebug" />
       <Bitmap guid="DeployOnly_16x" href="Resources\DeployOnly_16x.png" usedList="imgDeployOnly" />
       <Bitmap guid="DebugOnly_16x" href="Resources\DebugOnly_16x.png" usedList="imgDebugOnly" />
+      <Bitmap guid="Stop_16x" href="Resources\Stop_16x.png" usedList="imgStop" />
       <Bitmap guid="ShowLog_16x" href="Resources\ShowLog_16x.png" usedList="imgShowLog" />
       <Bitmap guid="Settings_16x" href="Resources\Settings_16x.png" usedList="imgSettings" />
       <!--
@@ -183,7 +180,7 @@
       <IDSymbol name="CmdDebugOnly" value="0x1003" />
       <IDSymbol name="CmdOpenLogs" value="0x1004" />
       <IDSymbol name="CmdOpenSettings" value="0x1005" />
-      <IDSymbol name="CmdBuildDeployLaunch" value="0x1006" />      
+      <IDSymbol name="CmdStop" value="0x1006" />
     </GuidSymbol>
 
     <GuidSymbol name="DeployAndDebug_16x" value="{B3A9DD89-C898-4AFE-AC48-3A4C84122475}">
@@ -196,6 +193,10 @@
 
     <GuidSymbol name="DebugOnly_16x" value="{0164DE8A-8EAB-40CE-9607-C6D15882A91A}">
       <IDSymbol name="imgDebugOnly" value="1" />
+    </GuidSymbol>
+
+    <GuidSymbol name="Stop_16x" value="{2C6A0A0E-6E63-4D5B-9F0B-4F6C4E1F7D8A}">
+      <IDSymbol name="imgStop" value="1" />
     </GuidSymbol>
 
     <GuidSymbol name="ShowLog_16x" value="{5B4A8C21-9884-4A10-B028-1BC98C324B10}">

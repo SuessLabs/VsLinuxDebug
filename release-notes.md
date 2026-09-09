@@ -4,6 +4,17 @@
 
 This document contains the release information for the project.
 
+### 3.0.0
+
+* Added: SSH CA certificate authentication (a private key with an accompanying `<key>-cert.pub` certificate, auto-detected or set explicitly), in addition to password and plain private-key auth.
+* Added: Sudo-elevated debugger launch, for debuggees running with elevated or ambient capabilities that the debugger must match to attach.
+* Added: Configurable pre/post-deploy shell commands, and an "Attach to Already-Running Process" mode (with a configurable PID-lookup command) for debuggees managed by an external supervisor (i.e. a systemd service).
+* Added: "Attach Only" menu item to reattach to a running/deployed process without rebuilding or redeploying.
+* Added: A "Stop" button to cancel an in-progress build/deploy/debug between steps.
+* Update: Deployment now always goes through `dotnet publish` (self-contained or framework-dependent), producing a real native executable either way, instead of uploading a plain build's output folder.
+* Update: Options window split across focused Tools > Options pages (Remote Host, Remote Credentials, Remote Debugger, Remote Launch, Local) with a real WPF UI (checkboxes, dynamic show/hide for dependent fields) instead of a single page with a WinForms PropertyGrid.
+* Update: Support for Visual Studio 2026 and newer .NET target frameworks (net8.0, net10.0).
+
 ### 2.3.0 - 2024-12-02
 
 Early patch release before Christmas break. Effort moving forward will be for the upcoming 3.0 release.

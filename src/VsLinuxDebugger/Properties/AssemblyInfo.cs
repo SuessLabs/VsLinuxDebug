@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Xeno Innovations, Inc.")]
 [assembly: AssemblyProduct("VS Linux Debugger")]
-[assembly: AssemblyCopyright("Copyright 2022-2024 Xeno Innovations, Inc.")]
+[assembly: AssemblyCopyright("Copyright 2022 Xeno Innovations, Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -18,15 +18,6 @@ using System.Runtime.InteropServices;
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.2.0.0")]
-[assembly: AssemblyFileVersion("2.2.0.0")]
+// AssemblyVersion/AssemblyFileVersion are generated at build time from $(VsixVersion)
+// in VsLinuxDebugger.csproj (see the GenerateAssemblyVersionInfo target) into
+// obj\...\AssemblyVersionInfo.cs -- change $(VsixVersion) there, not here.

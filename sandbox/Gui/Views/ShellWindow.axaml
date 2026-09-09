@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="using:Gui.Views"
+        xmlns:vm="using:Gui.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="350"
+        x:Class="Gui.Views.ShellWindow"
+        x:DataType="vm:ShellWindowViewModel"
+        Background="Transparent"
+        Icon="/Assets/avalonia-logo.ico"
+        Width="600" Height="300"
+        TransparencyLevelHint="AcrylicBlur"
+        Title="{Binding Title}">
+
+  <Panel>
+    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+      <ExperimentalAcrylicBorder.Material>
+        <ExperimentalAcrylicMaterial BackgroundSource="Digger"
+                                     TintColor="LightGray"
+                                     TintOpacity="1"
+                                     MaterialOpacity="0.65" />
+      </ExperimentalAcrylicBorder.Material>
+    </ExperimentalAcrylicBorder>
+
+    <Grid ColumnDefinitions="200,*" RowDefinitions="*,100">
+      <!-- Sidebar -->
+      <Panel Grid.Row="0" Grid.Column="0" Background="LightGray">
+        <local:SidebarView DataContext="{Binding Sidebar}" />
+      </Panel>
+
+      <!-- Main Content -->
+      <ContentControl Grid.Row="0"
+                      Grid.Column="1"
+                      Content="{Binding CurrentPage}" />
+    </Grid>
+  </Panel>
+</Window>

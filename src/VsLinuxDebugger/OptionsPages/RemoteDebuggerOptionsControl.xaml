@@ -1,0 +1,54 @@
+<UserControl x:Class="Xeno.VsLinuxDebug.OptionsPages.RemoteDebuggerOptionsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d">
+
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="OptionsPageStyles.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Style="{StaticResource PageRootStyle}">
+      <GroupBox Header="Remote Debugger" Style="{StaticResource OptionsGroupBoxStyle}">
+        <StackPanel>
+
+          <StackPanel Style="{StaticResource FieldRowStyle}">
+            <Label Content="Upload to folder" Style="{StaticResource FieldLabelStyle}" />
+            <TextBox Text="{Binding RemoteDeployBasePath, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBoxStyle}" />
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text="Folder files are deployed to, as-is. For HOME folder, use './VSLinuxDbg' and not '~/VSLinuxDbg'." />
+          </StackPanel>
+
+          <StackPanel Style="{StaticResource FieldRowStyle}">
+            <Label Content="Visual Studio Debugger Path" Style="{StaticResource FieldLabelStyle}" />
+            <TextBox Text="{Binding RemoteVsDbgRootPath, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBoxStyle}" />
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text="Root folder of Visual Studio Debugger. (Samples: `~/.vs-debugger/`, `~/.vsdbg`)" />
+          </StackPanel>
+
+          <StackPanel Style="{StaticResource FieldRowStyle}">
+            <CheckBox Content="Use Self-Contained Deployment"
+                       IsChecked="{Binding UseSelfContainedDeployment}"
+                       Style="{StaticResource FieldCheckBoxStyle}" />
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text="Publish and deploy a self-contained native executable instead of a plain 'dotnet &lt;assembly&gt;.dll' build." />
+          </StackPanel>
+
+          <StackPanel Style="{StaticResource FieldRowStyle}">
+            <Label Content="Remote Runtime Identifier" Style="{StaticResource FieldLabelStyle}" />
+            <TextBox Text="{Binding RemoteRuntimeIdentifier, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBoxStyle}" />
+            <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                       Text=".NET Runtime Identifier to publish for when Self-Contained Deployment is enabled, i.e. `linux-arm64`." />
+          </StackPanel>
+
+        </StackPanel>
+      </GroupBox>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

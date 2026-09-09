@@ -163,10 +163,19 @@ namespace VsLinuxDebugger.Core
         {
           Logger.Output($"SSH configuring private key connection...");
 
-          if (string.IsNullOrEmpty(_info.PrivateKeyPassword))
-            keyFile = new PrivateKeyFile(_info.PrivateKeyPath);
+          // Explicit path wins; otherwise, OpenSSH convention: "<key path>-cert.pub".
+          var certificatePath = !string.IsNullOrEmpty(_info.CertificatePath)
+            ? _info.CertificatePath
+            : $"{_info.PrivateKeyPath}-cert.pub";
+
+          if (!File.Exists(certificatePath))
+            certificatePath = null;
           else
-            keyFile = new PrivateKeyFile(_info.PrivateKeyPath, _info.PrivateKeyPassword);
+            Logger.Output($"SSH found matching certificate '{certificatePath}'.");
+
+          keyFile = string.IsNullOrEmpty(_info.PrivateKeyPassword)
+            ? new PrivateKeyFile(_info.PrivateKeyPath, null, certificatePath)
+            : new PrivateKeyFile(_info.PrivateKeyPath, _info.PrivateKeyPassword, certificatePath);
 
           /**
           // adds rsa-sha2-256
@@ -212,8 +221,8 @@ namespace VsLinuxDebugger.Core
       catch (Exception)
       {
         _scp = (_info.PrivateKeyEnabled && File.Exists(_info.PrivateKeyPath))
-          ? new ScpClient(connInfo)
-          : new ScpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass);
+          ? new ScpClient(connInfo, RemotePathTransformation.ShellQuote)
+          : new ScpClient(_info.Host, _info.Port, _info.UserName, _info.UserPass, RemotePathTransformation.ShellQuote);
 
         _scp.Connect();
       }
@@ -317,7 +326,7 @@ namespace VsLinuxDebugger.Core
         var success = await PayloadCompressAndUploadAsync(_sftp, srcDirInfo, destTarGz);
 
         // Decompress file
-        await PayloadDecompressAsync(targetFolder, destTarGz, false);
+        await PayloadDecompressAsync(targetFolder, destTarGz, true);
 
         Logger.Output($"Upload completed {(success ? "successfully" : "with failure")}.");
 
@@ -433,7 +442,7 @@ namespace VsLinuxDebugger.Core
         {
           try
           {
-            using (var tarGzWriter = WriterFactory.Open(tarGzStream, ArchiveType.Tar, CompressionType.GZip))
+            using (var tarGzWriter = WriterFactory.OpenWriter(tarGzStream, ArchiveType.Tar, WriterOptions.ForTar(CompressionType.GZip)))
             {
               using (MemoryStream fileStream = new MemoryStream())
               {

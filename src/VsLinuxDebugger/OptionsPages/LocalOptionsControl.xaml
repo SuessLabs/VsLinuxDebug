@@ -1,0 +1,66 @@
+<UserControl x:Class="Xeno.VsLinuxDebug.OptionsPages.LocalOptionsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Xeno.VsLinuxDebug.OptionsPages"
+             mc:Ignorable="d">
+
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="OptionsPageStyles.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+      <local:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibility" />
+    </ResourceDictionary>
+  </UserControl.Resources>
+
+  <StackPanel Style="{StaticResource PageRootStyle}">
+    <GroupBox Header="Local Settings" Style="{StaticResource OptionsGroupBoxStyle}">
+      <StackPanel>
+
+        <StackPanel Style="{StaticResource FieldRowStyle}">
+          <CheckBox Content="Use SSH.exe instead of PLINK"
+                     IsChecked="{Binding UseSSHExeEnabled}"
+                     Style="{StaticResource FieldCheckBoxStyle}" />
+          <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                     Text="Use SSH.exe (supports OpenSSH keys directly) instead of PLINK (needs a '.ppk' key)." />
+        </StackPanel>
+
+        <!-- Only meaningful when PLINK (not SSH.exe) is used. -->
+        <StackPanel Style="{StaticResource FieldRowStyle}"
+                    Visibility="{Binding UseSSHExeEnabled, Converter={StaticResource InverseBoolToVisibility}}">
+          <Label Content="PLink Local Path (blank to use embedded)" Style="{StaticResource FieldLabelStyle}" />
+          <TextBox Text="{Binding PLinkPath, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FieldTextBoxStyle}" />
+          <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                     Text="Full path to local PLINK.EXE, used when 'Use SSH.exe' is unchecked." />
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource FieldRowStyle}">
+          <CheckBox Content="Delete 'launch.json' after build."
+                     IsChecked="{Binding DeleteLaunchJsonAfterBuild}"
+                     Style="{StaticResource FieldCheckBoxStyle}" />
+          <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                     Text="The `launch.json` is generated in your build folder. You may keep this for debugging." />
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource FieldRowStyle}">
+          <CheckBox Content="Switch to LinuxDbg Output on Build"
+                     IsChecked="{Binding SwitchLinuxDbgOutput}"
+                     Style="{StaticResource FieldCheckBoxStyle}" />
+          <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                     Text="Automatically show output for Linux Debugger on build (default = true)." />
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource FieldRowStyle}">
+          <CheckBox Content="Force kill on Stop (interrupt mid-command)"
+                     IsChecked="{Binding ForceKillOnStop}"
+                     Style="{StaticResource FieldCheckBoxStyle}" />
+          <TextBlock Style="{StaticResource FieldHelpTextStyle}"
+                     Text="When Stop cancels an in-progress build/deploy, also immediately close the SSH connection even mid-command (default = false: lets the current remote step finish first, avoiding a half-uploaded or half-restarted state)." />
+        </StackPanel>
+
+      </StackPanel>
+    </GroupBox>
+  </StackPanel>
+</UserControl>
