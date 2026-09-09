@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using EnvDTE;
 using EnvDTE80;
@@ -29,7 +31,13 @@ namespace VsLinuxDebugger.Core
       SolutionDirPath = Path.GetDirectoryName(dte.Solution.FullName);
       OutputDirName = dteProject.ConfigurationManager.ActiveConfiguration.Properties.Item("OutputPath").Value.ToString();
       OutputDirFullPath = Path.Combine(Path.GetDirectoryName(dteProject.FullName), OutputDirName);
+      PublishDirFullPath = Path.Combine(Path.GetTempPath(), "VsLinuxDebuggerPublish", ProjectName);
     }
+
+    /// <summary>Folder `dotnet publish` writes to for a self-contained deployment. A temp folder,
+    /// not under the project's own `bin`/`obj`, so it never collides with the IDE's own build
+    /// output and is safe to wipe before each publish.</summary>
+    public string PublishDirFullPath { get; set; }
 
     /// <summary>Project assembly name. I.E. "ConsoleApp1"</summary>
     public string AssemblyName { get; set; }
@@ -54,13 +62,13 @@ namespace VsLinuxDebugger.Core
     /// <summary>Project name (not always the same as AssemblyName). I.E. "Console App1"</summary>
     public string ProjectName { get; set; }
 
-    /// <summary>Full path to the remote assembly. (i.e. `/home/USER/VLSDbg/Proj/ConsoleApp1.dll`)</summary>
-    public string RemoteDeployAssemblyFilePath => LinuxPath.Combine(RemoteDeployProjectFolder, $"{AssemblyName}.dll");
+    /// <summary>Full path to the deployed native executable (always produced by `dotnet
+    /// publish`, even framework-dependent). (i.e. `/home/USER/VLSDbg/ConsoleApp1`)</summary>
+    public string RemoteDeployExecutableFilePath => LinuxPath.Combine(RemoteDeployProjectFolder, AssemblyName);
 
-    /// <summary>Folder of our remote assembly. (i.e. `/home/USER/VLSDbg/Proj`)</summary>
-    public string RemoteDeployProjectFolder => LinuxPath.Combine(_opts.RemoteDeployBasePath, ProjectName);
-
-    public string RemoteDotNetPath => _opts.RemoteDotNetPath;
+    /// <summary>Folder files are deployed to. This is the configured deploy path itself
+    /// (i.e. `/home/USER/VLSDbg`) -- no per-project subfolder is added.</summary>
+    public string RemoteDeployProjectFolder => _opts.RemoteDeployBasePath;
 
     public string RemoteHostIp => _opts.HostIp;
 
@@ -84,17 +92,41 @@ namespace VsLinuxDebugger.Core
 
       (adapter, adapterArgs) = GetAdapter(vsdbgLogging);
 
+      // Always deployed via `dotnet publish`, which generates a native apphost executable
+      // even when framework-dependent -- so launch it directly, never via `dotnet <dll>`.
       var obj = new Launch(
-          RemoteDotNetPath,
-          $"{AssemblyName}.dll", /// RemoteDeployAppPath,
+          RemoteDeployExecutableFilePath,
+          new string[0],
           RemoteDeployProjectFolder,
-          default,
+          ParseEnvironmentVariables(_opts.RemoteEnvironmentVariables),
           false)
       {
         Adapter = adapter,
         AdapterArgs = adapterArgs,
       };
 
+      return WriteLaunchJson(obj);
+    }
+
+    /// <summary>Generates a `launch.json` that attaches to an already-running remote process
+    /// (i.e. one managed by a systemd service), instead of launching a new one.</summary>
+    /// <param name="processId">Remote process ID to attach to.</param>
+    /// <returns>Returns the local path to the file.</returns>
+    public string GenerateAttachLaunchJson(int processId, bool vsdbgLogging = false)
+    {
+      string adapter, adapterArgs;
+
+      (adapter, adapterArgs) = GetAdapter(vsdbgLogging);
+
+      var obj = Launch.CreateAttach(processId);
+      obj.Adapter = adapter;
+      obj.AdapterArgs = adapterArgs;
+
+      return WriteLaunchJson(obj);
+    }
+
+    private string WriteLaunchJson(Launch obj)
+    {
       var json = JsonSerializer.Serialize(obj, new JsonSerializerOptions
       {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -157,30 +189,36 @@ namespace VsLinuxDebugger.Core
 
       // Adapter Arguments:
       // NOTE:
-      //  1. SSH Private Key ("-i PPK") fails with PLINK. Must use manual password until this is resolved.
+      //  1. SSH Private Key ("-i PPK") fails with PLINK; PuTTY/plink requires its own
+      //     ".ppk" key format, not an OpenSSH-format private key. Use ssh.exe (below) for
+      //     OpenSSH-format keys, or convert the key to PPK for use with PLINK.
       //  2. Strict Host Key Checking is disabled by default; this doesn't need set.
       //
       // REF: https://linuxhint.com/ssh-stricthostkeychecking/
-      //      $"-i \"{_opts.UserPrivateKeyPath}\" -o \"StrictHostKeyChecking no\" {RemoteUserName}@{RemoteHostIp} {_opts.RemoteVsDbgPath} --interpreter=vscode {vsdbgLogPath}")
-      //
-      //// var strictKeyChecking = " -o \"StrictHostKeyChecking no\"";
-      ////
-      ////var sshPassword = !_opts.UserPrivateKeyEnabled
-      ////  ? $"-pw {RemoteUserPass}"
-      ////  : $"-i \"{_opts.UserPrivateKeyPath}{strictKeyChecking}\"";
       string sshPassword = "";
 
-      if(_opts.UseSSHExeEnabled)
+      if (_opts.UseSSHExeEnabled)
       {
-        sshPassword = ""; //nothing to do, we assume that c:\users\[user]\.ssh\id_rsa exists
+        // ssh.exe (OpenSSH) supports "-i <keyfile>" directly, and finds a matching
+        // "<keyfile>-cert.pub" on its own; only override with -oCertificateFile if the
+        // user pointed us at a certificate somewhere else.
+        if (_opts.UserPrivateKeyEnabled && !string.IsNullOrEmpty(_opts.UserPrivateKeyPath))
+        {
+          sshPassword = $"-i \"{_opts.UserPrivateKeyPath}\"";
+          if (!string.IsNullOrEmpty(_opts.UserCertificatePath))
+            sshPassword += $" -oCertificateFile=\"{_opts.UserCertificatePath}\"";
+        }
+        else
+        {
+          sshPassword = ""; // Nothing to do; ssh.exe falls back to its own default key discovery (i.e. ~/.ssh/id_rsa).
+        }
       }
       else
       {
         sshPassword = $"-pw {RemoteUserPass}";
       }
 
-      // TODO: Figure out why "-i <keyfile>" isn't working.
-      if (string.IsNullOrEmpty(RemoteUserPass))
+      if (!_opts.UseSSHExeEnabled && string.IsNullOrEmpty(RemoteUserPass))
         Logger.Output("You must provide a User Password to debug.");
 
       string adapter = plinkPath;
@@ -194,17 +232,54 @@ namespace VsLinuxDebugger.Core
           "DISPLAY=:0";
       }
 
+      // Optionally elevate the debugger itself, for debuggees running with capabilities
+      // (ambient/file capabilities, setuid, etc.) that VSDBG must match in order to attach.
+      var remoteVsDbgCommand = _opts.UseSudoForDebugger
+        ? $"{_opts.SudoCommand} {_opts.RemoteVsDbgFullPath}"
+        : _opts.RemoteVsDbgFullPath;
+
       if (_opts.UseSSHExeEnabled)
       {
-        adapterArgs = $"{sshPassword} {sshEndpoint} -T {displayAdapter} {_opts.RemoteVsDbgFullPath} {vsdbgLogPath}";
-        //// adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {RemoteVsDbgFullPath} --interpreter=vscode {vsdbgLogPath}";
+        adapterArgs = $"{sshPassword} {sshEndpoint} -T {displayAdapter} {remoteVsDbgCommand} {vsdbgLogPath}";
+        //// adapterArgs = $"-ssh {sshPassword} {sshEndpoint} -batch -T {remoteVsDbgCommand} --interpreter=vscode {vsdbgLogPath}";
       }
       else
       {
-        adapterArgs= $"-ssh {sshPassword} {sshEndpoint} -T {displayAdapter} {_opts.RemoteVsDbgFullPath} {vsdbgLogPath}";
+        adapterArgs= $"-ssh {sshPassword} {sshEndpoint} -T {displayAdapter} {remoteVsDbgCommand} {vsdbgLogPath}";
       }
 
       return (adapter, adapterArgs);
+    }
+
+    /// <summary>Parses `KEY=VALUE` pairs (one per line) into a dictionary for `launch.json`'s `env`.</summary>
+    /// <param name="rawEnvVariables">Newline-separated `KEY=VALUE` pairs.</param>
+    /// <returns>Dictionary of environment variables, or null if none were provided.</returns>
+    private Dictionary<string, string> ParseEnvironmentVariables(string rawEnvVariables)
+    {
+      if (string.IsNullOrWhiteSpace(rawEnvVariables))
+        return null;
+
+      var env = new Dictionary<string, string>();
+
+      foreach (var line in rawEnvVariables.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+      {
+        var trimmedLine = line.Trim();
+        if (trimmedLine.Length == 0 || trimmedLine.StartsWith("#"))
+          continue;
+
+        var separatorIndex = trimmedLine.IndexOf('=');
+        if (separatorIndex <= 0)
+        {
+          Logger.Output($"Ignoring malformed environment variable line: '{trimmedLine}'");
+          continue;
+        }
+
+        var key = trimmedLine.Substring(0, separatorIndex).Trim();
+        var value = trimmedLine.Substring(separatorIndex + 1).Trim();
+        env[key] = value;
+      }
+
+      return env.Count > 0 ? env : null;
     }
 
     /// <summary>Attempt to get the extension's local directory.</summary>

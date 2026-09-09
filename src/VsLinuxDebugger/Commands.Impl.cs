@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -16,7 +17,6 @@ namespace VsLinuxDebugger
     {
       public const int CmdBuildDeployOnly = 0x1001;
       public const int CmdBuildDeployDebug = 0x1002;
-      public const int CmdBuildDeployLaunch = 0x1006;
 
       public const int CmdDebugOnly = 0x1003;
       ////public const int CmdPublishOnly = 0x1006;
@@ -24,11 +24,16 @@ namespace VsLinuxDebugger
 
       public const int CmdShowLog = 0x1004;
       public const int CmdShowSettings = 0x1005;
+      public const int CmdStop = 0x1006;
 
       public const int LinuxRemoteMainMenu = 0x1000;
       public const int RemoteMainMenuGroupLevel1 = 0x1100;
       public const int RemoteMainMenuGroupLevel2 = 0x1200;
     }
+
+    /// <summary>Non-null while a build/deploy/debug operation is in progress; cancelled by
+    /// <see cref="OnStop"/>.</summary>
+    private static CancellationTokenSource _runningOperation;
 
     /////// <summary>Override standard button text with.</summary>
     /////// <param name="commandId">Command Id.</param>
@@ -40,7 +45,6 @@ namespace VsLinuxDebugger
     ////    case CommandIds.CmdBuildDeployOnly: return "Build and Deploy";
     ////    case CommandIds.CmdBuildDeployDebug: return "Build, Deploy and Debug";
     ////
-    ////    case CommandIds.CmdBuildDeployLaunch: return "Build, Deploy and Launch";
     ////    case CommandIds.CmdDebugOnly: return "Debug Only";
     ////    ////case CommandIds.CmdPublishOnly: return "Publish Only";
     ////    ////case CommandIds.CmdPublishDebug: return "Publish and Debug";
@@ -57,13 +61,18 @@ namespace VsLinuxDebugger
     {
       AddMenuItem(cmd, CommandIds.CmdBuildDeployOnly, SetMenuTextAndVisibility, OnBuildDeployAsync);
       AddMenuItem(cmd, CommandIds.CmdBuildDeployDebug, SetMenuTextAndVisibility, OnBuildDeployDebugAsync);
-      AddMenuItem(cmd, CommandIds.CmdBuildDeployLaunch, SetMenuTextAndVisibility, OnBuildDeployLaunchAsync);
 
       ////AddMenuItem(cmd, CommandIds.CmdPublishDebug, SetMenuTextAndVisibility, OnPublishDebugAsyc);
       AddMenuItem(cmd, CommandIds.CmdDebugOnly, SetMenuTextAndVisibility, OnDebugOnlyAsync);
 
       AddMenuItem(cmd, CommandIds.CmdShowLog, SetMenuTextAndVisibility, OnShowLog);
       AddMenuItem(cmd, CommandIds.CmdShowSettings, SetMenuTextAndVisibility, OnShowSettingsAsync);
+
+      // OleMenuCommand.Enabled defaults to true and is only recomputed by
+      // BeforeQueryStatus once the menu is actually opened/queried -- without this, Stop
+      // shows enabled from VS startup until the first time the menu is touched.
+      var stopCmd = AddMenuItem(cmd, CommandIds.CmdStop, SetMenuTextAndVisibility, OnStop);
+      stopCmd.Enabled = false;
     }
 
     private async Task<bool> ExecuteBuildAsync(BuildOptions buildOptions)
@@ -72,23 +81,36 @@ namespace VsLinuxDebugger
 
       var success = true;
 
-      var options = ToUserOptions();
-      using (var dbg = new RemoteDebugger(options))
+      using (var cts = new CancellationTokenSource())
       {
-        if (!dbg.IsProjectValid())
+        _runningOperation = cts;
+
+        var options = ToUserOptions();
+        using (var dbg = new RemoteDebugger(options))
         {
-          Logger.Output("No C# startup project/solution loaded.");
-          success = false;
+          if (!dbg.IsProjectValid())
+          {
+            Logger.Output("No C# startup project/solution loaded.");
+            success = false;
+          }
+
+          if (success && !await dbg.BeginAsync(buildOptions, cts.Token))
+          {
+            if (!cts.IsCancellationRequested)
+              Logger.Output("Failed to perform actions.");
+            success = false;
+          }
         }
 
-        if (success && !await dbg.BeginAsync(buildOptions))
-        {
-          Logger.Output("Failed to perform actions.");
-          success = false;
-        }
+        _runningOperation = null;
       }
 
       return success;
+    }
+
+    private void OnStop(object sender, EventArgs e)
+    {
+      _runningOperation?.Cancel();
     }
 
     private async void OnBuildDeployAsync(object sender, EventArgs e)
@@ -101,14 +123,10 @@ namespace VsLinuxDebugger
       await ExecuteBuildAsync(BuildOptions.Build | BuildOptions.Deploy | BuildOptions.Debug);
     }
 
-    private async void OnBuildDeployLaunchAsync(object sender, EventArgs e)
-    {
-      await ExecuteBuildAsync(BuildOptions.Build | BuildOptions.Deploy | BuildOptions.Launch);
-    }
-
     private async void OnDebugOnlyAsync(object sender, EventArgs e)
     {
-      await ExecuteBuildAsync(BuildOptions.Build | BuildOptions.Debug);
+      // No Build, no Deploy/Publish: just attach to what's already running/deployed.
+      await ExecuteBuildAsync(BuildOptions.Debug);
     }
 
     private void OnShowLog(object sender, EventArgs e)
@@ -128,7 +146,7 @@ namespace VsLinuxDebugger
 
       await Task.Yield();
 
-      Instance._package.ShowOptionPage(typeof(OptionsPage));
+      Instance._package.ShowOptionPage(typeof(RemoteHostOptionsPage));
     }
 
     private void SetMenuTextAndVisibility(object sender, EventArgs e)
@@ -142,16 +160,20 @@ namespace VsLinuxDebugger
         //// cmd.Text = $"{GetMenuText(cmd.CommandID.ID)} ({settings.HostIp})";
         //// cmd.Enabled = _extension.IsStartupProjectAvailable();
 
-        if (cmd.CommandID.ID == CommandIds.CmdShowLog
-          || cmd.CommandID.ID == CommandIds.CmdDebugOnly
-          ////|| cmd.CommandID.ID == CommandIds.CmdShowSettings
-          || cmd.CommandID.ID == CommandIds.CmdBuildDeployLaunch)
+        var isRunning = _runningOperation != null;
+
+        //// || cmd.CommandID.ID == CommandIds.CmdShowSettings
+        if (cmd.CommandID.ID == CommandIds.CmdShowLog)
         {
           cmd.Enabled = false;
         }
+        else if (cmd.CommandID.ID == CommandIds.CmdStop)
+        {
+          cmd.Enabled = isRunning;
+        }
         else
         {
-          cmd.Enabled = true;
+          cmd.Enabled = !isRunning;
         }
       }
     }
@@ -162,30 +184,40 @@ namespace VsLinuxDebugger
 
       return new UserOptions
       {
-        DeleteLaunchJsonAfterBuild = VsixPackage.VsixOptions.DeleteLaunchJsonAfterBuild,
+        DeleteLaunchJsonAfterBuild = VsixPackage.LocalOptions.DeleteLaunchJsonAfterBuild,
 
-        HostIp = VsixPackage.VsixOptions.HostIp,
-        HostPort = VsixPackage.VsixOptions.HostPort,
+        HostIp = VsixPackage.RemoteHostOptions.HostIp,
+        HostPort = VsixPackage.RemoteHostOptions.HostPort,
 
-        LocalPLinkPath = VsixPackage.VsixOptions.PLinkPath,
-        LocalSwitchLinuxDbgOutput = VsixPackage.VsixOptions.SwitchLinuxDbgOutput,
+        LocalPLinkPath = VsixPackage.LocalOptions.PLinkPath,
+        LocalSwitchLinuxDbgOutput = VsixPackage.LocalOptions.SwitchLinuxDbgOutput,
+        ForceKillOnStop = VsixPackage.LocalOptions.ForceKillOnStop,
 
-        RemoteDebugDisplayGui = VsixPackage.VsixOptions.RemoteDebugDisplayGui,
-        RemoteDebugDisplayNumber = VsixPackage.VsixOptions.RemoteDebugDisplayNumber,
-        RemoteDeployBasePath = VsixPackage.VsixOptions.RemoteDeployBasePath,
-        RemoteDotNetPath = VsixPackage.VsixOptions.RemoteDotNetPath,
-        RemoteVsDbgBasePath = VsixPackage.VsixOptions.RemoteVsDbgRootPath,
+        RemoteDebugDisplayGui = VsixPackage.RemoteLaunchOptions.RemoteDebugDisplayGui,
+        RemoteDebugDisplayNumber = VsixPackage.RemoteLaunchOptions.RemoteDebugDisplayNumber,
+        RemoteDeployBasePath = VsixPackage.RemoteDebuggerOptions.RemoteDeployBasePath,
+        RemoteEnvironmentVariables = VsixPackage.RemoteLaunchOptions.RemoteEnvironmentVariables,
+        RemotePreDeployCommands = VsixPackage.RemoteLaunchOptions.RemotePreDeployCommands,
+        RemotePostDeployCommands = VsixPackage.RemoteLaunchOptions.RemotePostDeployCommands,
+        AttachToRunningProcess = VsixPackage.RemoteLaunchOptions.AttachToRunningProcess,
+        RemotePidCommand = VsixPackage.RemoteLaunchOptions.RemotePidCommand,
+        RemoteVsDbgBasePath = VsixPackage.RemoteDebuggerOptions.RemoteVsDbgRootPath,
 
-        UseCommandLineArgs = VsixPackage.VsixOptions.UseCommandLineArgs,
+        SudoCommand = VsixPackage.RemoteLaunchOptions.SudoCommand,
+        UseSudoForDebugger = VsixPackage.RemoteLaunchOptions.UseSudoForDebugger,
+
+        UseSelfContainedDeployment = VsixPackage.RemoteDebuggerOptions.UseSelfContainedDeployment,
+        RemoteRuntimeIdentifier = VsixPackage.RemoteDebuggerOptions.RemoteRuntimeIdentifier,
         //// UsePublish = Settings.UsePublish,
 
-        UserPrivateKeyEnabled = VsixPackage.VsixOptions.UserPrivateKeyEnabled,
-        UserPrivateKeyPath = VsixPackage.VsixOptions.UserPrivateKeyPath,
-        UserPrivateKeyPassword = VsixPackage.VsixOptions.UserPrivateKeyPassword,
-        UserName = VsixPackage.VsixOptions.UserName,
-        UserPass = VsixPackage.VsixOptions.UserPass,
-        UserGroupName = VsixPackage.VsixOptions.UserGroupName,
-        UseSSHExeEnabled = VsixPackage.VsixOptions.UseSSHExeEnabled
+        UserPrivateKeyEnabled = VsixPackage.RemoteCredentialsOptions.UserPrivateKeyEnabled,
+        UserPrivateKeyPath = VsixPackage.RemoteCredentialsOptions.UserPrivateKeyPath,
+        UserPrivateKeyPassword = VsixPackage.RemoteCredentialsOptions.UserPrivateKeyPassword,
+        UserCertificatePath = VsixPackage.RemoteCredentialsOptions.UserCertificatePath,
+        UserName = VsixPackage.RemoteCredentialsOptions.UserName,
+        UserPass = VsixPackage.RemoteCredentialsOptions.UserPass,
+        UserGroupName = VsixPackage.RemoteHostOptions.UserGroupName,
+        UseSSHExeEnabled = VsixPackage.LocalOptions.UseSSHExeEnabled
       };
     }
   }
